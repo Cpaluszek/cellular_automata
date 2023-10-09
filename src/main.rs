@@ -1,11 +1,14 @@
 use bevy::prelude::*;
 
+pub const CLEAR_COLOR: Color = Color::hsl(240.0, 0.23, 0.09);
+
 mod cell;
 
 use cell::CellPlugin;
 
 fn main() {
     App::new()
+        .insert_resource(ClearColor(CLEAR_COLOR))
         .add_plugins(
             DefaultPlugins
                 .set(WindowPlugin {

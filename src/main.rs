@@ -29,7 +29,7 @@ fn main() {
         )
         // Events
         .add_event::<SimulationStart>()
-        .add_event::<SimulationEnd>()
+        .add_event::<SimulationStop>()
         .add_event::<ExitGame>()
         // Custom Plugins
         .add_plugins((CellPlugin, MainMenuPlugin))

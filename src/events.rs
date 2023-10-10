@@ -4,7 +4,7 @@ use bevy::prelude::*;
 pub struct SimulationStart;
 
 #[derive(Event)]
-pub struct SimulationEnd;
+pub struct SimulationStop;
 
 #[derive(Event)]
 pub struct ExitGame;

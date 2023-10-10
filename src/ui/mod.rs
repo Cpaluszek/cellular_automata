@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use crate::events::{ExitGame, SimulationStart, SimulationStop};
+
 const NORMAL_COLOR: Color = Color::rgb(0.8, 0.8, 0.8);
 const PRESSED_COLOR: Color = Color::rgb(0.4, 0.8, 0.8);
 const HOVERED_COLOR: Color = Color::rgb(0.8, 1.0, 1.80);
@@ -21,7 +23,8 @@ pub struct MainMenuPlugin;
 
 impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn_main_menu);
+        app.add_systems(Startup, spawn_main_menu)
+            .add_systems(Update, button_interaction);
     }
 }
 
@@ -101,5 +104,30 @@ fn build_classic_text(value: &str, asset_server: &Res<AssetServer>) -> TextBundl
             ..default()
         },
         ..default()
+    }
+}
+
+fn button_interaction(
+    mut interaction_query: Query<
+        (&Interaction, &mut BackgroundColor, &ClassicButton),
+        With<Button>,
+    >,
+    mut start_event_writer: EventWriter<SimulationStart>,
+    mut stop_event_writer: EventWriter<SimulationStop>,
+    mut exit_event_writer: EventWriter<ExitGame>,
+) {
+    for (interaction, mut color, classic_button) in interaction_query.iter_mut() {
+        match *interaction {
+            Interaction::Pressed => {
+                *color = PRESSED_COLOR.into();
+                match classic_button.0 {
+                    ButtonType::Start => start_event_writer.send(SimulationStart),
+                    ButtonType::Stop => stop_event_writer.send(SimulationStop),
+                    ButtonType::Exit => exit_event_writer.send(ExitGame),
+                }
+            }
+            Interaction::Hovered => *color = HOVERED_COLOR.into(),
+            Interaction::None => *color = NORMAL_COLOR.into(),
+        }
     }
 }

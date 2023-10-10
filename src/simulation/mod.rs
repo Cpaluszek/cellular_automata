@@ -6,7 +6,6 @@ const SPRITE_SIZE: f32 = 32.0;
 
 const ALIVE_COLOR: Color = Color::RED;
 const DEAD_COLOR: Color = Color::GRAY;
-const EMPTY_COLOR: Color = Color::DARK_GRAY;
 
 pub struct SimulationPlugin;
 

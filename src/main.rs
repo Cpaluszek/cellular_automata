@@ -1,6 +1,9 @@
 use bevy::prelude::*;
+use game::GamePlugin;
 
 pub const CLEAR_COLOR: Color = Color::hsl(240.0, 0.23, 0.09);
+
+mod game;
 
 fn main() {
     App::new()
@@ -20,7 +23,7 @@ fn main() {
         )
         // Events
         // Custom Plugins
-        // .add_plugins()
+        .add_plugins(GamePlugin)
         // Systems
         .add_systems(Startup, spawn_camera)
         .run();

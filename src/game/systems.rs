@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use rand::*;
 
 use super::{components::*, CELL_SIZE, GRID_SIZE};
-use super::{CELL_COLOR, CELL_SPRITE_SIZE, HALF_CELL_SIZE};
+use super::{CELL_COLOR, CELL_SPRITE_SIZE};
 
 // Game of life patterns: [LifeWiki](https://conwaylife.com/wiki)
 pub fn spawn_cells(mut commands: Commands) {

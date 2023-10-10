@@ -25,7 +25,6 @@ struct Cell {
 pub enum CellState {
     Alive,
     Dead,
-    Empty,
 }
 
 fn setup_simulation(mut commands: Commands) {
@@ -42,7 +41,7 @@ fn setup_simulation(mut commands: Commands) {
                     ..default()
                 },
                 Cell {
-                    state: CellState::Empty,
+                    state: CellState::Dead,
                 },
             ));
         }

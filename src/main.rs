@@ -5,6 +5,7 @@ pub const GRID_SIZE: usize = 100;
 
 mod cell;
 mod events;
+mod simulation;
 mod ui;
 
 use cell::CellPlugin;

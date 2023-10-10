@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 use crate::events::{ExitGame, SimulationStart, SimulationStop};
 
+// Todo: update color to palette
 const NORMAL_COLOR: Color = Color::rgb(0.8, 0.8, 0.8);
 const PRESSED_COLOR: Color = Color::rgb(0.4, 0.8, 0.8);
 const HOVERED_COLOR: Color = Color::rgb(0.8, 1.0, 1.80);

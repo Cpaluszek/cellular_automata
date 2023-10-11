@@ -1,7 +1,9 @@
 use bevy::prelude::*;
 use std::time::Duration;
+use systems::quit_application;
 
 mod resources;
+mod systems;
 use game::GamePlugin;
 use resources::WindowSize;
 
@@ -41,5 +43,6 @@ fn main() {
             board_height: 100,
         })
         // Systems
+        .add_systems(Update, quit_application)
         .run();
 }

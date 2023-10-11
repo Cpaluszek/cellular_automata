@@ -2,21 +2,17 @@ use bevy::{prelude::*, window::PrimaryWindow};
 
 use super::{
     components::{CellPosition, CellState},
-    resources::{BoardCycleEvent, CellBoard, CellEntityMap, CellSize, ColorHandleMap, CycleTimer},
+    resources::{BoardCycleEvent, CellBoard, CellEntityMap, CellSize, CycleTimer},
+    CELL_COLOR,
 };
 
 pub fn life_setup(
     mut commands: Commands,
     mut cell_entities: ResMut<CellEntityMap>,
-    mut color_handles: ResMut<ColorHandleMap>,
     board: Res<CellBoard>,
     cell_size: Res<CellSize>,
     window: Query<&Window, With<PrimaryWindow>>,
 ) {
-    color_handles
-        .0
-        .insert("white".to_string(), Color::WHITE.into());
-
     // Spawn camera
     commands.spawn(Camera2dBundle::default());
     // Background entity
@@ -44,7 +40,7 @@ pub fn life_setup(
                 let new_cell = commands
                     .spawn(SpriteBundle {
                         sprite: Sprite {
-                            color: color_handles.0.get("white").unwrap().clone().into(),
+                            color: CELL_COLOR.into(),
                             custom_size: Some(Vec2::new(cell_size.width, cell_size.height)),
                             ..default()
                         },
@@ -101,7 +97,6 @@ pub fn apply_next_generation(
     mut cycle_events: EventReader<BoardCycleEvent>,
     mut cell_entities: ResMut<CellEntityMap>,
     cell_size: Res<CellSize>,
-    color_handles: ResMut<ColorHandleMap>,
     window: Query<&Window, With<PrimaryWindow>>,
 ) {
     for evt in cycle_events.iter() {
@@ -120,7 +115,7 @@ pub fn apply_next_generation(
                     let new_cell = commands
                         .spawn(SpriteBundle {
                             sprite: Sprite {
-                                color: color_handles.0.get("white").unwrap().clone().into(),
+                                color: CELL_COLOR.into(),
                                 custom_size: Some(Vec2::new(cell_size.width, cell_size.height)),
                                 ..default()
                             },

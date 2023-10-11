@@ -8,7 +8,7 @@ mod systems;
 
 use self::{
     components::{CellPosition, CellState},
-    resources::{BoardCycleEvent, CellBoard, CellEntityMap, CellSize, ColorHandleMap, CycleTimer},
+    resources::{BoardCycleEvent, CellBoard, CellEntityMap, CellSize, CycleTimer},
     systems::{apply_next_generation, get_next_generation, life_setup},
 };
 
@@ -29,7 +29,7 @@ use self::{
 // pub const CELL_SIZE: f32 = 6.0;
 // pub const HALF_CELL_SIZE: f32 = CELL_SIZE / 2.0;
 // pub const CELL_SPRITE_SIZE: Vec2 = Vec2::new(CELL_SIZE, CELL_SIZE);
-// pub const CELL_COLOR: Color = Color::hsl(10.0, 0.56, 0.91);
+pub const CELL_COLOR: Color = Color::hsl(10.0, 0.56, 0.91);
 
 pub struct GamePlugin {
     pub cycle_interval: Duration,
@@ -63,7 +63,6 @@ impl Plugin for GamePlugin {
                 self.cycle_interval,
                 TimerMode::Repeating,
             )))
-            .init_resource::<ColorHandleMap>()
             .init_resource::<CellEntityMap>()
             .init_resource::<CellSize>()
             .add_systems(Startup, life_setup)

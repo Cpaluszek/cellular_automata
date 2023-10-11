@@ -11,9 +11,6 @@ const DEFAULT_BOARD_STATE: [CellState; 40 * 40] = [CellState::Dead; 40 * 40];
 #[derive(Resource, Default)]
 pub struct CellEntityMap(pub HashMap<CellPosition, Entity>);
 
-#[derive(Resource, Default)]
-pub struct ColorHandleMap(pub HashMap<String, Color>);
-
 #[derive(Resource)]
 pub struct CycleTimer(pub Timer);
 

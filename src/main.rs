@@ -1,18 +1,17 @@
+use bevy::prelude::*;
 use std::time::Duration;
 
-use bevy::prelude::*;
+mod resources;
 use game::GamePlugin;
+use resources::WindowSize;
 
 pub const WINDOW_WIDTH: f32 = 1024.0;
 pub const WINDOW_HEIGHT: f32 = 720.0;
+
 pub const CLEAR_COLOR: Color = Color::hsl(240.0, 0.23, 0.09);
+pub const CELL_COLOR: Color = Color::hsl(10.0, 0.56, 0.91);
 
 mod game;
-
-#[derive(Resource)]
-pub struct WindowSize {
-    pub resolution: Vec2,
-}
 
 fn main() {
     App::new()

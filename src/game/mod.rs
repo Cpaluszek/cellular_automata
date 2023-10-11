@@ -16,7 +16,6 @@ use self::{
 
 // [Conway's Game of Life - Wikipedia](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
 
-pub const CELL_COLOR: Color = Color::hsl(10.0, 0.56, 0.91);
 
 pub struct GamePlugin {
     pub cycle_interval: Duration,

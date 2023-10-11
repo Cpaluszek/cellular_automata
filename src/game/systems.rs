@@ -1,9 +1,10 @@
 use bevy::{prelude::*, window::PrimaryWindow};
 
+use crate::CELL_COLOR;
+
 use super::{
     components::{CellPosition, CellState},
     resources::{BoardCycleEvent, CellBoard, CellEntityMap, CellSize, CycleTimer},
-    CELL_COLOR,
 };
 
 pub fn life_setup(

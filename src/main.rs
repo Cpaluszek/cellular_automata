@@ -3,6 +3,8 @@ use std::time::Duration;
 use bevy::prelude::*;
 use game::GamePlugin;
 
+pub const WINDOW_WIDTH: f32 = 1024.0;
+pub const WINDOW_HEIGHT: f32 = 720.0;
 pub const CLEAR_COLOR: Color = Color::hsl(240.0, 0.23, 0.09);
 
 mod game;
@@ -20,7 +22,7 @@ fn main() {
                 .set(WindowPlugin {
                     primary_window: Some(Window {
                         title: "Cellular Automata".into(),
-                        resolution: (1024.0, 720.0).into(),
+                        resolution: (WINDOW_WIDTH, WINDOW_HEIGHT).into(),
                         resizable: false,
                         ..default()
                     }),
@@ -29,7 +31,7 @@ fn main() {
                 .build(),
         )
         .insert_resource(WindowSize {
-            resolution: Vec2::new(1024.0, 720.0),
+            resolution: Vec2::new(WINDOW_WIDTH, WINDOW_HEIGHT),
         })
         // Events
         // Custom Plugins

@@ -1,6 +1,6 @@
 use bevy::{prelude::*, window::PrimaryWindow};
 
-use crate::CELL_COLOR;
+use crate::{SimulationState, CELL_COLOR};
 
 use super::{
     components::{CellPosition, CellState},
@@ -121,6 +121,31 @@ pub fn apply_next_generation(
 
             if let Some(entt) = old_cell {
                 commands.entity(entt).despawn();
+            }
+        }
+    }
+}
+
+// pub fn pause_simulation(mut commands: Commands) {
+//     commands.insert_resource(NextState(Some(SimulationState::Paused)));
+// }
+
+// pub fn resume_simulation(mut commands: Commands) {
+//     commands.insert_resource(NextState(Some(SimulationState::Paused)));
+// }
+
+pub fn toggle_simulation_state(
+    mut commands: Commands,
+    keyboard_input: Res<Input<KeyCode>>,
+    simulation_state: Res<State<SimulationState>>,
+) {
+    if keyboard_input.just_pressed(KeyCode::Space) {
+        match *simulation_state.get() {
+            SimulationState::Running => {
+                commands.insert_resource(NextState(Some(SimulationState::Paused)));
+            }
+            SimulationState::Paused => {
+                commands.insert_resource(NextState(Some(SimulationState::Running)));
             }
         }
     }

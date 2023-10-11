@@ -18,6 +18,7 @@ mod game;
 fn main() {
     App::new()
         .insert_resource(ClearColor(CLEAR_COLOR))
+        .add_state::<SimulationState>()
         .add_plugins(
             DefaultPlugins
                 .set(WindowPlugin {
@@ -45,4 +46,11 @@ fn main() {
         // Systems
         .add_systems(Update, quit_application)
         .run();
+}
+
+#[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
+pub enum SimulationState {
+    #[default]
+    Running,
+    Paused,
 }

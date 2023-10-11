@@ -6,16 +6,17 @@ mod components;
 mod resources;
 mod systems;
 
+use crate::SimulationState;
+
 use self::{
     components::{CellPosition, CellState},
     resources::{BoardCycleEvent, CellBoard, CellEntityMap, CellSize, CycleTimer},
-    systems::{apply_next_generation, get_next_generation, life_setup},
+    systems::{apply_next_generation, get_next_generation, life_setup, toggle_simulation_state},
 };
 
 // Game of life patterns: [LifeWiki](https://conwaylife.com/wiki)
 
 // [Conway's Game of Life - Wikipedia](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
-
 
 pub struct GamePlugin {
     pub cycle_interval: Duration,
@@ -57,7 +58,9 @@ impl Plugin for GamePlugin {
                 (
                     get_next_generation,
                     apply_next_generation.after(get_next_generation),
-                ),
-            );
+                )
+                    .run_if(in_state(SimulationState::Running)),
+            )
+            .add_systems(Update, toggle_simulation_state);
     }
 }

@@ -34,10 +34,10 @@ fn main() {
         // Events
         // Custom Plugins
         .add_plugins(GamePlugin {
-            cycle_interval: Duration::from_millis(40),
+            cycle_interval: Duration::from_millis(100),
             init_state: None,
-            board_width: 30,
-            board_height: 30,
+            board_width: 100,
+            board_height: 100,
         })
         // Systems
         .run();

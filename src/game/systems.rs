@@ -15,15 +15,6 @@ pub fn life_setup(
 ) {
     // Spawn camera
     commands.spawn(Camera2dBundle::default());
-    // Background entity
-    commands.spawn(SpriteBundle {
-        sprite: Sprite {
-            custom_size: Some(Vec2::new(window.single().width(), window.single().height())),
-            color: Color::GRAY.into(),
-            ..default()
-        },
-        ..default()
-    });
 
     let half_window_width = window.single().width() / 2.0;
     let half_window_height = window.single().height() / 2.0;

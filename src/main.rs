@@ -17,6 +17,7 @@ pub const CYCLE_INTERVAL: Duration = Duration::from_millis(50);
 pub const BOARD_SIZE: (usize, usize) = (160, 90);
 
 mod game;
+mod ui;
 
 fn main() {
     App::new()

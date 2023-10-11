@@ -6,7 +6,7 @@ mod components;
 mod resources;
 mod systems;
 
-use crate::SimulationState;
+use crate::{SimulationState, CYCLE_INTERVAL};
 
 use self::{
     components::{CellPosition, CellState},
@@ -19,7 +19,6 @@ use self::{
 // [Conway's Game of Life - Wikipedia](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
 
 pub struct GamePlugin {
-    pub cycle_interval: Duration,
     pub init_state: Option<(Vec<CellState>, (usize, usize))>,
     pub board_width: usize,
     pub board_height: usize,
@@ -46,10 +45,7 @@ impl Plugin for GamePlugin {
 
         app.add_event::<BoardCycleEvent>()
             .insert_resource(board)
-            .insert_resource(CycleTimer(Timer::new(
-                self.cycle_interval,
-                TimerMode::Repeating,
-            )))
+            .insert_resource(CycleTimer(Timer::new(CYCLE_INTERVAL, TimerMode::Repeating)))
             .init_resource::<CellEntityMap>()
             .init_resource::<CellSize>()
             .add_systems(Startup, life_setup)

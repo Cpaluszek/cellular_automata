@@ -16,19 +16,6 @@ use self::{
 
 // [Conway's Game of Life - Wikipedia](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
 
-// === Rules ===
-// n for neighbours
-// Liging cells:
-//      n < 2 || n > 3 - DIES
-//      n == 2 || n == 3 - LIVES
-// Dead cells:
-//      n == 3 - LIVES
-
-// pub const GRID_SIZE: i32 = 100;
-
-// pub const CELL_SIZE: f32 = 6.0;
-// pub const HALF_CELL_SIZE: f32 = CELL_SIZE / 2.0;
-// pub const CELL_SPRITE_SIZE: Vec2 = Vec2::new(CELL_SIZE, CELL_SIZE);
 pub const CELL_COLOR: Color = Color::hsl(10.0, 0.56, 0.91);
 
 pub struct GamePlugin {

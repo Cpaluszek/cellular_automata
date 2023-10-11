@@ -5,7 +5,6 @@ use crate::WindowSize;
 use super::components::{CellPosition, CellState};
 
 const DEFAULT_BOARD_SIZE: (usize, usize) = (40, 40);
-
 const DEFAULT_BOARD_STATE: [CellState; 40 * 40] = [CellState::Dead; 40 * 40];
 
 #[derive(Resource, Default)]

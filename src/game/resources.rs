@@ -67,7 +67,7 @@ impl CellBoard {
     pub fn new_random(width: usize, height: usize) -> Self {
         let mut state = vec![CellState::Dead; width * height];
         for cell in state.iter_mut() {
-            *cell = if rand::random() {
+            *cell = if rand::random::<f32>() > 0.9 {
                 CellState::Alive
             } else {
                 CellState::Dead

@@ -34,7 +34,7 @@ fn main() {
         // Events
         // Custom Plugins
         .add_plugins(GamePlugin {
-            cycle_interval: Duration::from_millis(100),
+            cycle_interval: Duration::from_millis(50),
             init_state: None,
             board_width: 100,
             board_height: 100,

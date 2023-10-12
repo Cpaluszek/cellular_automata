@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use std::time::Duration;
 use systems::quit_application;
+use ui::UIPlugin;
 
 mod resources;
 mod systems;
@@ -41,6 +42,7 @@ fn main() {
         })
         // Events
         // Custom Plugins
+        .add_plugins(UIPlugin)
         .add_plugins(GamePlugin {
             init_state: None,
             board_width: 160,

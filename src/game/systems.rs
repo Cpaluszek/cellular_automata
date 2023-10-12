@@ -56,6 +56,10 @@ pub fn get_next_generation(
         return;
     }
     let delta: Vec<_> = (0..board.height)
+        // flat_map is used to flatten the results of the following closure.
+        // For each row in the range generated in step 2, it creates another range from 0 to board.width (representing the columns),
+        // and for each combination of row and col, it creates a CellPosition struct.
+        // flat_map essentially flattens this 2D structure into a single iterator.
         .flat_map(|row| (0..board.width).map(move |col| CellPosition { col, row }))
         .filter_map(|pos| {
             let alive_neighbours_count: usize = board
@@ -125,14 +129,6 @@ pub fn apply_next_generation(
         }
     }
 }
-
-// pub fn pause_simulation(mut commands: Commands) {
-//     commands.insert_resource(NextState(Some(SimulationState::Paused)));
-// }
-
-// pub fn resume_simulation(mut commands: Commands) {
-//     commands.insert_resource(NextState(Some(SimulationState::Paused)));
-// }
 
 pub fn toggle_simulation_state(
     mut commands: Commands,

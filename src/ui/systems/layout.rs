@@ -44,8 +44,15 @@ pub fn ui_example_system(
         ui.allocate_space(egui::Vec2::new(1.0, 10.0));
         // Cell color
         ui.separator();
-        ui.label("Cell color:");
+        ui.label("Colors:");
+        ui.horizontal(|ui| {
+            ui.color_edit_button_rgb(&mut ui_state.cell_color);
+            ui.label("Cell color");
+        });
+        ui.horizontal(|ui| {
+            ui.color_edit_button_rgb(&mut ui_state.background_color);
+            ui.label("Background color");
+        });
         ui.allocate_space(egui::Vec2::new(1.0, 10.0));
-        ui.color_edit_button_rgb(&mut ui_state.cell_color);
     });
 }

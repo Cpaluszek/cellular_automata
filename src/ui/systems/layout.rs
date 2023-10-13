@@ -3,6 +3,7 @@ use bevy_egui::{egui, EguiContexts};
 
 use crate::SimulationState;
 
+// [bevy\_egui/examples/ui.rs at main · mvlabat/bevy\_egui](https://github.com/mvlabat/bevy_egui/blob/main/examples/ui.rs)
 pub fn ui_example_system(
     mut contexts: EguiContexts,
     mut commands: Commands,
@@ -22,4 +23,3 @@ pub fn ui_example_system(
         }
     });
 }
-

@@ -16,6 +16,11 @@ pub fn ui_example_system(
             SimulationState::Paused => "Resume",
         };
         ui.horizontal(|ui| {
+            if ui.button("Reset").clicked() {
+                // Todo: use event
+                info!("Reset simulation");
+            }
+            ui.allocate_space(egui::Vec2::new(10.0, 0.0));
             if ui.button(button_text).clicked() {
                 // Todo: use event
                 match *simulation_state.get() {
@@ -27,12 +32,10 @@ pub fn ui_example_system(
                     }
                 }
             }
-            if ui.button("Reset").clicked() {
-                // Todo: use event
-                info!("Reset simulation");
-            }
         });
+        ui.allocate_space(egui::Vec2::new(1.0, 10.0));
         // board size
+        ui.separator();
         ui.label("Board size:");
         ui.add(egui::Slider::new(&mut ui_state.board_width, 40..=200).text("width"));
         ui.add(egui::Slider::new(&mut ui_state.board_heigth, 40..=200).text("height"));

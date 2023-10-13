@@ -4,7 +4,7 @@ use bevy_egui::{egui, EguiContexts};
 use crate::{
     ui::{
         events::{UiParameter, UiStateChangedEvent},
-        resources::UiState,
+        resources::{BoardHeight, BoardWidth, UiState},
     },
     SimulationState,
 };
@@ -13,6 +13,8 @@ use crate::{
 pub fn ui_panel(
     mut contexts: EguiContexts,
     mut ui_state: ResMut<UiState>,
+    mut board_width: ResMut<BoardWidth>,
+    mut board_height: ResMut<BoardHeight>,
     simulation_state: Res<State<SimulationState>>,
     mut ui_event_writer: EventWriter<UiStateChangedEvent>,
 ) {
@@ -35,7 +37,19 @@ pub fn ui_panel(
         ui.separator();
         ui.label("Board size:");
         ui.add(egui::Slider::new(&mut ui_state.board_width, 40..=200).text("width"));
+        if ui_state.board_width != board_width.0 {
+            board_width.0 = ui_state.board_width;
+            ui_event_writer.send(UiStateChangedEvent(UiParameter::BoardWidth(
+                ui_state.board_width,
+            )));
+        }
         ui.add(egui::Slider::new(&mut ui_state.board_height, 40..=200).text("height"));
+        if ui_state.board_height != board_height.0 {
+            board_height.0 = ui_state.board_height;
+            ui_event_writer.send(UiStateChangedEvent(UiParameter::BoardHeight(
+                ui_state.board_height,
+            )));
+        }
         ui.allocate_space(egui::Vec2::new(1.0, 10.0));
         // Simulation speed
         ui.separator();

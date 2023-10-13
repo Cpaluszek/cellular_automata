@@ -2,7 +2,10 @@ use bevy::prelude::*;
 use bevy_egui::EguiPlugin;
 
 // use self::systems::interaction::handle_ui_interaction;
-use self::systems::{interaction::handle_ui_interaction, layout::ui_panel};
+use self::{
+    resources::{BoardHeight, BoardWidth},
+    systems::{interaction::handle_ui_interaction, layout::ui_panel},
+};
 
 mod events;
 mod resources;
@@ -18,6 +21,8 @@ impl Plugin for UIPlugin {
         app.add_plugins(EguiPlugin)
             .add_event::<UiStateChangedEvent>()
             .init_resource::<UiState>()
+            .init_resource::<BoardWidth>()
+            .init_resource::<BoardHeight>()
             .add_systems(Update, (ui_panel, handle_ui_interaction.after(ui_panel)));
     }
 }

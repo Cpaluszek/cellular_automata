@@ -18,13 +18,13 @@ pub fn handle_ui_interaction(
                 } else {
                     commands.insert_resource(NextState(Some(SimulationState::Running)));
                 }
-            } // UiParameter::BoardWidth(width) => {
-              //     info!("Board width: {}", width);
-              // }
-              // UiParameter::BoardHeight(height) => {
-              //     info!("Board height: {}", height);
-              // }
-              // UiParameter::CycleInterval(interval) => {
+            }
+            UiParameter::BoardWidth(width) => {
+                info!("Board width: {}", width);
+            }
+            UiParameter::BoardHeight(height) => {
+                info!("Board height: {}", height);
+            } //   UiParameter::CycleInterval(interval) => {
               //     info!("Cycle interval: {}", interval);
               // }
               // UiParameter::CellColor(color) => {

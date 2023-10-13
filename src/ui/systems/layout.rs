@@ -1,14 +1,20 @@
 use bevy::prelude::*;
 use bevy_egui::{egui, EguiContexts};
 
-use crate::{ui::resources::UiState, SimulationState};
+use crate::{
+    ui::{
+        events::{UiParameter, UiStateChangedEvent},
+        resources::UiState,
+    },
+    SimulationState,
+};
 
 // [bevy\_egui/examples/ui.rs at main · mvlabat/bevy\_egui](https://github.com/mvlabat/bevy_egui/blob/main/examples/ui.rs)
-pub fn ui_example_system(
+pub fn ui_panel(
     mut contexts: EguiContexts,
-    mut commands: Commands,
     mut ui_state: ResMut<UiState>,
     simulation_state: Res<State<SimulationState>>,
+    mut ui_event_writer: EventWriter<UiStateChangedEvent>,
 ) {
     egui::Window::new("Settings").show(contexts.ctx_mut(), |ui| {
         let button_text = match *simulation_state.get() {
@@ -17,17 +23,11 @@ pub fn ui_example_system(
         };
         ui.horizontal(|ui| {
             if ui.button("Reset").clicked() {
-                // Todo: use event
-                info!("Reset simulation");
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::ResetSimulation));
             }
             ui.allocate_space(egui::Vec2::new(10.0, 0.0));
             if ui.button(button_text).clicked() {
-                // Todo: use event
-                if let SimulationState::Running = *simulation_state.get() {
-                    commands.insert_resource(NextState(Some(SimulationState::Paused)));
-                } else {
-                    commands.insert_resource(NextState(Some(SimulationState::Running)));
-                }
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::PauseSimulation));
             }
         });
         ui.allocate_space(egui::Vec2::new(1.0, 10.0));

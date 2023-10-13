@@ -8,3 +8,8 @@ pub struct UiState {
     pub cell_color: [f32; 3],
     pub background_color: [f32; 3],
 }
+
+#[derive(Default, Resource)]
+pub struct CellColorChanged {
+    pub color: Color,
+}

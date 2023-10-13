@@ -50,10 +50,9 @@ impl Plugin for GamePlugin {
             .add_systems(
                 Update,
                 (
-                    get_next_generation,
+                    get_next_generation.run_if(in_state(SimulationState::Running)),
                     apply_next_generation.after(get_next_generation),
-                )
-                    .run_if(in_state(SimulationState::Running)),
+                ),
             )
             .add_systems(Update, toggle_simulation_state);
     }

@@ -23,13 +23,10 @@ pub fn ui_example_system(
             ui.allocate_space(egui::Vec2::new(10.0, 0.0));
             if ui.button(button_text).clicked() {
                 // Todo: use event
-                match *simulation_state.get() {
-                    SimulationState::Running => {
-                        commands.insert_resource(NextState(Some(SimulationState::Paused)));
-                    }
-                    SimulationState::Paused => {
-                        commands.insert_resource(NextState(Some(SimulationState::Running)));
-                    }
+                if let SimulationState::Running = *simulation_state.get() {
+                    commands.insert_resource(NextState(Some(SimulationState::Paused)));
+                } else {
+                    commands.insert_resource(NextState(Some(SimulationState::Running)));
                 }
             }
         });
@@ -38,7 +35,7 @@ pub fn ui_example_system(
         ui.separator();
         ui.label("Board size:");
         ui.add(egui::Slider::new(&mut ui_state.board_width, 40..=200).text("width"));
-        ui.add(egui::Slider::new(&mut ui_state.board_heigth, 40..=200).text("height"));
+        ui.add(egui::Slider::new(&mut ui_state.board_height, 40..=200).text("height"));
         ui.allocate_space(egui::Vec2::new(1.0, 10.0));
         // Simulation speed
         ui.separator();

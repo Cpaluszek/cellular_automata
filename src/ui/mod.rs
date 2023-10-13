@@ -4,7 +4,7 @@ use bevy_egui::EguiPlugin;
 use self::systems::layout::ui_example_system;
 
 mod resources;
-mod systems;
+mod events;mod systems;
 
 use resources::UiState;
 

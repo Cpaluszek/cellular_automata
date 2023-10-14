@@ -132,6 +132,7 @@ pub fn apply_next_generation(
     }
 }
 
+// Todo: this function should be placed in ui interactions?
 pub fn change_cell_color(cell_color: Res<CellColor>, mut query: Query<&mut Sprite>) {
     if cell_color.is_changed() {
         for mut sprite in query.iter_mut() {

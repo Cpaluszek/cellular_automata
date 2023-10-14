@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 mod components;
-mod resources;
+pub mod resources;
 mod systems;
 
 use crate::{SimulationState, CYCLE_INTERVAL};

@@ -1,3 +1,6 @@
+use std::time::Duration;
+
+use crate::game::resources::CycleTimer;
 use crate::resources::{BoardSize, CellColor, CycleInterval};
 use crate::ui::events::*;
 use crate::SimulationState;
@@ -11,6 +14,7 @@ pub fn handle_ui_interaction(
     mut clear_color: ResMut<ClearColor>,
     mut cell_color: ResMut<CellColor>,
     mut cycle_interval: ResMut<CycleInterval>,
+    mut cycle_timer: ResMut<CycleTimer>,
 ) {
     for ev in ui_event.iter() {
         match ev.0 {
@@ -34,7 +38,9 @@ pub fn handle_ui_interaction(
             }
             UiParameter::CycleInterval(interval) => {
                 cycle_interval.0 = interval;
-                info!("Cycle interval: {}", interval);
+                cycle_timer
+                    .0
+                    .set_duration(Duration::from_millis(interval as u64));
             }
             UiParameter::CellColor(color) => {
                 cell_color.0 = Color::rgb(color[0], color[1], color[2]);

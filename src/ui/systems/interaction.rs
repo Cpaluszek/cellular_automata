@@ -1,3 +1,4 @@
+use crate::resources::{BoardSize, CellColor, CycleInterval};
 use crate::ui::events::*;
 use crate::SimulationState;
 use bevy::prelude::*;
@@ -6,7 +7,10 @@ pub fn handle_ui_interaction(
     mut ui_event: EventReader<UiStateChangedEvent>,
     simulation_state: Res<State<SimulationState>>,
     mut commands: Commands,
+    mut board_size: ResMut<BoardSize>,
     mut clear_color: ResMut<ClearColor>,
+    mut cell_color: ResMut<CellColor>,
+    mut cycle_interval: ResMut<CycleInterval>,
 ) {
     for ev in ui_event.iter() {
         match ev.0 {
@@ -21,15 +25,19 @@ pub fn handle_ui_interaction(
                 }
             }
             UiParameter::BoardWidth(width) => {
+                board_size.w = width;
                 info!("Board width: {}", width);
             }
             UiParameter::BoardHeight(height) => {
+                board_size.h = height;
                 info!("Board height: {}", height);
             }
             UiParameter::CycleInterval(interval) => {
+                cycle_interval.0 = interval;
                 info!("Cycle interval: {}", interval);
             }
             UiParameter::CellColor(color) => {
+                cell_color.0 = color;
                 info!("Cell color: {:?}", color);
             }
             UiParameter::BackgroundColor(color) => {

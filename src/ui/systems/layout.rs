@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_egui::{egui, EguiContexts};
 
 use crate::{
-    resources::{BoardSize, CellColor, CycleInterval},
+    resources::{BoardSize, CycleInterval},
     ui::{
         events::{UiParameter, UiStateChangedEvent},
         resources::UiState,
@@ -14,10 +14,8 @@ use crate::{
 pub fn ui_panel(
     mut contexts: EguiContexts,
     mut ui_state: ResMut<UiState>,
-    mut board_size: ResMut<BoardSize>,
-    mut cycle_interval: ResMut<CycleInterval>,
-    mut cell_color: ResMut<CellColor>,
-    mut clear_color: ResMut<ClearColor>,
+    board_size: Res<BoardSize>,
+    cycle_interval: Res<CycleInterval>,
     simulation_state: Res<State<SimulationState>>,
     mut ui_event_writer: EventWriter<UiStateChangedEvent>,
 ) {
@@ -41,14 +39,12 @@ pub fn ui_panel(
         ui.label("Board size:");
         ui.add(egui::Slider::new(&mut ui_state.board_width, 40..=200).text("width"));
         if ui_state.board_width != board_size.w as u32 {
-            board_size.w = ui_state.board_width;
             ui_event_writer.send(UiStateChangedEvent(UiParameter::BoardWidth(
                 ui_state.board_width,
             )));
         }
         ui.add(egui::Slider::new(&mut ui_state.board_height, 40..=200).text("height"));
         if ui_state.board_height != board_size.h as u32 {
-            board_size.h = ui_state.board_height;
             ui_event_writer.send(UiStateChangedEvent(UiParameter::BoardHeight(
                 ui_state.board_height,
             )));
@@ -59,7 +55,6 @@ pub fn ui_panel(
         ui.label("Simulation speed:");
         ui.add(egui::Slider::new(&mut ui_state.cycle_interval, 40..=500).text("interval (ms)"));
         if ui_state.cycle_interval != cycle_interval.0 {
-            cycle_interval.0 = ui_state.cycle_interval;
             ui_event_writer.send(UiStateChangedEvent(UiParameter::CycleInterval(
                 ui_state.cycle_interval,
             )));
@@ -70,7 +65,6 @@ pub fn ui_panel(
         ui.label("Colors:");
         ui.horizontal(|ui| {
             if ui.color_edit_button_rgb(&mut ui_state.cell_color).changed() {
-                cell_color.0 = ui_state.cell_color;
                 ui_event_writer.send(UiStateChangedEvent(UiParameter::CellColor(
                     ui_state.cell_color,
                 )));
@@ -82,7 +76,6 @@ pub fn ui_panel(
                 .color_edit_button_rgb(&mut ui_state.background_color)
                 .changed()
             {
-                clear_color.0 = ui_state.background_color.into();
                 ui_event_writer.send(UiStateChangedEvent(UiParameter::BackgroundColor(
                     ui_state.background_color,
                 )));

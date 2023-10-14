@@ -6,6 +6,7 @@ pub fn handle_ui_interaction(
     mut ui_event: EventReader<UiStateChangedEvent>,
     simulation_state: Res<State<SimulationState>>,
     mut commands: Commands,
+    mut clear_color: ResMut<ClearColor>,
 ) {
     for ev in ui_event.iter() {
         match ev.0 {
@@ -32,7 +33,7 @@ pub fn handle_ui_interaction(
                 info!("Cell color: {:?}", color);
             }
             UiParameter::BackgroundColor(color) => {
-                info!("Background color: {:?}", color);
+                clear_color.0 = Color::rgb(color[0], color[1], color[2]);
             }
         }
     }

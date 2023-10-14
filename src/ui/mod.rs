@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_egui::EguiPlugin;
 
 use self::{
-    resources::{BackgroundColor, BoardSize, CellColor, CycleInterval, UiState},
+    resources::UiState,
     systems::{
         interaction::handle_ui_interaction,
         layout::{init_ui_values, ui_panel},
@@ -22,10 +22,6 @@ impl Plugin for UIPlugin {
         app.add_plugins(EguiPlugin)
             .add_event::<UiStateChangedEvent>()
             .init_resource::<UiState>()
-            .init_resource::<BoardSize>()
-            .init_resource::<CycleInterval>()
-            .init_resource::<CellColor>()
-            .init_resource::<BackgroundColor>()
             .add_systems(Startup, init_ui_values)
             .add_systems(Update, (ui_panel, handle_ui_interaction.after(ui_panel)));
     }

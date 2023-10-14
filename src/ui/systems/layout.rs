@@ -2,9 +2,10 @@ use bevy::prelude::*;
 use bevy_egui::{egui, EguiContexts};
 
 use crate::{
+    resources::{BoardSize, CellColor, CycleInterval},
     ui::{
         events::{UiParameter, UiStateChangedEvent},
-        resources::{BackgroundColor, BoardSize, CellColor, CycleInterval, UiState},
+        resources::UiState,
     },
     SimulationState, BOARD_SIZE, CELL_COLOR, CLEAR_COLOR, CYCLE_INTERVAL,
 };
@@ -24,7 +25,7 @@ pub fn ui_panel(
     mut board_size: ResMut<BoardSize>,
     mut cycle_interval: ResMut<CycleInterval>,
     mut cell_color: ResMut<CellColor>,
-    mut background_color: ResMut<BackgroundColor>,
+    mut clear_color: ResMut<ClearColor>,
     simulation_state: Res<State<SimulationState>>,
     mut ui_event_writer: EventWriter<UiStateChangedEvent>,
 ) {
@@ -89,7 +90,7 @@ pub fn ui_panel(
                 .color_edit_button_rgb(&mut ui_state.background_color)
                 .changed()
             {
-                background_color.0 = ui_state.background_color;
+                clear_color.0 = ui_state.background_color.into();
                 ui_event_writer.send(UiStateChangedEvent(UiParameter::BackgroundColor(
                     ui_state.background_color,
                 )));

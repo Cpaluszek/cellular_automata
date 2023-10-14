@@ -6,7 +6,7 @@ use ui::UIPlugin;
 mod resources;
 mod systems;
 use game::GamePlugin;
-use resources::WindowSize;
+use resources::{BoardSize, CellColor, CycleInterval, WindowSize};
 
 pub const WINDOW_WIDTH: f32 = 1280.0;
 pub const WINDOW_HEIGHT: f32 = 720.0;
@@ -22,7 +22,6 @@ mod ui;
 
 fn main() {
     App::new()
-        .insert_resource(ClearColor(CLEAR_COLOR))
         .add_state::<SimulationState>()
         .add_plugins(
             DefaultPlugins
@@ -40,6 +39,10 @@ fn main() {
         .insert_resource(WindowSize {
             resolution: Vec2::new(WINDOW_WIDTH, WINDOW_HEIGHT),
         })
+        .init_resource::<BoardSize>()
+        .init_resource::<CycleInterval>()
+        .init_resource::<CellColor>()
+        .insert_resource(ClearColor(CLEAR_COLOR))
         // Events
         // Custom Plugins
         .add_plugins(UIPlugin)

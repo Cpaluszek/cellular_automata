@@ -37,8 +37,7 @@ pub fn handle_ui_interaction(
                 info!("Cycle interval: {}", interval);
             }
             UiParameter::CellColor(color) => {
-                cell_color.0 = color;
-                info!("Cell color: {:?}", color);
+                cell_color.0 = Color::rgb(color[0], color[1], color[2]);
             }
             UiParameter::BackgroundColor(color) => {
                 clear_color.0 = Color::rgb(color[0], color[1], color[2]);

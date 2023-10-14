@@ -15,4 +15,4 @@ pub struct BoardSize {
 pub struct CycleInterval(pub u32);
 
 #[derive(Default, Resource, PartialEq)]
-pub struct CellColor(pub [f32; 3]);
+pub struct CellColor(pub Color);

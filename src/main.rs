@@ -41,7 +41,7 @@ fn main() {
         })
         .init_resource::<BoardSize>()
         .init_resource::<CycleInterval>()
-        .init_resource::<CellColor>()
+        .insert_resource(CellColor(CELL_COLOR))
         .insert_resource(ClearColor(CLEAR_COLOR))
         // Events
         // Custom Plugins

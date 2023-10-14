@@ -1,6 +1,6 @@
 use bevy::{prelude::*, window::PrimaryWindow};
 
-use crate::{SimulationState, CELL_COLOR};
+use crate::{resources::CellColor, SimulationState};
 
 use super::{
     components::{CellPosition, CellState},
@@ -12,6 +12,7 @@ pub fn life_setup(
     mut cell_entities: ResMut<CellEntityMap>,
     board: Res<CellBoard>,
     cell_size: Res<CellSize>,
+    cell_color: Res<CellColor>,
     window: Query<&Window, With<PrimaryWindow>>,
 ) {
     // Spawn camera
@@ -32,7 +33,7 @@ pub fn life_setup(
                 let new_cell = commands
                     .spawn(SpriteBundle {
                         sprite: Sprite {
-                            color: CELL_COLOR.into(),
+                            color: cell_color.0,
                             custom_size: Some(Vec2::new(cell_size.width, cell_size.height)),
                             ..default()
                         },
@@ -92,6 +93,7 @@ pub fn apply_next_generation(
     mut commands: Commands,
     mut cycle_events: EventReader<BoardCycleEvent>,
     mut cell_entities: ResMut<CellEntityMap>,
+    cell_color: Res<CellColor>,
     cell_size: Res<CellSize>,
     window: Query<&Window, With<PrimaryWindow>>,
 ) {
@@ -111,7 +113,7 @@ pub fn apply_next_generation(
                     let new_cell = commands
                         .spawn(SpriteBundle {
                             sprite: Sprite {
-                                color: CELL_COLOR.into(),
+                                color: cell_color.0,
                                 custom_size: Some(Vec2::new(cell_size.width, cell_size.height)),
                                 ..default()
                             },
@@ -126,6 +128,14 @@ pub fn apply_next_generation(
             if let Some(entt) = old_cell {
                 commands.entity(entt).despawn();
             }
+        }
+    }
+}
+
+pub fn change_cell_color(cell_color: Res<CellColor>, mut query: Query<&mut Sprite>) {
+    if cell_color.is_changed() {
+        for mut sprite in query.iter_mut() {
+            sprite.color = cell_color.0;
         }
     }
 }

@@ -10,10 +10,10 @@ pub struct UiState {
 }
 
 #[derive(Default, Resource, PartialEq)]
-pub struct BoardWidth(pub u32);
-
-#[derive(Default, Resource, PartialEq)]
-pub struct BoardHeight(pub u32);
+pub struct BoardSize {
+    pub w: u32,
+    pub h: u32,
+}
 
 #[derive(Default, Resource, PartialEq)]
 pub struct CycleInterval(pub u32);

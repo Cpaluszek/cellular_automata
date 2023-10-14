@@ -4,7 +4,7 @@ use bevy_egui::{egui, EguiContexts};
 use crate::{
     ui::{
         events::{UiParameter, UiStateChangedEvent},
-        resources::{BackgroundColor, BoardHeight, BoardWidth, CellColor, CycleInterval, UiState},
+        resources::{BackgroundColor, BoardSize, CellColor, CycleInterval, UiState},
     },
     SimulationState, BOARD_SIZE, CELL_COLOR, CLEAR_COLOR, CYCLE_INTERVAL,
 };
@@ -21,8 +21,7 @@ pub fn init_ui_values(mut ui_state: ResMut<UiState>) {
 pub fn ui_panel(
     mut contexts: EguiContexts,
     mut ui_state: ResMut<UiState>,
-    mut board_width: ResMut<BoardWidth>,
-    mut board_height: ResMut<BoardHeight>,
+    mut board_size: ResMut<BoardSize>,
     mut cycle_interval: ResMut<CycleInterval>,
     mut cell_color: ResMut<CellColor>,
     mut background_color: ResMut<BackgroundColor>,
@@ -48,15 +47,15 @@ pub fn ui_panel(
         ui.separator();
         ui.label("Board size:");
         ui.add(egui::Slider::new(&mut ui_state.board_width, 40..=200).text("width"));
-        if ui_state.board_width != board_width.0 {
-            board_width.0 = ui_state.board_width;
+        if ui_state.board_width != board_size.w as u32 {
+            board_size.w = ui_state.board_width;
             ui_event_writer.send(UiStateChangedEvent(UiParameter::BoardWidth(
                 ui_state.board_width,
             )));
         }
         ui.add(egui::Slider::new(&mut ui_state.board_height, 40..=200).text("height"));
-        if ui_state.board_height != board_height.0 {
-            board_height.0 = ui_state.board_height;
+        if ui_state.board_height != board_size.h as u32 {
+            board_size.h = ui_state.board_height;
             ui_event_writer.send(UiStateChangedEvent(UiParameter::BoardHeight(
                 ui_state.board_height,
             )));

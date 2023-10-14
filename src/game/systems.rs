@@ -144,33 +144,43 @@ pub fn change_cell_color(cell_color: Res<CellColor>, mut query: Query<&mut Sprit
     }
 }
 
+// Todo: refacto function, extract state and board size outside of GamePlugin?
+// use resource insteaad
 pub fn handle_board_resize(
     board_size: Res<BoardSize>,
     mut cell_entities: ResMut<CellEntityMap>,
+    mut board: ResMut<CellBoard>,
     mut commands: Commands,
 ) {
-    if !board_size.is_changed() {
+    if !board_size.is_changed() || board_size.w == 0 || board_size.h == 0 {
         return;
     }
-    info!("Resize board");
-    // Despawn entities
-    let mut to_despawn = vec![];
-    for cell in cell_entities.0.iter_mut() {
-        if (cell.0).col >= board_size.w as usize || (cell.0).row >= board_size.h as usize {
-            to_despawn.push(*cell.1);
-        }
-    }
-    // Remove entities from the board that are outside the new board size
-    cell_entities
-        .0
-        .retain(|pos, _| pos.col < board_size.w as usize && pos.row < board_size.h as usize);
-    // Despawn entities
-    for entt in to_despawn {
-        commands.entity(entt).despawn();
-    }
-    // Todo: fix bug where entities remains on the grid
-    // maybe board_cycle_event is not cleared?
-    info!("Resize board: new entity count: {}", cell_entities.0.len());
+    let new_board_state: Vec<_> = (0..board.height)
+        .flat_map(|row| (0..board.width).map(move |col| CellPosition { col, row }))
+        .filter_map(|pos| {
+            if pos.col >= board_size.w as usize || pos.row >= board_size.h as usize {
+                if let Some(entt) = cell_entities.0.remove(&pos) {
+                    commands.entity(entt).despawn();
+                }
+                return None;
+            }
+            let state = if board.alive(pos) {
+                CellState::Alive
+            } else {
+                CellState::Dead
+            };
+            return Some((pos, state));
+        })
+        .collect();
+    board.height = board_size.h as usize;
+    board.width = board_size.w as usize;
+    board.state.resize(
+        board_size.w as usize * board_size.h as usize,
+        CellState::Dead,
+    );
+    new_board_state
+        .iter()
+        .for_each(|(pos, state)| board.set(*pos, *state));
 }
 
 pub fn toggle_simulation_state(

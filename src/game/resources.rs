@@ -41,7 +41,7 @@ impl FromWorld for CellSize {
 pub struct CellBoard {
     pub width: usize,
     pub height: usize,
-    state: Vec<CellState>,
+    pub state: Vec<CellState>,
 }
 
 impl Default for CellBoard {

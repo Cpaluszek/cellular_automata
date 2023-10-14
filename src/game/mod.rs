@@ -11,7 +11,7 @@ use self::{
     resources::{BoardCycleEvent, CellBoard, CellEntityMap, CellSize, CycleTimer},
     systems::{
         apply_next_generation, change_cell_color, get_next_generation, handle_board_resize,
-        life_setup, toggle_simulation_state,
+        life_setup, spawn_camera, toggle_simulation_state, update_cell_sprite_on_resize,
     },
 };
 
@@ -50,7 +50,7 @@ impl Plugin for GamePlugin {
             .insert_resource(CycleTimer(Timer::new(CYCLE_INTERVAL, TimerMode::Repeating)))
             .init_resource::<CellEntityMap>()
             .init_resource::<CellSize>()
-            .add_systems(Startup, life_setup)
+            .add_systems(Startup, (life_setup, spawn_camera))
             .add_systems(
                 Update,
                 (
@@ -60,7 +60,12 @@ impl Plugin for GamePlugin {
             )
             .add_systems(
                 Update,
-                (change_cell_color, handle_board_resize).after(apply_next_generation),
+                (
+                    change_cell_color,
+                    handle_board_resize,
+                    update_cell_sprite_on_resize,
+                )
+                    .after(apply_next_generation),
             )
             .add_systems(Update, toggle_simulation_state);
     }

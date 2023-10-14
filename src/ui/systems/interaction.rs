@@ -29,12 +29,9 @@ pub fn handle_ui_interaction(
                     commands.insert_resource(NextState(Some(SimulationState::Running)));
                 }
             }
-            // Todo: update board size
-            UiParameter::BoardWidth(width) => {
-                board_size.w = width;
-            }
-            UiParameter::BoardHeight(height) => {
-                board_size.h = height;
+            UiParameter::BoardSize(size) => {
+                board_size.w = size.0;
+                board_size.h = size.1;
             }
             UiParameter::CycleInterval(interval) => {
                 cycle_interval.0 = interval;

@@ -10,6 +10,11 @@ use super::{
     resources::{BoardCycleEvent, CellBoard, CellEntityMap, CellSize, CycleTimer},
 };
 
+pub fn spawn_camera(mut commands: Commands) {
+    // Spawn camera
+    commands.spawn(Camera2dBundle::default());
+}
+
 pub fn life_setup(
     mut commands: Commands,
     mut cell_entities: ResMut<CellEntityMap>,
@@ -18,9 +23,6 @@ pub fn life_setup(
     cell_color: Res<CellColor>,
     window: Query<&Window, With<PrimaryWindow>>,
 ) {
-    // Spawn camera
-    commands.spawn(Camera2dBundle::default());
-
     let half_window_width = window.single().width() / 2.0;
     let half_window_height = window.single().height() / 2.0;
 
@@ -34,15 +36,18 @@ pub fn life_setup(
 
                 // Cell Entity
                 let new_cell = commands
-                    .spawn(SpriteBundle {
-                        sprite: Sprite {
-                            color: cell_color.0,
-                            custom_size: Some(Vec2::new(cell_size.width, cell_size.height)),
+                    .spawn((
+                        SpriteBundle {
+                            sprite: Sprite {
+                                color: cell_color.0,
+                                custom_size: Some(Vec2::new(cell_size.width, cell_size.height)),
+                                ..default()
+                            },
+                            transform: Transform::from_xyz(x, y, 0.0),
                             ..default()
                         },
-                        transform: Transform::from_xyz(x, y, 0.0),
-                        ..default()
-                    })
+                        CellPosition { col, row },
+                    ))
                     .id();
                 cell_entities.0.insert(pos, new_cell);
             }
@@ -114,15 +119,21 @@ pub fn apply_next_generation(
 
                     // Cell entity
                     let new_cell = commands
-                        .spawn(SpriteBundle {
-                            sprite: Sprite {
-                                color: cell_color.0,
-                                custom_size: Some(Vec2::new(cell_size.width, cell_size.height)),
+                        .spawn((
+                            SpriteBundle {
+                                sprite: Sprite {
+                                    color: cell_color.0,
+                                    custom_size: Some(Vec2::new(cell_size.width, cell_size.height)),
+                                    ..default()
+                                },
+                                transform: Transform::from_xyz(x, y, 0.0),
                                 ..default()
                             },
-                            transform: Transform::from_xyz(x, y, 0.0),
-                            ..default()
-                        })
+                            CellPosition {
+                                col: pos.col,
+                                row: pos.row,
+                            },
+                        ))
                         .id();
                     cell_entities.0.insert(*pos, new_cell)
                 }
@@ -174,6 +185,7 @@ pub fn handle_board_resize(
         .collect();
     board.height = board_size.h as usize;
     board.width = board_size.w as usize;
+
     board.state.resize(
         board_size.w as usize * board_size.h as usize,
         CellState::Dead,
@@ -181,6 +193,32 @@ pub fn handle_board_resize(
     new_board_state
         .iter()
         .for_each(|(pos, state)| board.set(*pos, *state));
+}
+
+pub fn update_cell_sprite_on_resize(
+    mut cells: Query<(&mut Sprite, &mut Transform, &CellPosition)>,
+    mut cell_size: ResMut<CellSize>,
+    window: Query<&Window, With<PrimaryWindow>>,
+    board: Res<CellBoard>,
+    board_size: Res<BoardSize>,
+) {
+    if !board_size.is_changed() {
+        return;
+    }
+    cell_size.width = window.single().width() / board.width as f32;
+    cell_size.height = window.single().height() / board.height as f32;
+    let half_window_width = window.single().width() / 2.0;
+    let half_window_height = window.single().height() / 2.0;
+
+    for (mut sprite, mut transform, pos) in cells.iter_mut() {
+        sprite.custom_size = Some(Vec2::new(cell_size.width, cell_size.height));
+
+        let x = -half_window_width + (pos.col as f32 * cell_size.width) + cell_size.width / 2.0;
+        let y = half_window_height - (pos.row as f32 * cell_size.height) - cell_size.height / 2.0;
+
+        transform.translation.x = x;
+        transform.translation.y = y;
+    }
 }
 
 pub fn toggle_simulation_state(

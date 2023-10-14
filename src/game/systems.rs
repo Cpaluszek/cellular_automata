@@ -1,6 +1,9 @@
 use bevy::{prelude::*, window::PrimaryWindow};
 
-use crate::{resources::CellColor, SimulationState};
+use crate::{
+    resources::{BoardSize, CellColor},
+    SimulationState,
+};
 
 use super::{
     components::{CellPosition, CellState},
@@ -139,6 +142,35 @@ pub fn change_cell_color(cell_color: Res<CellColor>, mut query: Query<&mut Sprit
             sprite.color = cell_color.0;
         }
     }
+}
+
+pub fn handle_board_resize(
+    board_size: Res<BoardSize>,
+    mut cell_entities: ResMut<CellEntityMap>,
+    mut commands: Commands,
+) {
+    if !board_size.is_changed() {
+        return;
+    }
+    info!("Resize board");
+    // Despawn entities
+    let mut to_despawn = vec![];
+    for cell in cell_entities.0.iter_mut() {
+        if (cell.0).col >= board_size.w as usize || (cell.0).row >= board_size.h as usize {
+            to_despawn.push(*cell.1);
+        }
+    }
+    // Remove entities from the board that are outside the new board size
+    cell_entities
+        .0
+        .retain(|pos, _| pos.col < board_size.w as usize && pos.row < board_size.h as usize);
+    // Despawn entities
+    for entt in to_despawn {
+        commands.entity(entt).despawn();
+    }
+    // Todo: fix bug where entities remains on the grid
+    // maybe board_cycle_event is not cleared?
+    info!("Resize board: new entity count: {}", cell_entities.0.len());
 }
 
 pub fn toggle_simulation_state(

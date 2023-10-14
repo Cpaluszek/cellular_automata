@@ -37,7 +37,7 @@ pub fn ui_panel(
         // board size
         ui.separator();
         ui.label("Board size:");
-        ui.add(egui::Slider::new(&mut ui_state.board_width, 40..=200).text("width"));
+        ui.add(egui::Slider::new(&mut ui_state.board_width, 0..=200).text("width"));
         if ui_state.board_width != board_size.w as u32 {
             ui_event_writer.send(UiStateChangedEvent(UiParameter::BoardWidth(
                 ui_state.board_width,

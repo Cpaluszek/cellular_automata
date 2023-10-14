@@ -10,8 +10,8 @@ use self::{
     components::{CellPosition, CellState},
     resources::{BoardCycleEvent, CellBoard, CellEntityMap, CellSize, CycleTimer},
     systems::{
-        apply_next_generation, change_cell_color, get_next_generation, life_setup,
-        toggle_simulation_state,
+        apply_next_generation, change_cell_color, get_next_generation, handle_board_resize,
+        life_setup, toggle_simulation_state,
     },
 };
 
@@ -58,7 +58,10 @@ impl Plugin for GamePlugin {
                     apply_next_generation.after(get_next_generation),
                 ),
             )
-            .add_systems(Update, change_cell_color)
+            .add_systems(
+                Update,
+                (change_cell_color, handle_board_resize).after(apply_next_generation),
+            )
             .add_systems(Update, toggle_simulation_state);
     }
 }

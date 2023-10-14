@@ -48,8 +48,8 @@ fn main() {
         .add_plugins(UIPlugin)
         .add_plugins(GamePlugin {
             init_state: None,
-            board_width: 160,
-            board_height: 90,
+            board_width: BOARD_SIZE.0,
+            board_height: BOARD_SIZE.1,
         })
         // Systems
         .add_systems(Update, quit_application)

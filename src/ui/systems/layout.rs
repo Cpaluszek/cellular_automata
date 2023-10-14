@@ -6,8 +6,16 @@ use crate::{
         events::{UiParameter, UiStateChangedEvent},
         resources::{BackgroundColor, BoardHeight, BoardWidth, CellColor, CycleInterval, UiState},
     },
-    SimulationState,
+    SimulationState, BOARD_SIZE, CELL_COLOR, CLEAR_COLOR, CYCLE_INTERVAL,
 };
+
+pub fn init_ui_values(mut ui_state: ResMut<UiState>) {
+    ui_state.board_width = BOARD_SIZE.0 as u32;
+    ui_state.board_height = BOARD_SIZE.1 as u32;
+    ui_state.cycle_interval = CYCLE_INTERVAL.as_millis() as u32;
+    ui_state.cell_color = [CELL_COLOR.r(), CELL_COLOR.g(), CELL_COLOR.b()];
+    ui_state.background_color = [CLEAR_COLOR.r(), CLEAR_COLOR.g(), CLEAR_COLOR.b()];
+}
 
 // [bevy\_egui/examples/ui.rs at main · mvlabat/bevy\_egui](https://github.com/mvlabat/bevy_egui/blob/main/examples/ui.rs)
 pub fn ui_panel(

@@ -4,7 +4,7 @@ use bevy_egui::{egui, EguiContexts};
 use crate::{
     ui::{
         events::{UiParameter, UiStateChangedEvent},
-        resources::{BoardHeight, BoardWidth, UiState},
+        resources::{BackgroundColor, BoardHeight, BoardWidth, CellColor, CycleInterval, UiState},
     },
     SimulationState,
 };
@@ -15,6 +15,9 @@ pub fn ui_panel(
     mut ui_state: ResMut<UiState>,
     mut board_width: ResMut<BoardWidth>,
     mut board_height: ResMut<BoardHeight>,
+    mut cycle_interval: ResMut<CycleInterval>,
+    mut cell_color: ResMut<CellColor>,
+    mut background_color: ResMut<BackgroundColor>,
     simulation_state: Res<State<SimulationState>>,
     mut ui_event_writer: EventWriter<UiStateChangedEvent>,
 ) {
@@ -55,16 +58,35 @@ pub fn ui_panel(
         ui.separator();
         ui.label("Simulation speed:");
         ui.add(egui::Slider::new(&mut ui_state.cycle_interval, 40..=500).text("interval (ms)"));
+        if ui_state.cycle_interval != cycle_interval.0 {
+            cycle_interval.0 = ui_state.cycle_interval;
+            ui_event_writer.send(UiStateChangedEvent(UiParameter::CycleInterval(
+                ui_state.cycle_interval,
+            )));
+        }
         ui.allocate_space(egui::Vec2::new(1.0, 10.0));
         // Cell color
         ui.separator();
         ui.label("Colors:");
         ui.horizontal(|ui| {
-            ui.color_edit_button_rgb(&mut ui_state.cell_color);
+            if ui.color_edit_button_rgb(&mut ui_state.cell_color).changed() {
+                cell_color.0 = ui_state.cell_color;
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::CellColor(
+                    ui_state.cell_color,
+                )));
+            }
             ui.label("Cell color");
         });
         ui.horizontal(|ui| {
-            ui.color_edit_button_rgb(&mut ui_state.background_color);
+            if ui
+                .color_edit_button_rgb(&mut ui_state.background_color)
+                .changed()
+            {
+                background_color.0 = ui_state.background_color;
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::BackgroundColor(
+                    ui_state.background_color,
+                )));
+            }
             ui.label("Background color");
         });
         ui.allocate_space(egui::Vec2::new(1.0, 10.0));

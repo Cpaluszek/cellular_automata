@@ -8,7 +8,7 @@ pub enum UiParameter {
     PauseSimulation,
     BoardWidth(u32),
     BoardHeight(u32),
-    // CycleInterval(u32),
-    // CellColor([f32; 3]),
-    // BackgroundColor([f32; 3]),
+    CycleInterval(u32),
+    CellColor([f32; 3]),
+    BackgroundColor([f32; 3]),
 }

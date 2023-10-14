@@ -14,3 +14,12 @@ pub struct BoardWidth(pub u32);
 
 #[derive(Default, Resource, PartialEq)]
 pub struct BoardHeight(pub u32);
+
+#[derive(Default, Resource, PartialEq)]
+pub struct CycleInterval(pub u32);
+
+#[derive(Default, Resource, PartialEq)]
+pub struct CellColor(pub [f32; 3]);
+
+#[derive(Default, Resource, PartialEq)]
+pub struct BackgroundColor(pub [f32; 3]);

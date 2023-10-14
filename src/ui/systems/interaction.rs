@@ -24,15 +24,16 @@ pub fn handle_ui_interaction(
             }
             UiParameter::BoardHeight(height) => {
                 info!("Board height: {}", height);
-            } //   UiParameter::CycleInterval(interval) => {
-              //     info!("Cycle interval: {}", interval);
-              // }
-              // UiParameter::CellColor(color) => {
-              //     info!("Cell color: {:?}", color);
-              // }
-              // UiParameter::BackgroundColor(color) => {
-              //     info!("Background color: {:?}", color);
-              // }
+            }
+            UiParameter::CycleInterval(interval) => {
+                info!("Cycle interval: {}", interval);
+            }
+            UiParameter::CellColor(color) => {
+                info!("Cell color: {:?}", color);
+            }
+            UiParameter::BackgroundColor(color) => {
+                info!("Background color: {:?}", color);
+            }
         }
     }
 }

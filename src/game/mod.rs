@@ -29,6 +29,7 @@ impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         let board = match &self.init_state {
             None => CellBoard::new_random(self.board_width, self.board_height),
+            // Todo: parse init state from file
             Some((state, (width, height))) => {
                 let mut board = CellBoard::new(
                     self.board_width,

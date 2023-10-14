@@ -19,6 +19,7 @@ pub fn handle_ui_interaction(
     for ev in ui_event.iter() {
         match ev.0 {
             UiParameter::ResetSimulation => {
+                // Todo: reset simulation
                 info!("Reset simulation");
             }
             UiParameter::PauseSimulation => {
@@ -30,6 +31,7 @@ pub fn handle_ui_interaction(
             }
             UiParameter::BoardWidth(width) => {
                 board_size.w = width;
+                // Todo: update board size
                 info!("Board width: {}", width);
             }
             UiParameter::BoardHeight(height) => {

@@ -11,6 +11,7 @@ use crate::{
 };
 
 // [bevy\_egui/examples/ui.rs at main · mvlabat/bevy\_egui](https://github.com/mvlabat/bevy_egui/blob/main/examples/ui.rs)
+// [egui – An immediate mode GUI written in Rust](https://www.egui.rs/#Demo)
 pub fn ui_panel(
     mut contexts: EguiContexts,
     mut ui_state: ResMut<UiState>,
@@ -42,6 +43,7 @@ pub fn ui_panel(
                 ui.add(egui::Slider::new(&mut ui_state.board_height, 9..=180).text("height"));
             });
             ui.allocate_space(egui::Vec2::new(10.0, 0.0));
+
             if ui.button("Apply").clicked() {
                 ui_event_writer.send(UiStateChangedEvent(UiParameter::BoardSize((
                     ui_state.board_width,

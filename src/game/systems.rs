@@ -166,14 +166,19 @@ pub fn handle_board_resize(
     if !board_size.is_changed() || board_size.w == 0 || board_size.h == 0 {
         return;
     }
-    let new_board_state: Vec<_> = (0..board.height)
-        .flat_map(|row| (0..board.width).map(move |col| CellPosition { col, row }))
+    let new_board_state: Vec<_> = (0..board_size.h as usize)
+        .flat_map(|row| (0..board_size.w as usize).map(move |col| CellPosition { col, row }))
         .filter_map(|pos| {
+            // Remove if out of bounds
             if pos.col >= board_size.w as usize || pos.row >= board_size.h as usize {
                 if let Some(entt) = cell_entities.0.remove(&pos) {
                     commands.entity(entt).despawn();
                 }
                 return None;
+            }
+            // if the board gets bigger, spawn new cells
+            if pos.col >= board.width || pos.row >= board.height {
+                return Some((pos, CellState::Dead));
             }
             let state = if board.alive(pos) {
                 CellState::Alive
@@ -183,13 +188,10 @@ pub fn handle_board_resize(
             return Some((pos, state));
         })
         .collect();
+
     board.height = board_size.h as usize;
     board.width = board_size.w as usize;
-
-    board.state.resize(
-        board_size.w as usize * board_size.h as usize,
-        CellState::Dead,
-    );
+    board.state = vec![CellState::Dead; board.width * board.height];
     new_board_state
         .iter()
         .for_each(|(pos, state)| board.set(*pos, *state));

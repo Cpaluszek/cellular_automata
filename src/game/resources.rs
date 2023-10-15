@@ -126,7 +126,6 @@ impl CellBoard {
         assert!(pos.col < self.width, "Non existent column index");
         assert!(pos.row < self.height, "Non existent row index");
 
-        // Todo: prevent neighbours looping on side
         let mut neighbours = vec![];
         for row_offset in -1..=1 {
             for col_offset in -1..=1 {
@@ -138,7 +137,7 @@ impl CellBoard {
                 let row_neibgour = if row_neighbour < 0 {
                     self.height - 1
                 } else if row_neighbour as usize >= self.height {
-                    0
+                    continue;
                 } else {
                     row_neighbour as usize
                 };
@@ -147,7 +146,7 @@ impl CellBoard {
                 let col_neighbour = if col_neighbour < 0 {
                     self.width - 1
                 } else if col_neighbour as usize >= self.width {
-                    0
+                    continue;
                 } else {
                     col_neighbour as usize
                 };

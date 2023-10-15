@@ -36,16 +36,19 @@ pub fn ui_panel(
         // board size
         ui.separator();
         ui.label("Board size:");
-        // ui.horizontal(|ui| {
-        ui.add(egui::Slider::new(&mut ui_state.board_width, 16..=320).text("width"));
-        ui.add(egui::Slider::new(&mut ui_state.board_height, 9..=180).text("height"));
-        if ui.button("Apply").clicked() {
-            ui_event_writer.send(UiStateChangedEvent(UiParameter::BoardSize((
-                ui_state.board_width,
-                ui_state.board_height,
-            ))));
-        }
-        // });
+        ui.horizontal(|ui| {
+            ui.vertical(|ui| {
+                ui.add(egui::Slider::new(&mut ui_state.board_width, 16..=320).text("width"));
+                ui.add(egui::Slider::new(&mut ui_state.board_height, 9..=180).text("height"));
+            });
+            ui.allocate_space(egui::Vec2::new(10.0, 0.0));
+            if ui.button("Apply").clicked() {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::BoardSize((
+                    ui_state.board_width,
+                    ui_state.board_height,
+                ))));
+            }
+        });
         ui.allocate_space(egui::Vec2::new(1.0, 10.0));
         // Simulation speed
         ui.separator();

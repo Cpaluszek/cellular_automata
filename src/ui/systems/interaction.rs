@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use crate::game::resources::CycleTimer;
-use crate::resources::{BoardSize, CellColor, CycleInterval};
+use crate::resources::{BoardSize, CellColor, CycleInterval, PatternFile};
 use crate::ui::events::*;
 use crate::SimulationState;
 use bevy::prelude::*;
@@ -15,6 +15,7 @@ pub fn handle_ui_interaction(
     mut cell_color: ResMut<CellColor>,
     mut cycle_interval: ResMut<CycleInterval>,
     mut cycle_timer: ResMut<CycleTimer>,
+    mut pattern_file: ResMut<PatternFile>,
 ) {
     for ev in ui_event.iter() {
         match &ev.0 {
@@ -46,7 +47,7 @@ pub fn handle_ui_interaction(
                 clear_color.0 = Color::rgb(color[0], color[1], color[2]);
             }
             UiParameter::LoadPatternFile(file) => {
-                info!("Load pattern file: {}", file);
+                pattern_file.0 = file.clone();
             }
         }
     }

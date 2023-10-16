@@ -82,12 +82,22 @@ pub fn ui_panel(
         ui.horizontal(|ui| {
             if ui.button("Blinker").clicked() {
                 ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-                    "blinker.rle".to_string(),
+                    "assets/rle/blinker.rle".to_string(),
                 )));
             }
             if ui.button("Five").clicked() {
                 ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-                    "five.rle".to_string(),
+                    "assets/rle/five.rle".to_string(),
+                )));
+            }
+            if ui.button("Max").clicked() {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/max.rle".to_string(),
+                )));
+            }
+            if ui.button("Rpento").clicked() {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/Rpento.rle".to_string(),
                 )));
             }
         });

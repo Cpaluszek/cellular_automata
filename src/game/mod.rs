@@ -11,7 +11,7 @@ use self::{
     resources::{BoardCycleEvent, CellBoard, CellEntityMap, CellSize, CycleTimer},
     systems::{
         interactivity::{
-            change_cell_color, handle_board_resize, toggle_simulation_state,
+            change_cell_color, handle_board_resize, load_pattern_file, toggle_simulation_state,
             update_cell_sprite_on_resize,
         },
         simulation::{apply_next_generation, get_next_generation},
@@ -38,7 +38,7 @@ impl Plugin for GamePlugin {
                 let mut board = CellBoard::new(
                     self.board_width,
                     self.board_height,
-                    vec![CellState::Alive; self.board_width * self.board_height],
+                    vec![CellState::Dead; self.board_width * self.board_height],
                 );
                 let pos = CellPosition {
                     col: (self.board_width - width) / 2,
@@ -55,6 +55,7 @@ impl Plugin for GamePlugin {
             .init_resource::<CellEntityMap>()
             .init_resource::<CellSize>()
             .add_systems(Startup, (life_setup, spawn_camera))
+            // Simulation Systems
             .add_systems(
                 Update,
                 (
@@ -62,12 +63,14 @@ impl Plugin for GamePlugin {
                     apply_next_generation.after(get_next_generation),
                 ),
             )
+            // Interactivity Systems
             .add_systems(
                 Update,
                 (
                     change_cell_color,
                     handle_board_resize,
                     update_cell_sprite_on_resize,
+                    load_pattern_file,
                 )
                     .after(apply_next_generation),
             )

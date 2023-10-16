@@ -6,7 +6,7 @@ use ui::UIPlugin;
 mod resources;
 mod systems;
 use game::GamePlugin;
-use resources::{BoardSize, CellColor, CycleInterval, WindowSize};
+use resources::{BoardSize, CellColor, CycleInterval, PatternFile, WindowSize};
 
 pub const WINDOW_WIDTH: f32 = 1280.0;
 pub const WINDOW_HEIGHT: f32 = 720.0;
@@ -41,6 +41,7 @@ fn main() {
         })
         .init_resource::<BoardSize>()
         .init_resource::<CycleInterval>()
+        .init_resource::<PatternFile>()
         .insert_resource(CellColor(CELL_COLOR))
         .insert_resource(ClearColor(CLEAR_COLOR))
         // Events

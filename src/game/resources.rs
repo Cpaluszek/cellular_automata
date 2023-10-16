@@ -64,6 +64,10 @@ impl CellBoard {
         }
     }
 
+    pub fn clear(&mut self) {
+        self.state = vec![CellState::Dead; self.width * self.height];
+    }
+
     pub fn new_random(width: usize, height: usize) -> Self {
         let mut state = vec![CellState::Dead; width * height];
         for cell in state.iter_mut() {

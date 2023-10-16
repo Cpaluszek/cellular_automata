@@ -16,3 +16,6 @@ pub struct CycleInterval(pub u32);
 
 #[derive(Default, Resource, PartialEq)]
 pub struct CellColor(pub Color);
+
+#[derive(Default, Resource, PartialEq)]
+pub struct PatternFile(pub String);

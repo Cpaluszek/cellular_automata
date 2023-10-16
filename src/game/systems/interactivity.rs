@@ -1,3 +1,5 @@
+use std::{fs::File, io::Read};
+
 use bevy::{prelude::*, window::PrimaryWindow};
 
 use crate::{
@@ -5,7 +7,7 @@ use crate::{
         components::{CellPosition, CellState},
         resources::{CellBoard, CellEntityMap, CellSize},
     },
-    resources::{BoardSize, CellColor},
+    resources::{BoardSize, CellColor, PatternFile},
     SimulationState,
 };
 
@@ -100,4 +102,155 @@ pub fn toggle_simulation_state(
             }
         }
     }
+}
+
+pub fn load_pattern_file(
+    mut commands: Commands,
+    pattern_file: Res<PatternFile>,
+    mut board: ResMut<CellBoard>,
+    mut cell_entities: ResMut<CellEntityMap>,
+    cell_color: Res<CellColor>,
+    cell_size: Res<CellSize>,
+    window: Query<&Window, With<PrimaryWindow>>,
+) {
+    if !pattern_file.is_changed() || pattern_file.0.is_empty() {
+        return;
+    }
+    info!("Load pattern file: {}", pattern_file.0);
+
+    // Clear previous board
+    board.clear();
+    for cell_entt in cell_entities.0.values() {
+        commands.entity(*cell_entt).despawn();
+    }
+    cell_entities.0.clear();
+
+    // Read file content - see http://www.conwaylife.com/wiki/RLE
+    let file_content = read_file_content(&pattern_file.0);
+    let mut state = Vec::new();
+    match file_content {
+        Ok(content) => {
+            let mut pattern_height = 0;
+            let mut pattern_width = 0;
+            let mut current_width = 0;
+            let mut count = 0;
+            // read file line by line
+            for line in content.lines() {
+                // if 1st char is '#' or 'x' skip
+                if line.starts_with('#') || line.starts_with('x') {
+                    // Todo: get real board size from file
+                    continue;
+                }
+                info!("Line: {}", line);
+                // iterate over line chars
+                for c in line.chars() {
+                    match c {
+                        '0'..='9' => {
+                            count = c.to_digit(10).unwrap();
+                        }
+                        'o' => {
+                            for _ in 0..count {
+                                state.push(CellState::Alive);
+                                current_width += 1;
+                            }
+                            if count == 0 {
+                                state.push(CellState::Alive);
+                                current_width += 1;
+                            }
+                            count = 0;
+                        }
+                        'b' => {
+                            for _ in 0..count {
+                                state.push(CellState::Dead);
+                                current_width += 1;
+                            }
+                            if count == 0 {
+                                state.push(CellState::Dead);
+                                current_width += 1;
+                            }
+                            count = 0;
+                        }
+                        '$' => {
+                            pattern_height += 1;
+                            if current_width > pattern_width {
+                                pattern_width = current_width;
+                            }
+                            current_width = 0;
+                        }
+                        _ => {
+                            pattern_height += 1;
+                            if current_width > pattern_width {
+                                pattern_width = current_width;
+                            }
+                            info!("Current width: {}", current_width);
+                        }
+                    }
+                }
+            }
+            // Set the new state to the board
+            let pos = CellPosition {
+                col: (board.width - pattern_width) / 2,
+                row: (board.height - pattern_height) / 2,
+            };
+            info!("New state from file: {:?}", state);
+            info!("New state position: {:?}", pos);
+            info!(
+                "New state width: {} - height: {}",
+                pattern_width, pattern_height
+            );
+
+            board.patch(pos, &state, pattern_width, pattern_height);
+
+            // Spawn entities
+            let half_window_height = window.single().height() / 2.0;
+            let half_window_width = window.single().width() / 2.0;
+            for row in 0..board.height {
+                for col in 0..board.width {
+                    let pos = CellPosition { col, row };
+                    if board.alive(pos) {
+                        let x = -half_window_width
+                            + (col as f32 * cell_size.width)
+                            + cell_size.width / 2.0;
+                        let y = half_window_height
+                            - (row as f32 * cell_size.height)
+                            - cell_size.height / 2.0;
+
+                        // Cell Entity
+                        let new_cell = commands
+                            .spawn((
+                                SpriteBundle {
+                                    sprite: Sprite {
+                                        color: cell_color.0,
+                                        custom_size: Some(Vec2::new(
+                                            cell_size.width,
+                                            cell_size.height,
+                                        )),
+                                        ..default()
+                                    },
+                                    transform: Transform::from_xyz(x, y, 0.0),
+                                    ..default()
+                                },
+                                CellPosition { col, row },
+                            ))
+                            .id();
+                        cell_entities.0.insert(pos, new_cell);
+                    }
+                }
+            }
+        }
+        Err(err) => {
+            error!("Failed to read file: {}", err);
+        }
+    }
+}
+
+// .X.
+// XX.
+// .XX
+
+fn read_file_content(file: &str) -> Result<String, std::io::Error> {
+    let mut file = File::open(file)?;
+    let mut content = String::new();
+    file.read_to_string(&mut content)?;
+    Ok(content)
 }

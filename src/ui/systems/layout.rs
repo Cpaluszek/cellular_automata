@@ -55,7 +55,7 @@ pub fn ui_panel(
         // Simulation speed
         ui.separator();
         ui.label("Simulation speed:");
-        ui.add(egui::Slider::new(&mut ui_state.cycle_interval, 40..=300).text("interval (ms)"));
+        ui.add(egui::Slider::new(&mut ui_state.cycle_interval, 20..=300).text("interval (ms)"));
         if ui_state.cycle_interval != cycle_interval.0 {
             ui_event_writer.send(UiStateChangedEvent(UiParameter::CycleInterval(
                 ui_state.cycle_interval,

@@ -20,22 +20,7 @@ pub fn ui_panel(
     mut ui_event_writer: EventWriter<UiStateChangedEvent>,
 ) {
     egui::Window::new("Settings").show(contexts.ctx_mut(), |ui| {
-        let button_text = match *simulation_state.get() {
-            SimulationState::Running => "Pause",
-            SimulationState::Paused => "Resume",
-        };
-        ui.horizontal(|ui| {
-            if ui.button("Reset").clicked() {
-                ui_event_writer.send(UiStateChangedEvent(UiParameter::ResetSimulation));
-            }
-            ui.allocate_space(egui::Vec2::new(10.0, 0.0));
-            if ui.button(button_text).clicked() {
-                ui_event_writer.send(UiStateChangedEvent(UiParameter::PauseSimulation));
-            }
-        });
-        ui.allocate_space(egui::Vec2::new(1.0, 10.0));
         // board size
-        ui.separator();
         ui.label("Board size:");
         ui.horizontal(|ui| {
             ui.vertical(|ui| {
@@ -85,5 +70,19 @@ pub fn ui_panel(
             ui.label("Background color");
         });
         ui.allocate_space(egui::Vec2::new(1.0, 10.0));
+
+        let button_text = match *simulation_state.get() {
+            SimulationState::Running => "Pause",
+            SimulationState::Paused => "Resume",
+        };
+        // ui.horizontal(|ui| {
+        //     if ui.button("Reset").clicked() {
+        //         ui_event_writer.send(UiStateChangedEvent(UiParameter::ResetSimulation));
+        //     }
+        ui.separator();
+        ui.allocate_space(egui::Vec2::new(10.0, 0.0));
+        if ui.button(button_text).clicked() {
+            ui_event_writer.send(UiStateChangedEvent(UiParameter::PauseSimulation));
+        }
     });
 }

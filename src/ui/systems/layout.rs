@@ -75,11 +75,28 @@ pub fn ui_panel(
             SimulationState::Running => "Pause",
             SimulationState::Paused => "Resume",
         };
-        // ui.horizontal(|ui| {
+
+        // Pattern files loading
+        ui.separator();
+        ui.label("RLE files:");
+        ui.horizontal(|ui| {
+            if ui.button("Blinker").clicked() {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "blinker.rle".to_string(),
+                )));
+            }
+            if ui.button("Five").clicked() {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "five.rle".to_string(),
+                )));
+            }
+        });
+
+        // Pause/Resume
+        ui.separator();
         //     if ui.button("Reset").clicked() {
         //         ui_event_writer.send(UiStateChangedEvent(UiParameter::ResetSimulation));
         //     }
-        ui.separator();
         ui.allocate_space(egui::Vec2::new(10.0, 0.0));
         if ui.button(button_text).clicked() {
             ui_event_writer.send(UiStateChangedEvent(UiParameter::PauseSimulation));

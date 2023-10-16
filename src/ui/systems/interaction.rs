@@ -17,11 +17,11 @@ pub fn handle_ui_interaction(
     mut cycle_timer: ResMut<CycleTimer>,
 ) {
     for ev in ui_event.iter() {
-        match ev.0 {
-            UiParameter::ResetSimulation => {
-                // Todo: reset simulation
-                info!("Reset simulation");
-            }
+        match &ev.0 {
+            // UiParameter::ResetSimulation => {
+            //     // Todo: reset simulation
+            //     info!("Reset simulation");
+            // }
             UiParameter::PauseSimulation => {
                 if let SimulationState::Running = *simulation_state.get() {
                     commands.insert_resource(NextState(Some(SimulationState::Paused)));
@@ -34,16 +34,19 @@ pub fn handle_ui_interaction(
                 board_size.h = size.1;
             }
             UiParameter::CycleInterval(interval) => {
-                cycle_interval.0 = interval;
+                cycle_interval.0 = *interval;
                 cycle_timer
                     .0
-                    .set_duration(Duration::from_millis(interval as u64));
+                    .set_duration(Duration::from_millis(*interval as u64));
             }
             UiParameter::CellColor(color) => {
                 cell_color.0 = Color::rgb(color[0], color[1], color[2]);
             }
             UiParameter::BackgroundColor(color) => {
                 clear_color.0 = Color::rgb(color[0], color[1], color[2]);
+            }
+            UiParameter::LoadPatternFile(file) => {
+                info!("Load pattern file: {}", file);
             }
         }
     }

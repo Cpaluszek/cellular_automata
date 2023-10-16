@@ -10,8 +10,12 @@ use self::{
     components::{CellPosition, CellState},
     resources::{BoardCycleEvent, CellBoard, CellEntityMap, CellSize, CycleTimer},
     systems::{
-        apply_next_generation, change_cell_color, get_next_generation, handle_board_resize,
-        life_setup, spawn_camera, toggle_simulation_state, update_cell_sprite_on_resize,
+        interactivity::{
+            change_cell_color, handle_board_resize, toggle_simulation_state,
+            update_cell_sprite_on_resize,
+        },
+        simulation::{apply_next_generation, get_next_generation},
+        startup::{life_setup, spawn_camera},
     },
 };
 

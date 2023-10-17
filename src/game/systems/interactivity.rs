@@ -195,15 +195,10 @@ pub fn load_pattern_file(
                                 }
                             }
                             'b' => {
-                                // Todo: adding dead cells is useless
                                 if count == 0 {
-                                    state[row * pattern_width + col] = CellState::Dead;
                                     col += 1;
                                 } else {
-                                    for _ in 0..count {
-                                        state[row * pattern_width + col] = CellState::Dead;
-                                        col += 1;
-                                    }
+                                    col += count as usize;
                                     count = 0;
                                 }
                             }

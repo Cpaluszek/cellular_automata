@@ -226,6 +226,7 @@ pub fn load_pattern_file(
             };
             // info!("New state from file: {:?}", state);
             info!("New state position: {:?}", pos);
+            info!("New state {:?}", state.len());
 
             board.patch(pos, &state, pattern_width, pattern_height);
 

@@ -37,7 +37,7 @@ pub fn get_next_generation(
             if (can_live || can_revive) && !is_alive {
                 return Some((pos, CellState::Alive));
             }
-            if !(can_live || can_live) && is_alive {
+            if !(can_live || can_revive) && is_alive {
                 return Some((pos, CellState::Dead));
             }
             None
@@ -61,6 +61,7 @@ pub fn apply_next_generation(
     for evt in cycle_events.iter() {
         for (pos, state) in &evt.delta {
             let old_cell = match state {
+                // Todo: need to despawn cell?
                 CellState::Dead => cell_entities.0.remove(pos),
                 CellState::Alive => {
                     let x = -window.single().width() / 2.0

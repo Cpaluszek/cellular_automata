@@ -1,5 +1,8 @@
 use bevy::prelude::*;
-use bevy_egui::{egui, EguiContexts};
+use bevy_egui::{
+    egui::{self, Color32, RichText},
+    EguiContexts,
+};
 
 use crate::{
     resources::CycleInterval,
@@ -25,11 +28,11 @@ pub fn ui_panel(
         ui.horizontal(|ui| {
             ui.vertical(|ui| {
                 ui.add(
-                    egui::Slider::new(&mut ui_state.board_width, 16..=(WINDOW_WIDTH as u32 / 4))
+                    egui::Slider::new(&mut ui_state.board_width, 16..=(WINDOW_WIDTH as u32 / 2))
                         .text("width"),
                 );
                 ui.add(
-                    egui::Slider::new(&mut ui_state.board_height, 9..=(WINDOW_HEIGHT as u32 / 4))
+                    egui::Slider::new(&mut ui_state.board_height, 9..=(WINDOW_HEIGHT as u32 / 2))
                         .text("height"),
                 );
             });
@@ -101,11 +104,6 @@ pub fn ui_panel(
                     "assets/rle/max.rle".to_string(),
                 )));
             }
-            if ui.button("Rpento").clicked() {
-                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-                    "assets/rle/Rpento.rle".to_string(),
-                )));
-            }
             if ui.button("10-cell inf.").clicked() {
                 ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
                     "assets/rle/10cellinfinitegrowth.rle".to_string(),
@@ -120,11 +118,161 @@ pub fn ui_panel(
         ui.horizontal(|ui| {
             if ui.button("glider gun").clicked() {
                 ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-                    "assets/rle/gospelglidergun.rle".to_string(),
+                    "assets/rle/gosperglidergun.rle".to_string(),
+                )));
+            }
+            if ui.button("60p5h2v0").clicked() {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/60p5h2v0.rle".to_string(),
+                )));
+            }
+            if ui.button("104p177").clicked() {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/104p177.rle".to_string(),
+                )));
+            }
+            if ui
+                .button(RichText::new("backrake3").color(Color32::RED))
+                .clicked()
+            {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/backrake3.rle".to_string(),
+                )));
+            }
+            if ui
+                .button(RichText::new("beehiveplus").color(Color32::RED))
+                .clicked()
+            {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/beehiveplus.rle".to_string(),
                 )));
             }
         });
-
+        ui.horizontal(|ui| {
+            if ui
+                .button(RichText::new("breeder1").color(Color32::RED))
+                .clicked()
+            {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/breeder1.rle".to_string(),
+                )));
+            }
+            if ui.button("cthulhu").clicked() {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/cthulhu.rle".to_string(),
+                )));
+            }
+            if ui
+                .button(RichText::new("example1").color(Color32::RED))
+                .clicked()
+            {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/example1.rle".to_string(),
+                )));
+            }
+            if ui
+                .button(RichText::new("example2").color(Color32::RED))
+                .clicked()
+            {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/example2.rle".to_string(),
+                )));
+            }
+            if ui
+                .button(RichText::new("exploder").color(Color32::RED))
+                .clicked()
+            {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/exploder.rle".to_string(),
+                )));
+            }
+        });
+        ui.horizontal(|ui| {
+            if ui
+                .button(RichText::new("four").color(Color32::RED))
+                .clicked()
+            {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/four.rle".to_string(),
+                )));
+            }
+            if ui.button("linepuffer").clicked() {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/linepuffer.rle".to_string(),
+                )));
+            }
+            if ui
+                .button(RichText::new("oscillos").color(Color32::RED))
+                .clicked()
+            {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/oscillos.rle".to_string(),
+                )));
+            }
+            if ui
+                .button(RichText::new("otcametapixel").color(Color32::RED))
+                .clicked()
+            {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/otcametapixel.rle".to_string(),
+                )));
+            }
+            if ui
+                .button(RichText::new("otcametapixeloff").color(Color32::RED))
+                .clicked()
+            {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/otcametapixeloff.rle".to_string(),
+                )));
+            }
+        });
+        ui.horizontal(|ui| {
+            if ui
+                .button(RichText::new("p41660p5h2v0gun").color(Color32::RED))
+                .clicked()
+            {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/p41660p5h2v0gun.rle".to_string(),
+                )));
+            }
+            if ui.button("puffer1").clicked() {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/puffer1.rle".to_string(),
+                )));
+            }
+            if ui
+                .button(RichText::new("spaceships").color(Color32::RED))
+                .clicked()
+            {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/spaceships.rle".to_string(),
+                )));
+            }
+            if ui
+                .button(RichText::new("stairs6").color(Color32::RED))
+                .clicked()
+            {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/stairs6.rle".to_string(),
+                )));
+            }
+            if ui
+                .button(RichText::new("stills").color(Color32::RED))
+                .clicked()
+            {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/stills.rle".to_string(),
+                )));
+            }
+            if ui
+                .button(RichText::new("ten").color(Color32::RED))
+                .clicked()
+            {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/ten.rle".to_string(),
+                )));
+            }
+        });
         // Pause/Resume
         ui.separator();
         //     if ui.button("Reset").clicked() {

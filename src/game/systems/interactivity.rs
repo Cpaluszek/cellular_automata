@@ -166,6 +166,15 @@ pub fn load_pattern_file(
                         .parse::<usize>()
                         .unwrap();
 
+                    assert!(
+                        pattern_width > 0 && pattern_height > 0,
+                        "Invalid pattern size"
+                    );
+                    assert!(
+                        pattern_width <= board.width && pattern_height <= board.height,
+                        "Pattern size exceed board size"
+                    );
+
                     state = vec![CellState::Dead; pattern_width * pattern_height];
                 } else {
                     for c in line.chars() {

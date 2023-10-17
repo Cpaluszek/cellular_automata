@@ -138,18 +138,14 @@ impl CellBoard {
                 }
 
                 let row_neighbour = pos.row as isize + row_offset;
-                let row_neibgour = if row_neighbour < 0 {
-                    self.height - 1
-                } else if row_neighbour as usize >= self.height {
+                let row_neibgour = if row_neighbour < 0 || row_neighbour as usize >= self.height {
                     continue;
                 } else {
                     row_neighbour as usize
                 };
 
                 let col_neighbour = pos.col as isize + col_offset;
-                let col_neighbour = if col_neighbour < 0 {
-                    self.width - 1
-                } else if col_neighbour as usize >= self.width {
+                let col_neighbour = if col_neighbour < 0 || col_neighbour as usize >= self.width {
                     continue;
                 } else {
                     col_neighbour as usize

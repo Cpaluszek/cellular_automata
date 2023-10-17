@@ -244,10 +244,6 @@ pub fn load_pattern_file(
     }
 }
 
-// .X.
-// XX.
-// .XX
-
 fn read_file_content(file: &str) -> Result<String, std::io::Error> {
     let mut file = File::open(file)?;
     let mut content = String::new();

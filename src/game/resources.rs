@@ -91,10 +91,6 @@ impl CellBoard {
         patch_width: usize,
         patch_height: usize,
     ) {
-        info!(
-            "patching parameters: {:?}",
-            (pos, patch_width, patch_height)
-        );
         assert!(pos.col < self.width, "Non existent column index");
         assert!(pos.row < self.height, "Non existent row index");
 

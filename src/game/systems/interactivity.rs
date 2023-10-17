@@ -168,22 +168,12 @@ pub fn load_pattern_file(
                         .parse::<usize>()
                         .unwrap();
 
-                    // init state
-                    info!(
-                        "New state width: {} - height: {}",
-                        pattern_width, pattern_height
-                    );
                     state = vec![CellState::Dead; pattern_width * pattern_height];
-                    info!(
-                        "State size: {} - expected size: {}",
-                        state.len(),
-                        pattern_width * pattern_height
-                    );
                 } else {
                     for c in line.chars() {
                         match c {
                             '0'..='9' => {
-                                count = c.to_digit(10).unwrap();
+                                count = count * 10 + c.to_digit(10).unwrap();
                             }
                             'o' => {
                                 if count == 0 {
@@ -224,9 +214,6 @@ pub fn load_pattern_file(
                 col: (board.width - pattern_width) / 2,
                 row: (board.height - pattern_height) / 2,
             };
-            // info!("New state from file: {:?}", state);
-            info!("New state position: {:?}", pos);
-            info!("New state {:?}", state.len());
 
             board.patch(pos, &state, pattern_width, pattern_height);
 

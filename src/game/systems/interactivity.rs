@@ -117,8 +117,6 @@ pub fn load_pattern_file(
     if !pattern_file.is_changed() || pattern_file.0.is_empty() {
         return;
     }
-    info!("===============================");
-    info!("Load pattern file: {}", pattern_file.0);
 
     // Clear previous board
     board.clear();

@@ -100,6 +100,11 @@ pub fn ui_panel(
                     "assets/rle/Rpento.rle".to_string(),
                 )));
             }
+            if ui.button("10-cell inf.").clicked() {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/10cellinfinitegrowth.rle".to_string(),
+                )));
+            }
         });
 
         // Pause/Resume

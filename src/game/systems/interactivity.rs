@@ -27,6 +27,7 @@ pub fn handle_board_resize(
     mut board: ResMut<CellBoard>,
     mut commands: Commands,
 ) {
+    // Todo: clear cells outside of new board size
     if !board_size.is_changed() || board_size.w == 0 || board_size.h == 0 {
         return;
     }
@@ -116,6 +117,7 @@ pub fn load_pattern_file(
     if !pattern_file.is_changed() || pattern_file.0.is_empty() {
         return;
     }
+    info!("===============================");
     info!("Load pattern file: {}", pattern_file.0);
 
     // Clear previous board
@@ -127,77 +129,103 @@ pub fn load_pattern_file(
 
     // Read file content - see http://www.conwaylife.com/wiki/RLE
     let file_content = read_file_content(&pattern_file.0);
-    let mut state = Vec::new();
+    let mut state: Vec<CellState> = vec![];
     match file_content {
         Ok(content) => {
             let mut pattern_height = 0;
             let mut pattern_width = 0;
-            let mut current_width = 0;
+            let mut col = 0;
+            let mut row = 0;
             let mut count = 0;
-            // read file line by line
+
+            // Parse a rle file
             for line in content.lines() {
                 // if 1st char is '#' or 'x' skip
-                if line.starts_with('#') || line.starts_with('x') {
-                    // Todo: get real board size from file
+                if line.starts_with('#') {
                     continue;
-                }
-                info!("Line: {}", line);
-                // iterate over line chars
-                for c in line.chars() {
-                    match c {
-                        '0'..='9' => {
-                            count = c.to_digit(10).unwrap();
-                        }
-                        'o' => {
-                            for _ in 0..count {
-                                state.push(CellState::Alive);
-                                current_width += 1;
+                } else if line.starts_with('x') {
+                    // split line on ','
+                    let mut split = line.split(',');
+                    // pattern width on 1st part
+                    pattern_width = split
+                        .next()
+                        .unwrap()
+                        .split('=')
+                        .last()
+                        .unwrap()
+                        .trim()
+                        .parse::<usize>()
+                        .unwrap();
+
+                    // pattern height on 2nd part
+                    pattern_height = split
+                        .next()
+                        .unwrap()
+                        .split('=')
+                        .last()
+                        .unwrap()
+                        .trim()
+                        .parse::<usize>()
+                        .unwrap();
+
+                    // init state
+                    info!(
+                        "New state width: {} - height: {}",
+                        pattern_width, pattern_height
+                    );
+                    state = vec![CellState::Dead; pattern_width * pattern_height];
+                    info!(
+                        "State size: {} - expected size: {}",
+                        state.len(),
+                        pattern_width * pattern_height
+                    );
+                } else {
+                    for c in line.chars() {
+                        match c {
+                            '0'..='9' => {
+                                count = c.to_digit(10).unwrap();
                             }
-                            if count == 0 {
-                                state.push(CellState::Alive);
-                                current_width += 1;
+                            'o' => {
+                                if count == 0 {
+                                    state[row * pattern_width + col] = CellState::Alive;
+                                    col += 1;
+                                } else {
+                                    for _ in 0..count {
+                                        state[row * pattern_width + col] = CellState::Alive;
+                                        col += 1;
+                                    }
+                                    count = 0;
+                                }
                             }
-                            count = 0;
-                        }
-                        'b' => {
-                            for _ in 0..count {
-                                state.push(CellState::Dead);
-                                current_width += 1;
+                            'b' => {
+                                // Todo: adding dead cells is useless
+                                if count == 0 {
+                                    state[row * pattern_width + col] = CellState::Dead;
+                                    col += 1;
+                                } else {
+                                    for _ in 0..count {
+                                        state[row * pattern_width + col] = CellState::Dead;
+                                        col += 1;
+                                    }
+                                    count = 0;
+                                }
                             }
-                            if count == 0 {
-                                state.push(CellState::Dead);
-                                current_width += 1;
+                            _ => {
+                                row += 1;
+                                col = 0;
                             }
-                            count = 0;
-                        }
-                        '$' => {
-                            pattern_height += 1;
-                            if current_width > pattern_width {
-                                pattern_width = current_width;
-                            }
-                            current_width = 0;
-                        }
-                        _ => {
-                            pattern_height += 1;
-                            if current_width > pattern_width {
-                                pattern_width = current_width;
-                            }
-                            info!("Current width: {}", current_width);
                         }
                     }
                 }
             }
+
             // Set the new state to the board
             let pos = CellPosition {
                 col: (board.width - pattern_width) / 2,
                 row: (board.height - pattern_height) / 2,
             };
-            info!("New state from file: {:?}", state);
+            // info!("New state from file: {:?}", state);
             info!("New state position: {:?}", pos);
-            info!(
-                "New state width: {} - height: {}",
-                pattern_width, pattern_height
-            );
 
             board.patch(pos, &state, pattern_width, pattern_height);
 

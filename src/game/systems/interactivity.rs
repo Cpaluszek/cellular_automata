@@ -118,13 +118,6 @@ pub fn load_pattern_file(
         return;
     }
 
-    // Clear previous board
-    board.clear();
-    for cell_entt in cell_entities.0.values() {
-        commands.entity(*cell_entt).despawn();
-    }
-    cell_entities.0.clear();
-
     // Read file content - see http://www.conwaylife.com/wiki/RLE
     let file_content = read_file_content(&pattern_file.0);
     let mut state: Vec<CellState> = vec![];
@@ -210,6 +203,13 @@ pub fn load_pattern_file(
                     }
                 }
             }
+
+            // Clear previous board
+            board.clear();
+            for cell_entt in cell_entities.0.values() {
+                commands.entity(*cell_entt).despawn();
+            }
+            cell_entities.0.clear();
 
             // Set the new state to the board
             let pos = CellPosition {

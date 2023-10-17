@@ -7,7 +7,7 @@ use crate::{
         events::{UiParameter, UiStateChangedEvent},
         resources::UiState,
     },
-    SimulationState,
+    SimulationState, WINDOW_HEIGHT, WINDOW_WIDTH,
 };
 
 // [bevy\_egui/examples/ui.rs at main · mvlabat/bevy\_egui](https://github.com/mvlabat/bevy_egui/blob/main/examples/ui.rs)
@@ -24,8 +24,14 @@ pub fn ui_panel(
         ui.label("Board size:");
         ui.horizontal(|ui| {
             ui.vertical(|ui| {
-                ui.add(egui::Slider::new(&mut ui_state.board_width, 16..=320).text("width"));
-                ui.add(egui::Slider::new(&mut ui_state.board_height, 9..=180).text("height"));
+                ui.add(
+                    egui::Slider::new(&mut ui_state.board_width, 16..=(WINDOW_WIDTH as u32 / 4))
+                        .text("width"),
+                );
+                ui.add(
+                    egui::Slider::new(&mut ui_state.board_height, 9..=(WINDOW_HEIGHT as u32 / 4))
+                        .text("height"),
+                );
             });
             ui.allocate_space(egui::Vec2::new(10.0, 0.0));
 

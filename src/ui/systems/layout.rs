@@ -105,6 +105,18 @@ pub fn ui_panel(
                     "assets/rle/10cellinfinitegrowth.rle".to_string(),
                 )));
             }
+            if ui.button("canada goose").clicked() {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/canadagoose.rle".to_string(),
+                )));
+            }
+        });
+        ui.horizontal(|ui| {
+            if ui.button("glider gun").clicked() {
+                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    "assets/rle/gospelglidergun.rle".to_string(),
+                )));
+            }
         });
 
         // Pause/Resume

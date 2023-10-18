@@ -2,7 +2,7 @@ use bevy::{prelude::*, window::PrimaryWindow};
 
 use crate::{
     game::{
-        components::{CellPosition, CellState},
+        components::CellPosition,
         resources::{BoardCycleEvent, CellBoard, CellEntityMap, CellSize, CycleTimer},
     },
     resources::CellColor,
@@ -35,10 +35,10 @@ pub fn get_next_generation(
             let can_revive = !is_alive && alive_neighbours_count == 3;
 
             if (can_live || can_revive) && !is_alive {
-                return Some((pos, CellState::Alive));
+                return Some((pos, true));
             }
             if !(can_live || can_revive) && is_alive {
-                return Some((pos, CellState::Dead));
+                return Some((pos, false));
             }
             None
         })
@@ -62,8 +62,8 @@ pub fn apply_next_generation(
         for (pos, state) in &evt.delta {
             let old_cell = match state {
                 // Todo: need to despawn cell?
-                CellState::Dead => cell_entities.0.remove(pos),
-                CellState::Alive => {
+                false => cell_entities.0.remove(pos),
+                true => {
                     let x = -window.single().width() / 2.0
                         + (pos.col as f32 * cell_size.width)
                         + cell_size.width / 2.0;

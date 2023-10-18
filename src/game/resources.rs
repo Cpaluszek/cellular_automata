@@ -2,10 +2,10 @@ use bevy::{prelude::*, utils::HashMap};
 
 use crate::WindowSize;
 
-use super::components::{CellPosition, CellState};
+use super::components::CellPosition;
 
 const DEFAULT_BOARD_SIZE: (usize, usize) = (40, 40);
-const DEFAULT_BOARD_STATE: [CellState; 40 * 40] = [CellState::Dead; 40 * 40];
+const DEFAULT_BOARD_STATE: [bool; 40 * 40] = [false; 40 * 40];
 
 #[derive(Resource, Default)]
 pub struct CellEntityMap(pub HashMap<CellPosition, Entity>);
@@ -15,7 +15,7 @@ pub struct CycleTimer(pub Timer);
 
 #[derive(Event)]
 pub struct BoardCycleEvent {
-    pub delta: Vec<(CellPosition, CellState)>,
+    pub delta: Vec<(CellPosition, bool)>,
 }
 
 #[derive(Resource)]
@@ -41,7 +41,7 @@ impl FromWorld for CellSize {
 pub struct CellBoard {
     pub width: usize,
     pub height: usize,
-    pub state: Vec<CellState>,
+    pub state: Vec<bool>,
 }
 
 impl Default for CellBoard {
@@ -57,13 +57,9 @@ impl Default for CellBoard {
 
 impl CellBoard {
     pub fn new_random(width: usize, height: usize) -> Self {
-        let mut state = vec![CellState::Dead; width * height];
+        let mut state = vec![false; width * height];
         for cell in state.iter_mut() {
-            *cell = if rand::random::<f32>() > 0.9 {
-                CellState::Alive
-            } else {
-                CellState::Dead
-            };
+            *cell = rand::random::<f32>() > 0.9;
         }
         Self {
             width,
@@ -73,13 +69,13 @@ impl CellBoard {
     }
 
     pub fn clear(&mut self) {
-        self.state = vec![CellState::Dead; self.width * self.height];
+        self.state = vec![false; self.width * self.height];
     }
 
     pub fn patch(
         &mut self,
         pos: CellPosition,
-        patch: &[CellState],
+        patch: &[bool],
         patch_width: usize,
         patch_height: usize,
     ) {
@@ -106,7 +102,7 @@ impl CellBoard {
         }
     }
 
-    pub fn set(&mut self, pos: CellPosition, state: CellState) {
+    pub fn set(&mut self, pos: CellPosition, state: bool) {
         assert!(pos.col < self.width, "Non existent column index");
         assert!(pos.row < self.height, "Non existent row index");
         self.state[pos.row * self.width + pos.col] = state;
@@ -115,7 +111,7 @@ impl CellBoard {
     pub fn alive(&self, pos: CellPosition) -> bool {
         assert!(pos.col < self.width, "Non existent column index");
         assert!(pos.row < self.height, "Non existent row index");
-        self.state[pos.row * self.width + pos.col] == CellState::Alive
+        self.state[pos.row * self.width + pos.col]
     }
 
     pub fn neighbours(&self, pos: CellPosition) -> Vec<CellPosition> {

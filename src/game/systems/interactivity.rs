@@ -4,7 +4,7 @@ use bevy::{prelude::*, window::PrimaryWindow};
 
 use crate::{
     game::{
-        components::{CellPosition, CellState},
+        components::CellPosition,
         resources::{CellBoard, CellEntityMap, CellSize},
     },
     resources::{BoardSize, CellColor, PatternFile},
@@ -43,20 +43,15 @@ pub fn handle_board_resize(
             }
             // if the board gets bigger, spawn new cells
             if pos.col >= board.width || pos.row >= board.height {
-                return Some((pos, CellState::Dead));
+                return Some((pos, false));
             }
-            let state = if board.alive(pos) {
-                CellState::Alive
-            } else {
-                CellState::Dead
-            };
-            return Some((pos, state));
+            return Some((pos, board.alive(pos)));
         })
         .collect();
 
     board.height = board_size.h as usize;
     board.width = board_size.w as usize;
-    board.state = vec![CellState::Dead; board.width * board.height];
+    board.state = vec![false; board.width * board.height];
     new_board_state
         .iter()
         .for_each(|(pos, state)| board.set(*pos, *state));
@@ -120,7 +115,7 @@ pub fn load_pattern_file(
 
     // Read file content - see http://www.conwaylife.com/wiki/RLE
     let file_content = read_file_content(&pattern_file.0);
-    let mut state: Vec<CellState> = vec![];
+    let mut state: Vec<bool> = vec![];
     match file_content {
         Ok(content) => {
             let mut pattern_height = 0;
@@ -168,7 +163,7 @@ pub fn load_pattern_file(
                         "Pattern size exceed board size"
                     );
 
-                    state = vec![CellState::Dead; pattern_width * pattern_height];
+                    state = vec![false; pattern_width * pattern_height];
                 } else {
                     for c in line.chars() {
                         match c {
@@ -177,11 +172,11 @@ pub fn load_pattern_file(
                             }
                             'o' => {
                                 if count == 0 {
-                                    state[row * pattern_width + col] = CellState::Alive;
+                                    state[row * pattern_width + col] = true;
                                     col += 1;
                                 } else {
                                     for _ in 0..count {
-                                        state[row * pattern_width + col] = CellState::Alive;
+                                        state[row * pattern_width + col] = true;
                                         col += 1;
                                     }
                                     count = 0;

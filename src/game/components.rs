@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 #[derive(Component)]
 pub struct Cell {
+    // Todo: use bool instead of enum
     pub state: CellState,
 }
 

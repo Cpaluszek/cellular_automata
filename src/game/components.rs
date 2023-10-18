@@ -1,11 +1,5 @@
 use bevy::prelude::*;
 
-#[derive(Component)]
-pub struct Cell {
-    // Todo: use bool instead of enum
-    pub state: CellState,
-}
-
 #[derive(Component, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct CellPosition {
     pub col: usize,
@@ -14,6 +8,7 @@ pub struct CellPosition {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CellState {
+    // Todo: use bool instead of enum
     Alive,
     Dead,
 }

@@ -48,7 +48,6 @@ fn main() {
         // Custom Plugins
         .add_plugins(UIPlugin)
         .add_plugins(GamePlugin {
-            init_state: None,
             board_width: BOARD_SIZE.0,
             board_height: BOARD_SIZE.1,
         })

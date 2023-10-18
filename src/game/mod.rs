@@ -7,7 +7,6 @@ mod systems;
 use crate::{SimulationState, CYCLE_INTERVAL};
 
 use self::{
-    components::{CellPosition, CellState},
     resources::{BoardCycleEvent, CellBoard, CellEntityMap, CellSize, CycleTimer},
     systems::{
         interactivity::{
@@ -24,30 +23,13 @@ use self::{
 // [Conway's Game of Life - Wikipedia](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
 
 pub struct GamePlugin {
-    pub init_state: Option<(Vec<CellState>, (usize, usize))>,
     pub board_width: usize,
     pub board_height: usize,
 }
 
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
-        let board = match &self.init_state {
-            None => CellBoard::new_random(self.board_width, self.board_height),
-            // Todo: parse init state from file
-            Some((state, (width, height))) => {
-                let mut board = CellBoard::new(
-                    self.board_width,
-                    self.board_height,
-                    vec![CellState::Dead; self.board_width * self.board_height],
-                );
-                let pos = CellPosition {
-                    col: (self.board_width - width) / 2,
-                    row: (self.board_height - height) / 2,
-                };
-                board.patch(pos, state, *width, *height);
-                board
-            }
-        };
+        let board = CellBoard::new_random(self.board_width, self.board_height);
 
         app.add_event::<BoardCycleEvent>()
             .insert_resource(board)

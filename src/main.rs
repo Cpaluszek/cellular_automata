@@ -27,7 +27,7 @@ fn main() {
             DefaultPlugins
                 .set(WindowPlugin {
                     primary_window: Some(Window {
-                        title: "Cellular Automata".into(),
+                        title: "Game Of Life".to_string(),
                         resolution: (WINDOW_WIDTH, WINDOW_HEIGHT).into(),
                         resizable: false,
                         ..default()

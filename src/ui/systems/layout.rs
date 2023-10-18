@@ -66,8 +66,7 @@ pub fn ui_panel(
                 )));
             }
             ui.label("Cell color");
-        });
-        ui.horizontal(|ui| {
+            ui.allocate_space(egui::Vec2::new(10.0, 0.0));
             if ui
                 .color_edit_button_rgb(&mut ui_state.background_color)
                 .changed()
@@ -89,7 +88,7 @@ pub fn ui_panel(
         ui.separator();
         ui.label("RLE files:");
         ui.horizontal(|ui| {
-            ui.label("Lines:");
+            ui.label("Lines");
             if ui.button("Blinker").clicked() {
                 ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
                     "assets/rle/blinker.rle".to_string(),
@@ -112,7 +111,7 @@ pub fn ui_panel(
             }
         });
         ui.horizontal(|ui| {
-            ui.label("Stables:");
+            ui.label("Stables");
             if ui.button("cthulhu").clicked() {
                 ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
                     "assets/rle/cthulhu.rle".to_string(),
@@ -130,7 +129,7 @@ pub fn ui_panel(
             }
         });
         ui.horizontal(|ui| {
-            ui.label("Infinites:");
+            ui.label("Infinites");
             if ui.button("Max").clicked() {
                 ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
                     "assets/rle/max.rle".to_string(),
@@ -171,7 +170,7 @@ pub fn ui_panel(
             }
         });
         ui.horizontal(|ui| {
-            ui.label("Oscillators:");
+            ui.label("Oscillators");
             if ui.button("oscillos").clicked() {
                 ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
                     "assets/rle/oscillos.rle".to_string(),
@@ -184,7 +183,7 @@ pub fn ui_panel(
             }
         });
         ui.horizontal(|ui| {
-            ui.label("BIG:");
+            ui.label("Big");
             if ui
                 .button(RichText::new("breeder1").color(Color32::RED))
                 .clicked()

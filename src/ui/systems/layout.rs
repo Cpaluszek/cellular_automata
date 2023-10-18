@@ -131,18 +131,7 @@ pub fn ui_panel(
                     "assets/rle/104p177.rle".to_string(),
                 )));
             }
-            if ui
-                .button(RichText::new("backrake3").color(Color32::RED))
-                .clicked()
-            {
-                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-                    "assets/rle/backrake3.rle".to_string(),
-                )));
-            }
-            if ui
-                .button(RichText::new("beehiveplus").color(Color32::RED))
-                .clicked()
-            {
+            if ui.button("beehiveplus").clicked() {
                 ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
                     "assets/rle/beehiveplus.rle".to_string(),
                 )));
@@ -162,36 +151,14 @@ pub fn ui_panel(
                     "assets/rle/cthulhu.rle".to_string(),
                 )));
             }
-            if ui
-                .button(RichText::new("example1").color(Color32::RED))
-                .clicked()
-            {
-                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-                    "assets/rle/example1.rle".to_string(),
-                )));
-            }
-            if ui
-                .button(RichText::new("example2").color(Color32::RED))
-                .clicked()
-            {
-                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-                    "assets/rle/example2.rle".to_string(),
-                )));
-            }
-            if ui
-                .button(RichText::new("exploder").color(Color32::RED))
-                .clicked()
-            {
+            if ui.button("exploder").clicked() {
                 ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
                     "assets/rle/exploder.rle".to_string(),
                 )));
             }
         });
         ui.horizontal(|ui| {
-            if ui
-                .button(RichText::new("four").color(Color32::RED))
-                .clicked()
-            {
+            if ui.button("four").clicked() {
                 ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
                     "assets/rle/four.rle".to_string(),
                 )));
@@ -201,10 +168,7 @@ pub fn ui_panel(
                     "assets/rle/linepuffer.rle".to_string(),
                 )));
             }
-            if ui
-                .button(RichText::new("oscillos").color(Color32::RED))
-                .clicked()
-            {
+            if ui.button("oscillos").clicked() {
                 ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
                     "assets/rle/oscillos.rle".to_string(),
                 )));
@@ -240,34 +204,12 @@ pub fn ui_panel(
                     "assets/rle/puffer1.rle".to_string(),
                 )));
             }
-            if ui
-                .button(RichText::new("spaceships").color(Color32::RED))
-                .clicked()
-            {
-                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-                    "assets/rle/spaceships.rle".to_string(),
-                )));
-            }
-            if ui
-                .button(RichText::new("stairs6").color(Color32::RED))
-                .clicked()
-            {
+            if ui.button("stairs6").clicked() {
                 ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
                     "assets/rle/stairs6.rle".to_string(),
                 )));
             }
-            if ui
-                .button(RichText::new("stills").color(Color32::RED))
-                .clicked()
-            {
-                ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-                    "assets/rle/stills.rle".to_string(),
-                )));
-            }
-            if ui
-                .button(RichText::new("ten").color(Color32::RED))
-                .clicked()
-            {
+            if ui.button("ten").clicked() {
                 ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
                     "assets/rle/ten.rle".to_string(),
                 )));

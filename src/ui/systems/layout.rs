@@ -79,11 +79,6 @@ pub fn ui_panel(
         });
         ui.allocate_space(egui::Vec2::new(1.0, 10.0));
 
-        let button_text = match *simulation_state.get() {
-            SimulationState::Running => "Pause",
-            SimulationState::Paused => "Resume",
-        };
-
         // Pattern files loading
         ui.separator();
         ui.label("RLE files:");
@@ -217,11 +212,11 @@ pub fn ui_panel(
                 )));
             }
         });
-        // Pause/Resume
         ui.separator();
-        //     if ui.button("Reset").clicked() {
-        //         ui_event_writer.send(UiStateChangedEvent(UiParameter::ResetSimulation));
-        //     }
+        let button_text = match *simulation_state.get() {
+            SimulationState::Running => "Pause",
+            SimulationState::Paused => "Resume",
+        };
         ui.allocate_space(egui::Vec2::new(10.0, 0.0));
         if ui.button(button_text).clicked() {
             ui_event_writer.send(UiStateChangedEvent(UiParameter::PauseSimulation));

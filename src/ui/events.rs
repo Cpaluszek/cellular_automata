@@ -4,7 +4,6 @@ use bevy::prelude::*;
 pub struct UiStateChangedEvent(pub UiParameter);
 
 pub enum UiParameter {
-    // ResetSimulation,
     PauseSimulation,
     BoardSize((u32, u32)),
     CycleInterval(u32),

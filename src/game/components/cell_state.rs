@@ -5,8 +5,6 @@ use crate::CELL_COLOR;
 
 use super::CellState;
 
-// use super::CellState;
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Component, Reflect)]
 pub struct ConwayCellState(pub bool);
 
@@ -22,7 +20,6 @@ impl CellState for ConwayCellState {
 
     fn color(&self) -> Option<Color> {
         if self.0 {
-            // Todo: use custom color
             Some(CELL_COLOR)
         } else {
             None
@@ -30,7 +27,6 @@ impl CellState for ConwayCellState {
     }
 }
 
-// Todo: research
 impl Deref for ConwayCellState {
     type Target = bool;
 

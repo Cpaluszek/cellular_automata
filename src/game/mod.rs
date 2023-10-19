@@ -47,8 +47,6 @@ impl Plugin for GameOfLifePlugin {
 }
 
 impl GameOfLifePlugin {
-    /// Instantiates Self with default values
-    /// Todo: check must_use and inline
     #[must_use]
     #[inline]
     pub const fn new() -> Self {

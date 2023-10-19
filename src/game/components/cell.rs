@@ -43,6 +43,8 @@ impl Cell for Moore2dCell {
 }
 
 impl Moore2dCell {
+    // must_use is a compiler hint that the return value of this function should
+    // be used. If the return value is not used, the compiler will emit a warning.
     #[must_use]
     #[inline]
     pub const fn new(coords: IVec2) -> Self {

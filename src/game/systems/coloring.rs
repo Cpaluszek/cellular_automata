@@ -18,8 +18,6 @@ where
     }
 }
 
-// Todo: ???
-#[allow(clippy::needless_pass_by_value)]
 pub fn color_sprites<S>(
     mut query: Query<(&ConwayCellState, &mut Visibility, &mut Sprite), Changed<ConwayCellState>>,
     batch: Option<Res<SimulationBatch>>,

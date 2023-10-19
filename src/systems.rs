@@ -4,7 +4,7 @@ use rand::Rng;
 
 use crate::{
     game::{ConwayCellState, Moore2dCell},
-    BOARD_SIZE, SPRITE_SIZE,
+    BOARD_SIZE, CELL_PROBABILITY, SPRITE_SIZE,
 };
 
 pub fn quit_application(
@@ -33,7 +33,7 @@ pub fn setup_map(mut commands: Commands) {
         .with_children(|builder| {
             for y in 0..=size_y {
                 for x in 0..=size_x {
-                    let state = ConwayCellState(rng.gen_bool(1.0 / 3.0));
+                    let state = ConwayCellState(rng.gen_bool(CELL_PROBABILITY));
                     builder.spawn((
                         SpriteBundle {
                             sprite: Sprite {

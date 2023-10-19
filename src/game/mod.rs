@@ -1,53 +1,69 @@
-use bevy::prelude::*;
+use bevy::{log, prelude::*, time::common_conditions::on_timer};
+use std::{marker::PhantomData, time::Duration};
 
 mod components;
-pub mod resources;
+mod resources;
 mod systems;
 
-use crate::{SimulationState, CYCLE_INTERVAL};
+pub use components::*;
+pub use resources::*;
 
-use self::{
-    resources::{BoardCycleEvent, CellBoard, CellEntityMap, CellSize, CycleTimer},
-    systems::simulation::{apply_next_generation, get_next_generation},
+use crate::{
+    game::systems::cells::{handle_cells, handle_new_cells, handle_removed_cells},
+    CYCLE_INTERVAL,
 };
 
 // Game of life patterns: [LifeWiki](https://conwaylife.com/wiki)
-
 // [Conway's Game of Life - Wikipedia](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
 
-pub struct GamePlugin {
-    pub board_width: usize,
-    pub board_height: usize,
+pub struct GameOfLifePlugin {
+    pub tick_time_step: Option<f64>,
+    pub use_cell_map: bool,
+    pub phantom_c: PhantomData<Moore2dCell>,
+    pub phantom_s: PhantomData<ConwayCellState>,
 }
 
-impl Plugin for GamePlugin {
+impl Plugin for GameOfLifePlugin {
     fn build(&self, app: &mut App) {
-        let board = CellBoard::new_random(self.board_width, self.board_height);
+        if self.use_cell_map {
+            if self.use_cell_map {
+                app.insert_resource(CellMap::<Moore2dCell>::default())
+                    .add_systems(Update, handle_new_cells::<Moore2dCell>)
+                    .add_systems(PostUpdate, handle_removed_cells::<Moore2dCell>);
+            }
+            if let Some(time_step) = self.tick_time_step {
+                let duration = Duration::from_secs_f64(time_step);
+                app.add_systems(
+                    Update,
+                    handle_cells::<Moore2dCell, ConwayCellState>.run_if(on_timer(duration)),
+                );
+            } else {
+                app.add_systems(Update, handle_cells::<Moore2dCell, ConwayCellState>);
+            }
+            app.add_systems(Update, systems::coloring::color_sprites::<ConwayCellState>);
+        }
+        log::info!("Loaded cellular automata plugin");
+    }
+}
 
-        app.add_event::<BoardCycleEvent>()
-            .insert_resource(board)
-            .insert_resource(CycleTimer(Timer::new(CYCLE_INTERVAL, TimerMode::Repeating)))
-            .init_resource::<CellEntityMap>()
-            .init_resource::<CellSize>()
-            // Simulation Systems
-            .add_systems(
-                Update,
-                (
-                    get_next_generation.run_if(in_state(SimulationState::Running)),
-                    apply_next_generation.after(get_next_generation),
-                ),
-            );
-        // Interactivity Systems
-        // .add_systems(
-        //     Update,
-        //     (
-        //         change_cell_color,
-        //         handle_board_resize,
-        //         update_cell_sprite_on_resize,
-        //         load_pattern_file,
-        //     )
-        //         .after(apply_next_generation),
-        // )
-        // .add_systems(Update, toggle_simulation_state);
+impl GameOfLifePlugin {
+    /// Instantiates Self with default values
+    /// Todo: check must_use and inline
+    #[must_use]
+    #[inline]
+    pub const fn new() -> Self {
+        Self {
+            tick_time_step: Some(CYCLE_INTERVAL),
+            use_cell_map: true,
+            // Todo: remove PhantomData
+            phantom_c: PhantomData,
+            phantom_s: PhantomData,
+        }
+    }
+}
+
+impl Default for GameOfLifePlugin {
+    fn default() -> Self {
+        Self::new()
     }
 }

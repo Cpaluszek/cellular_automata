@@ -1,11 +1,9 @@
 use bevy::prelude::*;
-use std::time::Duration;
-use systems::{quit_application, spawn_camera};
+use systems::{quit_application, setup_map, spawn_camera};
 
-mod resources;
+mod game;
 mod systems;
-use game::GamePlugin;
-use resources::{BoardSize, CellColor, CycleInterval, PatternFile, WindowSize};
+use game::GameOfLifePlugin;
 
 pub const WINDOW_WIDTH: f32 = 1600.0;
 pub const WINDOW_HEIGHT: f32 = 900.0;
@@ -13,14 +11,13 @@ pub const WINDOW_HEIGHT: f32 = 900.0;
 pub const CLEAR_COLOR: Color = Color::hsl(240.0, 0.23, 0.09);
 pub const CELL_COLOR: Color = Color::hsl(10.0, 0.56, 0.91);
 
-pub const CYCLE_INTERVAL: Duration = Duration::from_millis(100);
-pub const BOARD_SIZE: (usize, usize) = (160, 90);
+pub const BOARD_SIZE: (i32, i32) = (320, 180);
+pub const SPRITE_SIZE: f32 = 4.0;
 
-mod game;
+pub const CYCLE_INTERVAL: f64 = 0.1;
 
 fn main() {
     App::new()
-        .add_state::<SimulationState>()
         .add_plugins(
             DefaultPlugins
                 .set(WindowPlugin {
@@ -34,26 +31,9 @@ fn main() {
                 })
                 .build(),
         )
-        .insert_resource(WindowSize {
-            resolution: Vec2::new(WINDOW_WIDTH, WINDOW_HEIGHT),
-        })
-        .init_resource::<BoardSize>()
-        .init_resource::<CycleInterval>()
-        .init_resource::<PatternFile>()
-        .insert_resource(CellColor(CELL_COLOR))
         .insert_resource(ClearColor(CLEAR_COLOR))
-        .add_plugins(GamePlugin {
-            board_width: BOARD_SIZE.0,
-            board_height: BOARD_SIZE.1,
-        })
-        .add_systems(Startup, spawn_camera)
+        .add_plugins(GameOfLifePlugin::default())
+        .add_systems(Startup, (spawn_camera, setup_map))
         .add_systems(Update, quit_application)
         .run();
-}
-
-#[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
-pub enum SimulationState {
-    #[default]
-    Running,
-    Paused,
 }

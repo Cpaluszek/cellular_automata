@@ -5,13 +5,13 @@ mod game;
 mod systems;
 use game::GameOfLifePlugin;
 
-pub const WINDOW_WIDTH: f32 = 1600.0;
-pub const WINDOW_HEIGHT: f32 = 900.0;
+pub const WINDOW_WIDTH: f32 = 1280.0;
+pub const WINDOW_HEIGHT: f32 = 720.0;
 
 pub const CLEAR_COLOR: Color = Color::hsl(240.0, 0.23, 0.09);
 pub const CELL_COLOR: Color = Color::hsl(10.0, 0.56, 0.91);
 
-pub const BOARD_SIZE: (i32, i32) = (400, 400);
+pub const BOARD_SIZE: (i32, i32) = (300, 300);
 pub const SPRITE_SIZE: f32 = 2.0;
 
 pub const CELL_PROBABILITY: f64 = 0.3;

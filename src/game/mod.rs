@@ -1,5 +1,5 @@
 use bevy::{log, prelude::*, time::common_conditions::on_timer};
-use std::{marker::PhantomData, time::Duration};
+use std::time::Duration;
 
 mod components;
 mod resources;
@@ -18,8 +18,6 @@ use crate::{
 
 pub struct GameOfLifePlugin {
     pub tick_time_step: Option<f64>,
-    pub phantom_c: PhantomData<Moore2dCell>,
-    pub phantom_s: PhantomData<ConwayCellState>,
 }
 
 impl Plugin for GameOfLifePlugin {
@@ -54,9 +52,6 @@ impl GameOfLifePlugin {
     pub const fn new() -> Self {
         Self {
             tick_time_step: Some(CYCLE_INTERVAL),
-            // Todo: remove PhantomData
-            phantom_c: PhantomData,
-            phantom_s: PhantomData,
         }
     }
 }

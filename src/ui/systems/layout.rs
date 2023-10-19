@@ -13,6 +13,8 @@ use crate::{
     SimulationState, WINDOW_HEIGHT, WINDOW_WIDTH,
 };
 
+pub const BOARD_MAX_SIZE: (u32, u32) = (WINDOW_WIDTH as u32 / 2, WINDOW_HEIGHT as u32 / 2);
+
 // [bevy\_egui/examples/ui.rs at main · mvlabat/bevy\_egui](https://github.com/mvlabat/bevy_egui/blob/main/examples/ui.rs)
 // [egui – An immediate mode GUI written in Rust](https://www.egui.rs/#Demo)
 pub fn ui_panel(
@@ -28,11 +30,11 @@ pub fn ui_panel(
         ui.horizontal(|ui| {
             ui.vertical(|ui| {
                 ui.add(
-                    egui::Slider::new(&mut ui_state.board_width, 16..=(WINDOW_WIDTH as u32 / 2))
+                    egui::Slider::new(&mut ui_state.board_width, 16..=BOARD_MAX_SIZE.0)
                         .text("width"),
                 );
                 ui.add(
-                    egui::Slider::new(&mut ui_state.board_height, 9..=(WINDOW_HEIGHT as u32 / 2))
+                    egui::Slider::new(&mut ui_state.board_height, 9..=BOARD_MAX_SIZE.1)
                         .text("height"),
                 );
             });

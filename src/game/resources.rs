@@ -68,39 +68,39 @@ impl CellBoard {
         }
     }
 
-    pub fn clear(&mut self) {
-        self.state = vec![false; self.width * self.height];
-    }
+    // pub fn clear(&mut self) {
+    //     self.state = vec![false; self.width * self.height];
+    // }
 
-    pub fn patch(
-        &mut self,
-        pos: CellPosition,
-        patch: &[bool],
-        patch_width: usize,
-        patch_height: usize,
-    ) {
-        assert!(pos.col < self.width, "Non existent column index");
-        assert!(pos.row < self.height, "Non existent row index");
+    // pub fn patch(
+    //     &mut self,
+    //     pos: CellPosition,
+    //     patch: &[bool],
+    //     patch_width: usize,
+    //     patch_height: usize,
+    // ) {
+    //     assert!(pos.col < self.width, "Non existent column index");
+    //     assert!(pos.row < self.height, "Non existent row index");
 
-        assert!(
-            pos.col + patch_width <= self.width,
-            "Patch exceed board size"
-        );
-        assert!(
-            pos.row + patch_height <= self.height,
-            "Patch exceed board size"
-        );
+    //     assert!(
+    //         pos.col + patch_width <= self.width,
+    //         "Patch exceed board size"
+    //     );
+    //     assert!(
+    //         pos.row + patch_height <= self.height,
+    //         "Patch exceed board size"
+    //     );
 
-        for row_patch in 0..patch_height {
-            for col_patch in 0..patch_width {
-                let pos = CellPosition {
-                    col: pos.col + col_patch,
-                    row: pos.row + row_patch,
-                };
-                self.set(pos, patch[row_patch * patch_width + col_patch]);
-            }
-        }
-    }
+    //     for row_patch in 0..patch_height {
+    //         for col_patch in 0..patch_width {
+    //             let pos = CellPosition {
+    //                 col: pos.col + col_patch,
+    //                 row: pos.row + row_patch,
+    //             };
+    //             self.set(pos, patch[row_patch * patch_width + col_patch]);
+    //         }
+    //     }
+    // }
 
     pub fn set(&mut self, pos: CellPosition, state: bool) {
         assert!(pos.col < self.width, "Non existent column index");

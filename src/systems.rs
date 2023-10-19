@@ -9,3 +9,7 @@ pub fn quit_application(
         exit_events_writer.send(AppExit);
     }
 }
+
+pub fn spawn_camera(mut commands: Commands) {
+    commands.spawn(Camera2dBundle::default());
+}

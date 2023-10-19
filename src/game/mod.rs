@@ -8,14 +8,7 @@ use crate::{SimulationState, CYCLE_INTERVAL};
 
 use self::{
     resources::{BoardCycleEvent, CellBoard, CellEntityMap, CellSize, CycleTimer},
-    systems::{
-        interactivity::{
-            change_cell_color, handle_board_resize, load_pattern_file, toggle_simulation_state,
-            update_cell_sprite_on_resize,
-        },
-        simulation::{apply_next_generation, get_next_generation},
-        startup::{life_setup, spawn_camera},
-    },
+    systems::simulation::{apply_next_generation, get_next_generation},
 };
 
 // Game of life patterns: [LifeWiki](https://conwaylife.com/wiki)
@@ -36,7 +29,6 @@ impl Plugin for GamePlugin {
             .insert_resource(CycleTimer(Timer::new(CYCLE_INTERVAL, TimerMode::Repeating)))
             .init_resource::<CellEntityMap>()
             .init_resource::<CellSize>()
-            .add_systems(Startup, (life_setup, spawn_camera))
             // Simulation Systems
             .add_systems(
                 Update,
@@ -44,18 +36,18 @@ impl Plugin for GamePlugin {
                     get_next_generation.run_if(in_state(SimulationState::Running)),
                     apply_next_generation.after(get_next_generation),
                 ),
-            )
-            // Interactivity Systems
-            .add_systems(
-                Update,
-                (
-                    change_cell_color,
-                    handle_board_resize,
-                    update_cell_sprite_on_resize,
-                    load_pattern_file,
-                )
-                    .after(apply_next_generation),
-            )
-            .add_systems(Update, toggle_simulation_state);
+            );
+        // Interactivity Systems
+        // .add_systems(
+        //     Update,
+        //     (
+        //         change_cell_color,
+        //         handle_board_resize,
+        //         update_cell_sprite_on_resize,
+        //         load_pattern_file,
+        //     )
+        //         .after(apply_next_generation),
+        // )
+        // .add_systems(Update, toggle_simulation_state);
     }
 }

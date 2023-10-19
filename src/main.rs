@@ -1,7 +1,6 @@
 use bevy::prelude::*;
 use std::time::Duration;
-use systems::quit_application;
-use ui::UIPlugin;
+use systems::{quit_application, spawn_camera};
 
 mod resources;
 mod systems;
@@ -18,7 +17,6 @@ pub const CYCLE_INTERVAL: Duration = Duration::from_millis(100);
 pub const BOARD_SIZE: (usize, usize) = (160, 90);
 
 mod game;
-mod ui;
 
 fn main() {
     App::new()
@@ -44,14 +42,11 @@ fn main() {
         .init_resource::<PatternFile>()
         .insert_resource(CellColor(CELL_COLOR))
         .insert_resource(ClearColor(CLEAR_COLOR))
-        // Events
-        // Custom Plugins
-        .add_plugins(UIPlugin)
         .add_plugins(GamePlugin {
             board_width: BOARD_SIZE.0,
             board_height: BOARD_SIZE.1,
         })
-        // Systems
+        .add_systems(Startup, spawn_camera)
         .add_systems(Update, quit_application)
         .run();
 }

@@ -8,8 +8,7 @@ use crate::game::Cell;
 /// Global Cell container resource , uses a `Hashmap`to allow non-continuous
 /// cells.
 ///
-/// The resource is automatically added and refreshed, it may be used for
-/// clearing (see examples).
+/// The resource is automatically added and refreshed, it may be used for clearing
 #[derive(Clone, Resource)]
 pub struct CellMap<C: Cell> {
     cells: HashMap<C::Coordinates, Entity>,
@@ -76,7 +75,7 @@ impl<C: Cell> CellMap<C> {
     // }
 
     // Clears the entire map
-    // 
+    //
     // pub fn clear(&mut self) {
     //     self.cells.clear();
     // }

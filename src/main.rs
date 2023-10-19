@@ -3,7 +3,9 @@ use systems::{quit_application, scroll_events, setup_map, spawn_camera};
 
 mod game;
 mod systems;
+mod ui;
 use game::GameOfLifePlugin;
+use ui::UIPlugin;
 
 pub const WINDOW_WIDTH: f32 = 1280.0;
 pub const WINDOW_HEIGHT: f32 = 720.0;
@@ -34,6 +36,7 @@ fn main() {
                 .build(),
         )
         .insert_resource(ClearColor(CLEAR_COLOR))
+        .add_plugins(UIPlugin)
         .add_plugins(GameOfLifePlugin::default())
         .add_systems(Startup, (spawn_camera, setup_map))
         .add_systems(Update, (quit_application, scroll_events))

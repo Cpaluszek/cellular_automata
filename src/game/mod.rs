@@ -26,6 +26,7 @@ pub struct GameOfLifePlugin {
 impl Plugin for GameOfLifePlugin {
     fn build(&self, app: &mut App) {
         if self.use_cell_map {
+            app.add_state::<SimulationState>();
             if self.use_cell_map {
                 app.insert_resource(CellMap::<Moore2dCell>::default())
                     .add_systems(Update, handle_new_cells::<Moore2dCell>)
@@ -35,10 +36,16 @@ impl Plugin for GameOfLifePlugin {
                 let duration = Duration::from_secs_f64(time_step);
                 app.add_systems(
                     Update,
-                    handle_cells::<Moore2dCell, ConwayCellState>.run_if(on_timer(duration)),
+                    handle_cells::<Moore2dCell, ConwayCellState>
+                        .run_if(on_timer(duration))
+                        .run_if(in_state(SimulationState::Running)),
                 );
             } else {
-                app.add_systems(Update, handle_cells::<Moore2dCell, ConwayCellState>);
+                app.add_systems(
+                    Update,
+                    handle_cells::<Moore2dCell, ConwayCellState>
+                        .run_if(in_state(SimulationState::Running)),
+                );
             }
             app.add_systems(Update, systems::coloring::color_sprites::<ConwayCellState>);
         }
@@ -64,4 +71,11 @@ impl Default for GameOfLifePlugin {
     fn default() -> Self {
         Self::new()
     }
+}
+
+#[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
+pub enum SimulationState {
+    Running,
+    #[default]
+    Paused,
 }

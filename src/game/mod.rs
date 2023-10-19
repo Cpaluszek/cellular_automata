@@ -1,4 +1,4 @@
-use bevy::{log, prelude::*, time::common_conditions::on_timer};
+use bevy::{prelude::*, time::common_conditions::on_timer};
 use std::time::Duration;
 
 mod components;
@@ -42,7 +42,7 @@ impl Plugin for GameOfLifePlugin {
             );
         }
         app.add_systems(Update, systems::coloring::color_sprites::<ConwayCellState>);
-        log::info!("Loaded cellular automata plugin");
+        info!("Loaded cellular automata plugin");
     }
 }
 

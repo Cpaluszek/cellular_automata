@@ -1,4 +1,4 @@
-use bevy::{log, prelude::*, utils::HashMap};
+use bevy::{prelude::*, utils::HashMap};
 
 use crate::game::{resources::SimulationBatch, Cell, CellMap, CellState, SimulationPause};
 
@@ -61,7 +61,7 @@ where
         let old_entity = map.insert_cell(new_cell.coords().clone(), entity);
         if let Some(e) = old_entity {
             if e != entity {
-                log::warn!(
+                warn!(
                     "{:?} replaced {:?} at {:?} coordinates",
                     entity,
                     e,
@@ -79,6 +79,6 @@ where
     if removed_cells.is_empty() {
         return;
     }
-    log::trace!("Removing {} cells from cell map", removed_cells.len());
+    trace!("Removing {} cells from cell map", removed_cells.len());
     map.remove_entities(removed_cells.iter());
 }

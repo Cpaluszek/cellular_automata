@@ -11,12 +11,12 @@ pub const WINDOW_HEIGHT: f32 = 900.0;
 pub const CLEAR_COLOR: Color = Color::hsl(240.0, 0.23, 0.09);
 pub const CELL_COLOR: Color = Color::hsl(10.0, 0.56, 0.91);
 
-pub const BOARD_SIZE: (i32, i32) = (320, 180);
-pub const SPRITE_SIZE: f32 = 4.0;
+pub const BOARD_SIZE: (i32, i32) = (640, 360);
+pub const SPRITE_SIZE: f32 = 2.0;
 
 pub const CELL_PROBABILITY: f64 = 0.33;
 
-pub const CYCLE_INTERVAL: f64 = 0.1;
+pub const CYCLE_INTERVAL: f64 = 0.05;
 
 fn main() {
     App::new()

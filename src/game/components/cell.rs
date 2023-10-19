@@ -30,7 +30,6 @@ impl Deref for Moore2dCell {
 impl Cell for Moore2dCell {
     type Coordinates = IVec2;
 
-    // Todo: what is inline?
     #[inline]
     fn coords(&self) -> &Self::Coordinates {
         &self.coords

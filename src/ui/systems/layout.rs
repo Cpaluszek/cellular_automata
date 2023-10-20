@@ -4,50 +4,58 @@ use bevy_egui::{
     EguiContexts,
 };
 
-use crate::{game::SimulationState, ui::resources::UiState};
-
-// pub const BOARD_MAX_SIZE: (u32, u32) = (WINDOW_WIDTH as u32 / 2, WINDOW_HEIGHT as u32 / 2);
+use crate::{
+    game::SimulationState,
+    ui::resources::{UIBoardState, UiSimulationState},
+    BOARD_MAX_SIZE, BOARD_MIN_SIZE,
+};
 
 // [bevy\_egui/examples/ui.rs at main · mvlabat/bevy\_egui](https://github.com/mvlabat/bevy_egui/blob/main/examples/ui.rs)
 // [egui – An immediate mode GUI written in Rust](https://www.egui.rs/#Demo)
 pub fn ui_panel(
     mut contexts: EguiContexts,
-    mut ui_state: ResMut<UiState>,
+    mut ui_simulation_state: ResMut<UiSimulationState>,
+    mut ui_board_state: ResMut<UIBoardState>,
     simulation_state: Res<State<SimulationState>>,
 ) {
     egui::Window::new("Settings").show(contexts.ctx_mut(), |ui| {
+        // Pause - Resume button
         let button_text = match *simulation_state.get() {
             SimulationState::Running => "Pause",
             SimulationState::Paused => "Resume",
         };
         ui.allocate_space(egui::Vec2::new(10.0, 0.0));
         if ui.button(button_text).clicked() {
-            ui_state.simulation_state = !ui_state.simulation_state;
+            ui_simulation_state.simulation_state = !ui_simulation_state.simulation_state;
         }
+
+        // Board size
+        ui.label("Board size:");
+        ui.horizontal(|ui| {
+            ui.vertical(|ui| {
+                ui.add(
+                    egui::Slider::new(
+                        &mut ui_board_state.board_width,
+                        BOARD_MIN_SIZE.0..=BOARD_MAX_SIZE.0,
+                    )
+                    .text("width"),
+                );
+                ui.add(
+                    egui::Slider::new(
+                        &mut ui_board_state.board_height,
+                        BOARD_MIN_SIZE.1..=BOARD_MAX_SIZE.1,
+                    )
+                    .text("height"),
+                );
+            });
+            ui.allocate_space(egui::Vec2::new(10.0, 0.0));
+
+            if ui.button("Apply").clicked() {
+                info!("Update board size")
+            }
+        });
     });
 }
-// board size
-// ui.label("Board size:");
-// ui.horizontal(|ui| {
-//     ui.vertical(|ui| {
-//         ui.add(
-//             egui::Slider::new(&mut ui_state.board_width, 16..=BOARD_MAX_SIZE.0)
-//                 .text("width"),
-//         );
-//         ui.add(
-//             egui::Slider::new(&mut ui_state.board_height, 9..=BOARD_MAX_SIZE.1)
-//                 .text("height"),
-//         );
-//     });
-//     ui.allocate_space(egui::Vec2::new(10.0, 0.0));
-
-//     if ui.button("Apply").clicked() {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::BoardSize((
-//             ui_state.board_width,
-//             ui_state.board_height,
-//         ))));
-//     }
-// });
 // ui.allocate_space(egui::Vec2::new(1.0, 10.0));
 // // Simulation speed
 // ui.separator();

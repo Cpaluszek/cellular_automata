@@ -1,15 +1,9 @@
-// use std::time::Duration;
-
-// use crate::game::resources::CycleTimer;
-// use crate::resources::{BoardSize, CellColor, CycleInterval, PatternFile};
-// use crate::ui::events::*;
-// use crate::SimulationState;
 use bevy::prelude::*;
 
-use crate::{game::SimulationState, ui::resources::UiState};
+use crate::{game::SimulationState, ui::resources::UiSimulationState};
 
-pub fn handle_ui_interaction(
-    ui_state: Res<UiState>,
+pub fn handle_pause_interaction(
+    ui_state: Res<UiSimulationState>,
     simulation_state: Res<State<SimulationState>>,
     mut commands: Commands,
 ) {

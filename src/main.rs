@@ -1,7 +1,9 @@
 use bevy::prelude::*;
-use systems::{quit_application, scroll_events, setup_map, spawn_camera};
+use startup::{setup_map, spawn_camera};
+use systems::{quit_application, scroll_events};
 
 mod game;
+mod startup;
 mod systems;
 mod ui;
 use game::GameOfLifePlugin;
@@ -13,12 +15,12 @@ pub const WINDOW_HEIGHT: f32 = 720.0;
 pub const CLEAR_COLOR: Color = Color::hsl(240.0, 0.23, 0.09);
 pub const CELL_COLOR: Color = Color::hsl(10.0, 0.56, 0.91);
 
-pub const BOARD_SIZE: (i32, i32) = (300, 300);
-pub const SPRITE_SIZE: f32 = 2.0;
+pub const BOARD_SIZE: (i32, i32) = (600, 600);
+pub const SPRITE_SIZE: f32 = 3.0;
 
 pub const CELL_PROBABILITY: f64 = 0.3;
 
-pub const CYCLE_INTERVAL: f64 = 0.2;
+pub const CYCLE_INTERVAL: f64 = 0.1;
 
 fn main() {
     App::new()

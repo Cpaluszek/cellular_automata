@@ -28,6 +28,8 @@ pub fn ui_panel(
         if ui.button(button_text).clicked() {
             ui_simulation_state.simulation_state = !ui_simulation_state.simulation_state;
         }
+        ui.allocate_space(egui::Vec2::new(0.0, 10.0));
+        ui.separator();
 
         // Board size
         ui.label("Board size:");
@@ -58,7 +60,6 @@ pub fn ui_panel(
 }
 // ui.allocate_space(egui::Vec2::new(1.0, 10.0));
 // // Simulation speed
-// ui.separator();
 // ui.label("Simulation speed:");
 // ui.add(egui::Slider::new(&mut ui_state.cycle_interval, 20..=300).text("interval (ms)"));
 // if ui_state.cycle_interval != cycle_interval.0 {

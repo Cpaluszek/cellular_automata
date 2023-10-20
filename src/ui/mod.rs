@@ -16,7 +16,6 @@ pub struct UIPlugin;
 impl Plugin for UIPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(EguiPlugin)
-            // .add_event::<UiStateChangedEvent>()
             .insert_resource(UiSimulationState {
                 simulation_state: true,
                 // cycle_interval: CYCLE_INTERVAL.as_millis() as u32,
@@ -27,6 +26,7 @@ impl Plugin for UIPlugin {
                 board_height: BOARD_SIZE.1 as u32,
                 board_width: BOARD_SIZE.0 as u32,
             })
-            .add_systems(Update, (ui_panel, handle_pause_interaction));
+            .add_systems(Update, ui_panel)
+            .add_systems(PostUpdate, handle_pause_interaction)
     }
 }

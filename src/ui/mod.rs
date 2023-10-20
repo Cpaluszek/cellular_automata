@@ -27,6 +27,6 @@ impl Plugin for UIPlugin {
                 board_width: BOARD_SIZE.0 as u32,
             })
             .add_systems(Update, ui_panel)
-            .add_systems(PostUpdate, handle_pause_interaction)
+            .add_systems(PostUpdate, handle_pause_interaction);
     }
 }

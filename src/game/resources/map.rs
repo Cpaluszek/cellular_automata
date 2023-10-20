@@ -5,6 +5,11 @@ use bevy::{
 
 use crate::game::Cell;
 
+#[derive(Resource)]
+pub struct BoardSize {
+    pub size: u32,
+}
+
 #[derive(Clone, Resource)]
 pub struct CellMap<C: Cell> {
     cells: HashMap<C::Coordinates, Entity>,

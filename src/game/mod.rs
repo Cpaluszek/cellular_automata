@@ -9,8 +9,11 @@ pub use components::*;
 pub use resources::*;
 
 use crate::{
-    game::systems::cells::{handle_cells, handle_new_cells, handle_removed_cells},
-    CYCLE_INTERVAL,
+    game::systems::{
+        cells::{handle_cells, handle_new_cells, handle_removed_cells},
+        interactivity::handle_board_resize,
+    },
+    BOARD_SIZE, CYCLE_INTERVAL,
 };
 
 // Game of life patterns: [LifeWiki](https://conwaylife.com/wiki)
@@ -22,8 +25,9 @@ pub struct GameOfLifePlugin {
 
 impl Plugin for GameOfLifePlugin {
     fn build(&self, app: &mut App) {
-        app.add_state::<SimulationState>();
-        app.insert_resource(CellMap::<Moore2dCell>::default())
+        app.add_state::<SimulationState>()
+            .insert_resource(BoardSize { size: BOARD_SIZE })
+            .insert_resource(CellMap::<Moore2dCell>::default())
             .add_systems(Update, handle_new_cells::<Moore2dCell>)
             .add_systems(PostUpdate, handle_removed_cells::<Moore2dCell>);
         if let Some(time_step) = self.tick_time_step {
@@ -41,7 +45,8 @@ impl Plugin for GameOfLifePlugin {
                     .run_if(in_state(SimulationState::Running)),
             );
         }
-        app.add_systems(Update, systems::coloring::color_sprites::<ConwayCellState>);
+        app.add_systems(Update, systems::coloring::color_sprites::<ConwayCellState>)
+            .add_systems(PostUpdate, handle_board_resize);
         info!("Loaded cellular automata plugin");
     }
 }

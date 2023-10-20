@@ -23,8 +23,7 @@ impl Plugin for UIPlugin {
                 // background_color: [CLEAR_COLOR.r(), CLEAR_COLOR.g(), CLEAR_COLOR.b()],
             })
             .insert_resource(UIBoardState {
-                board_height: BOARD_SIZE.1 as u32,
-                board_width: BOARD_SIZE.0 as u32,
+                board_size: BOARD_SIZE,
             })
             .add_systems(Update, ui_panel)
             .add_systems(PostUpdate, handle_pause_interaction);

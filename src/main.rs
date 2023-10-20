@@ -5,6 +5,7 @@ use systems::{quit_application, scroll_events, toggle_simulation_state};
 mod game;
 mod startup;
 mod systems;
+
 mod ui;
 use game::GameOfLifePlugin;
 use ui::UIPlugin;
@@ -12,9 +13,9 @@ use ui::UIPlugin;
 pub const WINDOW_WIDTH: f32 = 1600.0;
 pub const WINDOW_HEIGHT: f32 = 900.0;
 
-pub const BOARD_SIZE: (i32, i32) = (600, 600);
-pub const BOARD_MAX_SIZE: (u32, u32) = (1000, 1000);
-pub const BOARD_MIN_SIZE: (u32, u32) = (20, 20);
+pub const BOARD_SIZE: u32 = 600;
+pub const BOARD_MAX_SIZE: u32 = 1000;
+pub const BOARD_MIN_SIZE: u32 = 20;
 
 pub const SPRITE_SIZE: f32 = 3.0;
 

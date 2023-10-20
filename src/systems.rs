@@ -2,6 +2,8 @@ use bevy::app::AppExit;
 use bevy::input::mouse::{MouseScrollUnit, MouseWheel};
 use bevy::prelude::*;
 
+use crate::game::SimulationState;
+
 pub fn quit_application(
     keyboard_input: Res<Input<KeyCode>>,
     mut exit_events_writer: EventWriter<AppExit>,
@@ -27,6 +29,20 @@ pub fn scroll_events(
                 MouseScrollUnit::Pixel => event.y * ZOOM_SPEED * 0.1 * time.delta_seconds(),
             };
             camera.scale = log_scale.exp();
+        }
+    }
+}
+
+pub fn toggle_simulation_state(
+    keyboard_input: Res<Input<KeyCode>>,
+    simulation_state: Res<State<SimulationState>>,
+    mut commands: Commands,
+) {
+    if keyboard_input.just_pressed(KeyCode::Space) {
+        if *simulation_state.get() == SimulationState::Running {
+            commands.insert_resource(NextState(Some(SimulationState::Paused)));
+        } else if *simulation_state.get() == SimulationState::Paused {
+            commands.insert_resource(NextState(Some(SimulationState::Running)));
         }
     }
 }

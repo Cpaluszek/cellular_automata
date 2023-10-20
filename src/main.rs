@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use startup::{setup_map, spawn_camera};
-use systems::{quit_application, scroll_events};
+use systems::{quit_application, scroll_events, toggle_simulation_state};
 
 mod game;
 mod startup;
@@ -9,8 +9,8 @@ mod ui;
 use game::GameOfLifePlugin;
 use ui::UIPlugin;
 
-pub const WINDOW_WIDTH: f32 = 1280.0;
-pub const WINDOW_HEIGHT: f32 = 720.0;
+pub const WINDOW_WIDTH: f32 = 1600.0;
+pub const WINDOW_HEIGHT: f32 = 900.0;
 
 pub const BOARD_SIZE: (i32, i32) = (600, 600);
 pub const SPRITE_SIZE: f32 = 3.0;
@@ -44,6 +44,9 @@ fn main() {
         .add_plugins(UIPlugin)
         .add_plugins(GameOfLifePlugin::default())
         .add_systems(Startup, (spawn_camera, setup_map))
-        .add_systems(Update, (quit_application, scroll_events))
+        .add_systems(
+            Update,
+            (quit_application, scroll_events, toggle_simulation_state),
+        )
         .run();
 }

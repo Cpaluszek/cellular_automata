@@ -24,6 +24,8 @@ use bevy::prelude::*;
 pub fn handle_board_resize(board_size: Res<BoardSize>) {
     if board_size.is_changed() {
         println!("Board size changed to: {}", board_size.size);
+        // Todo: remove cells if out of bounds
+        // Todo: add cells if board grows
     }
 }
 // // Todo: refacto function, extract state and board size outside of GamePlugin?

@@ -13,7 +13,7 @@ pub fn quit_application(
     }
 }
 
-const ZOOM_SPEED: f32 = 0.5;
+const ZOOM_SPEED: f32 = 1.;
 
 pub fn scroll_events(
     mut scroll_event: EventReader<MouseWheel>,

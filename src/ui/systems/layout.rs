@@ -44,7 +44,9 @@ pub fn ui_panel(
             ui.allocate_space(egui::Vec2::new(10.0, 0.0));
 
             if ui.button("Apply").clicked() {
-                board_size.size = ui_board_state.board_size;
+                if board_size.size != ui_board_state.board_size {
+                    board_size.size = ui_board_state.board_size;
+                }
             }
         });
     });

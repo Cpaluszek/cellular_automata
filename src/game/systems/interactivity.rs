@@ -18,14 +18,34 @@
 //         }
 //     }
 // }
-use crate::game::BoardSize;
+use crate::game::{BoardSize, Cell, CellMap};
 use bevy::prelude::*;
 
-pub fn handle_board_resize(board_size: Res<BoardSize>) {
+pub fn handle_board_resize<C>(board_size: Res<BoardSize>, mut map: ResMut<CellMap<C>>)
+where
+    C: Cell,
+{
     if board_size.is_changed() {
+        // println!("Previous entity count: {}",);
+        let entities_count = map.cell_count();
+        let prev_board_size = (entities_count as f64).sqrt() as u32;
         println!("Board size changed to: {}", board_size.size);
-        // Todo: remove cells if out of bounds
-        // Todo: add cells if board grows
+        println!("Previous entities count: {}", entities_count);
+        println!("Previous board size: {}", prev_board_size);
+        if prev_board_size < board_size.size {
+            for y in prev_board_size..board_size.size {
+                for x in prev_board_size..board_size.size {
+                    // Todo: spawn cells
+                }
+            }
+        } else {
+            for y in (prev_board_size..board_size.size).rev() {
+                for x in (prev_board_size..board_size.size).rev() {
+                    // Todo: remove cells
+                }
+            }
+        }
+        // Todo:  resize background
     }
 }
 // // Todo: refacto function, extract state and board size outside of GamePlugin?
@@ -144,131 +164,23 @@ pub fn handle_board_resize(board_size: Res<BoardSize>) {
 //                     // pattern width on 1st part
 //                     pattern_width = split
 //                         .next()
-//                         .unwrap()
-//                         .split('=')
-//                         .last()
-//                         .unwrap()
-//                         .trim()
-//                         .parse::<usize>()
-//                         .unwrap();
+//                         .unwrap()// use std::{fs::File, io::Read};
 
-//                     // pattern height on 2nd part
-//                     pattern_height = split
-//                         .next()
-//                         .unwrap()
-//                         .split('=')
-//                         .last()
-//                         .unwrap()
-//                         .trim()
-//                         .parse::<usize>()
-//                         .unwrap();
+// use bevy::{prelude::*, window::PrimaryWindow};
 
-//                     assert!(
-//                         pattern_width > 0 && pattern_height > 0,
-//                         "Invalid pattern size"
-//                     );
-//                     assert!(
-//                         pattern_width <= board.width && pattern_height <= board.height,
-//                         "Pattern size exceed board size"
-//                     );
+// use crate::{
+//     game::{
+//         components::CellPosition,
+//         resources::{CellBoard, CellEntityMap, CellSize},
+//     },
+//     resources::{BoardSize, CellColor, PatternFile},
+//     SimulationState,
+// };
 
-//                     state = vec![false; pattern_width * pattern_height];
-//                 } else {
-//                     for c in line.chars() {
-//                         match c {
-//                             '0'..='9' => {
-//                                 count = count * 10 + c.to_digit(10).unwrap();
-//                             }
-//                             'o' => {
-//                                 if count == 0 {
-//                                     state[row * pattern_width + col] = true;
-//                                     col += 1;
-//                                 } else {
-//                                     for _ in 0..count {
-//                                         state[row * pattern_width + col] = true;
-//                                         col += 1;
-//                                     }
-//                                     count = 0;
-//                                 }
-//                             }
-//                             'b' => {
-//                                 if count == 0 {
-//                                     col += 1;
-//                                 } else {
-//                                     col += count as usize;
-//                                     count = 0;
-//                                 }
-//                             }
-//                             _ => {
-//                                 row += 1;
-//                                 col = 0;
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-
-//             // Clear previous board
-//             board.clear();
-//             for cell_entt in cell_entities.0.values() {
-//                 commands.entity(*cell_entt).despawn();
-//             }
-//             cell_entities.0.clear();
-
-//             // Set the new state to the board
-//             let pos = CellPosition {
-//                 col: (board.width - pattern_width) / 2,
-//                 row: (board.height - pattern_height) / 2,
-//             };
-
-//             board.patch(pos, &state, pattern_width, pattern_height);
-
-//             // Spawn entities
-//             let half_window_height = window.single().height() / 2.0;
-//             let half_window_width = window.single().width() / 2.0;
-//             for row in 0..board.height {
-//                 for col in 0..board.width {
-//                     let pos = CellPosition { col, row };
-//                     if board.alive(pos) {
-//                         let x = -half_window_width
-//                             + (col as f32 * cell_size.width)
-//                             + cell_size.width / 2.0;
-//                         let y = half_window_height
-//                             - (row as f32 * cell_size.height)
-//                             - cell_size.height / 2.0;
-
-//                         // Cell Entity
-//                         let new_cell = commands
-//                             .spawn((
-//                                 SpriteBundle {
-//                                     sprite: Sprite {
-//                                         color: cell_color.0,
-//                                         custom_size: Some(Vec2::new(
-//                                             cell_size.width,
-//                                             cell_size.height,
-//                                         )),
-//                                         ..default()
-//                                     },
-//                                     transform: Transform::from_xyz(x, y, 0.0),
-//                                     ..default()
-//                                 },
-//                                 CellPosition { col, row },
-//                             ))
-//                             .id();
-//                         cell_entities.0.insert(pos, new_cell);
-//                     }
-//                 }
-//             }
-//         }
-//         Err(err) => {
-//             error!("Failed to read file: {}", err);
+// pub fn change_cell_color(cell_color: Res<CellColor>, mut query: Query<&mut Sprite>) {
+//     if cell_color.is_changed() {
+//         for mut sprite in query.iter_mut() {
+//             sprite.color = cell_color.0;
 //         }
 //     }
-// }
-
-// fn read_file_content(file: &str) -> Result<String, std::io::Error> {
-//     let mut file = File::open(file)?;
-//     let mut content = String::new();
-//     file.read_to_string(&mut content)?;
-//     Ok(content)
 // }

@@ -46,7 +46,7 @@ impl Plugin for GameOfLifePlugin {
             );
         }
         app.add_systems(Update, systems::coloring::color_sprites::<ConwayCellState>)
-            .add_systems(PostUpdate, handle_board_resize);
+            .add_systems(PostUpdate, handle_board_resize::<Moore2dCell>);
         info!("Loaded cellular automata plugin");
     }
 }

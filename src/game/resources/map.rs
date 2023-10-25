@@ -57,9 +57,9 @@ impl<C: Cell> CellMap<C> {
     /// Use this method to remove cell entities from the map if you remove a
     /// `Cell` component from an `Entity` or *despawn* an `Entity` with a
     /// `Cell` component.
-    // pub fn remove_cell(&mut self, coordinates: &C::Coordinates) -> Option<Entity> {
-    //     self.cells.remove(coordinates)
-    // }
+    pub fn remove_cell(&mut self, coordinates: &C::Coordinates) -> Option<Entity> {
+        self.cells.remove(coordinates)
+    }
 
     /// Removes a cell entities from the map
     pub fn remove_entities(&mut self, entities: impl Iterator<Item = Entity>) {
@@ -71,13 +71,16 @@ impl<C: Cell> CellMap<C> {
     }
 
     // Retrieves a cell entity using its `coordinates`
-    // pub fn get_cell(&self, coordinates: &C::Coordinates) -> Option<Entity> {
-    //     self.cells.get(coordinates).copied()
-    // }
+    pub fn get_cell(&self, coordinates: &C::Coordinates) -> Option<Entity> {
+        self.cells.get(coordinates).copied()
+    }
 
     // Clears the entire map
-    //
-    // pub fn clear(&mut self) {
-    //     self.cells.clear();
-    // }
+    pub fn clear(&mut self) {
+        self.cells.clear();
+    }
+
+    pub fn cell_count(& self) -> usize {
+        self.cells.len()
+    }
 }

@@ -80,7 +80,7 @@ impl<C: Cell> CellMap<C> {
         self.cells.clear();
     }
 
-    pub fn cell_count(& self) -> usize {
+    pub fn cell_count(&self) -> usize {
         self.cells.len()
     }
 }

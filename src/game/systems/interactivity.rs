@@ -1,43 +1,60 @@
-// use std::{fs::File, io::Read};
-
-// use bevy::{prelude::*, window::PrimaryWindow};
-
-// use crate::{
-//     game::{
-//         components::CellPosition,
-//         resources::{CellBoard, CellEntityMap, CellSize},
-//     },
-//     resources::{BoardSize, CellColor, PatternFile},
-//     SimulationState,
-// };
-
-// pub fn change_cell_color(cell_color: Res<CellColor>, mut query: Query<&mut Sprite>) {
-//     if cell_color.is_changed() {
-//         for mut sprite in query.iter_mut() {
-//             sprite.color = cell_color.0;
-//         }
-//     }
-// }
-use crate::game::{BoardSize, Cell, CellMap};
+use crate::{game::{BoardSize, Cell, CellContainer, CellMap, Moore2dCell, ConwayCellState, BoardBackground}, SPRITE_SIZE};
 use bevy::prelude::*;
 
-pub fn handle_board_resize<C>(board_size: Res<BoardSize>, mut map: ResMut<CellMap<C>>)
-where
-    C: Cell,
+pub fn handle_board_resize<C>(
+    board_size: Res<BoardSize>,
+    map: Res<CellMap<C>>,
+    mut cell_container: Query<(Entity, &mut Transform), With<CellContainer>>,
+    mut board_background: Query<&mut Sprite, With<BoardBackground>>,
+    mut commands: Commands,
+    ) where
+C: Cell,
 {
     if board_size.is_changed() {
-        // println!("Previous entity count: {}",);
         let entities_count = map.cell_count();
         let prev_board_size = (entities_count as f64).sqrt() as u32;
+
+        let (parent_entity, mut parent_transform) = cell_container.get_single_mut().unwrap();
+
+        // Set board background sprite
+        // let mut sprite = board_background.get_single_mut().unwrap();
+        // sprite.custom_size = Some(Vec2::new(
+        //         board_size.size as f32 * SPRITE_SIZE,
+        //         board_size.size as f32 * SPRITE_SIZE,
+        //     ));
+
+        // let delta_size = board_size.size as i32 - prev_board_size as i32;
+        // parent_transform.translation.x -= delta_size as f32;
+        // parent_transform.translation.y += delta_size as f32;
+
         println!("Board size changed to: {}", board_size.size);
         println!("Previous entities count: {}", entities_count);
         println!("Previous board size: {}", prev_board_size);
         if prev_board_size < board_size.size {
+            let mut new_entities = vec![];
             for y in prev_board_size..board_size.size {
                 for x in prev_board_size..board_size.size {
-                    // Todo: spawn cells
+                    let entity = commands.spawn((
+                            SpriteBundle {
+                                sprite: Sprite {
+                                    custom_size: Some(Vec2::splat(SPRITE_SIZE)),
+                                    ..default()
+                                },
+                                transform: Transform::from_xyz(
+                                               x as f32 * SPRITE_SIZE,
+                                               y as f32 * SPRITE_SIZE,
+                                               0.,
+                                               ),
+                                               ..default()
+                            },
+                            Moore2dCell::new(IVec2::new(x as i32, y as i32)),
+                            ConwayCellState(true),
+                            ));
+                    new_entities.push(entity.id());
                 }
             }
+                commands.entity(parent_entity).push_children(&new_entities);
+            println!("Added {} entities", new_entities.len());
         } else {
             for y in (prev_board_size..board_size.size).rev() {
                 for x in (prev_board_size..board_size.size).rev() {
@@ -48,139 +65,3 @@ where
         // Todo:  resize background
     }
 }
-// // Todo: refacto function, extract state and board size outside of GamePlugin?
-// // use resource insteaad
-// pub fn handle_board_resize(
-//     board_size: Res<BoardSize>,
-//     mut cell_entities: ResMut<CellEntityMap>,
-//     mut board: ResMut<CellBoard>,
-//     mut commands: Commands,
-// ) {
-//     // Todo: clear cells outside of new board size
-//     if !board_size.is_changed() || board_size.w == 0 || board_size.h == 0 {
-//         return;
-//     }
-//     let new_board_state: Vec<_> = (0..board_size.h as usize)
-//         .flat_map(|row| (0..board_size.w as usize).map(move |col| CellPosition { col, row }))
-//         .filter_map(|pos| {
-//             // Remove if out of bounds
-//             if pos.col >= board_size.w as usize || pos.row >= board_size.h as usize {
-//                 if let Some(entt) = cell_entities.0.remove(&pos) {
-//                     commands.entity(entt).despawn();
-//                 }
-//                 return None;
-//             }
-//             // if the board gets bigger, spawn new cells
-//             if pos.col >= board.width || pos.row >= board.height {
-//                 return Some((pos, false));
-//             }
-//             return Some((pos, board.alive(pos)));
-//         })
-//         .collect();
-
-//     board.height = board_size.h as usize;
-//     board.width = board_size.w as usize;
-//     board.state = vec![false; board.width * board.height];
-//     new_board_state
-//         .iter()
-//         .for_each(|(pos, state)| board.set(*pos, *state));
-// }
-
-// pub fn update_cell_sprite_on_resize(
-//     mut cells: Query<(&mut Sprite, &mut Transform, &CellPosition)>,
-//     mut cell_size: ResMut<CellSize>,
-//     window: Query<&Window, With<PrimaryWindow>>,
-//     board: Res<CellBoard>,
-//     board_size: Res<BoardSize>,
-// ) {
-//     if !board_size.is_changed() {
-//         return;
-//     }
-//     cell_size.width = window.single().width() / board.width as f32;
-//     cell_size.height = window.single().height() / board.height as f32;
-//     let half_window_width = window.single().width() / 2.0;
-//     let half_window_height = window.single().height() / 2.0;
-
-//     for (mut sprite, mut transform, pos) in cells.iter_mut() {
-//         sprite.custom_size = Some(Vec2::new(cell_size.width, cell_size.height));
-
-//         let x = -half_window_width + (pos.col as f32 * cell_size.width) + cell_size.width / 2.0;
-//         let y = half_window_height - (pos.row as f32 * cell_size.height) - cell_size.height / 2.0;
-
-//         transform.translation.x = x;
-//         transform.translation.y = y;
-//     }
-// }
-
-// pub fn toggle_simulation_state(
-//     mut commands: Commands,
-//     keyboard_input: Res<Input<KeyCode>>,
-//     simulation_state: Res<State<SimulationState>>,
-// ) {
-//     if keyboard_input.just_pressed(KeyCode::Space) {
-//         match *simulation_state.get() {
-//             SimulationState::Running => {
-//                 commands.insert_resource(NextState(Some(SimulationState::Paused)));
-//             }
-//             SimulationState::Paused => {
-//                 commands.insert_resource(NextState(Some(SimulationState::Running)));
-//             }
-//         }
-//     }
-// }
-
-// pub fn load_pattern_file(
-//     mut commands: Commands,
-//     pattern_file: Res<PatternFile>,
-//     mut board: ResMut<CellBoard>,
-//     mut cell_entities: ResMut<CellEntityMap>,
-//     cell_color: Res<CellColor>,
-//     cell_size: Res<CellSize>,
-//     window: Query<&Window, With<PrimaryWindow>>,
-// ) {
-//     if !pattern_file.is_changed() || pattern_file.0.is_empty() {
-//         return;
-//     }
-
-//     // Read file content - see http://www.conwaylife.com/wiki/RLE
-//     let file_content = read_file_content(&pattern_file.0);
-//     let mut state: Vec<bool> = vec![];
-//     match file_content {
-//         Ok(content) => {
-//             let mut pattern_height = 0;
-//             let mut pattern_width = 0;
-//             let mut col = 0;
-//             let mut row = 0;
-//             let mut count = 0;
-
-//             // Parse a rle file
-//             for line in content.lines() {
-//                 // if 1st char is '#' or 'x' skip
-//                 if line.starts_with('#') {
-//                     continue;
-//                 } else if line.starts_with('x') {
-//                     // split line on ','
-//                     let mut split = line.split(',');
-//                     // pattern width on 1st part
-//                     pattern_width = split
-//                         .next()
-//                         .unwrap()// use std::{fs::File, io::Read};
-
-// use bevy::{prelude::*, window::PrimaryWindow};
-
-// use crate::{
-//     game::{
-//         components::CellPosition,
-//         resources::{CellBoard, CellEntityMap, CellSize},
-//     },
-//     resources::{BoardSize, CellColor, PatternFile},
-//     SimulationState,
-// };
-
-// pub fn change_cell_color(cell_color: Res<CellColor>, mut query: Query<&mut Sprite>) {
-//     if cell_color.is_changed() {
-//         for mut sprite in query.iter_mut() {
-//             sprite.color = cell_color.0;
-//         }
-//     }
-// }

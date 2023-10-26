@@ -14,6 +14,12 @@ const NEIGHBOURS_COORDINATES: [IVec2; 8] = [
     IVec2::new(-1, 1),
 ];
 
+#[derive(Component)]
+pub struct CellContainer;
+
+#[derive(Component)]
+pub struct BoardBackground;
+
 #[derive(Debug, Clone, Component, Reflect)]
 pub struct Moore2dCell {
     pub coords: IVec2,

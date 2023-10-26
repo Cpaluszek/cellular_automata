@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use rand::Rng;
 
 use crate::{
-    game::{ConwayCellState, Moore2dCell},
+    game::{CellContainer, ConwayCellState, Moore2dCell, BoardBackground},
     BACKGROND_COLOR, BOARD_SIZE, CELL_PROBABILITY, SPRITE_SIZE,
 };
 
@@ -15,7 +15,7 @@ pub fn setup_map(mut commands: Commands) {
     let size = BOARD_SIZE;
 
     // Background
-    commands.spawn(SpriteBundle {
+    commands.spawn((SpriteBundle {
         sprite: Sprite {
             custom_size: Some(Vec2::new(
                 size as f32 * SPRITE_SIZE,
@@ -24,20 +24,22 @@ pub fn setup_map(mut commands: Commands) {
             color: BACKGROND_COLOR,
             ..default()
         },
+        transform: Transform::from_xyz(-SPRITE_SIZE / 2., -SPRITE_SIZE / 2., 0.),
         ..default()
-    });
+    },
+    BoardBackground {},
+    ));
 
     // Cells
     commands
-        .spawn(
+        .spawn((
             SpatialBundle::from_transform(Transform::from_xyz(
                 -(size as f32 * SPRITE_SIZE) / 2.,
                 -(size as f32 * SPRITE_SIZE) / 2.,
                 0.,
             )),
-            // SpriteBundle {
-            // },
-        )
+            CellContainer {},
+        ))
         .with_children(|builder| {
             for y in 0..size {
                 for x in 0..size {

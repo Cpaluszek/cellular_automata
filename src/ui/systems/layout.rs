@@ -63,18 +63,6 @@ pub fn ui_panel(
         });
     });
 }
-// ui.allocate_space(egui::Vec2::new(1.0, 10.0));
-// // Simulation speed
-// ui.label("Simulation speed:");
-// ui.add(egui::Slider::new(&mut ui_state.cycle_interval, 20..=300).text("interval (ms)"));
-// if ui_state.cycle_interval != cycle_interval.0 {
-//     ui_event_writer.send(UiStateChangedEvent(UiParameter::CycleInterval(
-//         ui_state.cycle_interval,
-//     )));
-// }
-// ui.allocate_space(egui::Vec2::new(1.0, 10.0));
-// ui.allocate_space(egui::Vec2::new(1.0, 10.0));
-
 // // Pattern files loading
 // ui.separator();
 // ui.label("RLE files:");

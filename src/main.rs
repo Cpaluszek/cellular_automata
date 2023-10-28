@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use startup::{setup_map, spawn_camera};
-use systems::{quit_application, scroll_events, toggle_simulation_state};
+use systems::{quit_application, scroll_events, toggle_simulation_state, mouse_drag_event};
 
 mod game;
 mod startup;
@@ -49,8 +49,8 @@ fn main() {
         .add_plugins(GameOfLifePlugin::default())
         .add_systems(Startup, (spawn_camera, setup_map))
         .add_systems(
-            Update,
-            (quit_application, scroll_events, toggle_simulation_state),
+            PostUpdate,
+            (quit_application, scroll_events, mouse_drag_event, toggle_simulation_state),
         )
         .run();
 }

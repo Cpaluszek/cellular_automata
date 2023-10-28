@@ -38,18 +38,22 @@ pub fn mouse_drag_event(
     mut ev_motion: EventReader<MouseMotion>,
     mut camera_query: Query<&mut Transform, With<Camera>>,
 ) {
-
-    if input_mouse.pressed(MouseButton::Left) {
-        let delta = ev_motion.iter().fold(Vec2::ZERO, |acc, e| acc + e.delta);
-        println!("Drag : {}", delta);
-
-        if delta.length_squared() > 0.0 {
-            // Translate the camera
-            let mut camera = camera_query.get_single_mut().unwrap();
-            camera.translation.x += delta.x;
-            camera.translation.y += delta.y;
+    // Todo: try without WSL
+    
+    // if input_mouse.pressed(MouseButton::Left) {
+        for ev in ev_motion.iter() {
+            println!("delta {}", ev.delta);
         }
-    }
+        // let delta = ev_motion.iter().fold(Vec2::ZERO, |acc, e| acc + e.delta);
+        // println!("Drag : {}", delta);
+        //
+        // if delta.length_squared() > 0.0 {
+        //     // Translate the camera
+        //     let mut camera = camera_query.get_single_mut().unwrap();
+        //     camera.translation.x += delta.x;
+        //     camera.translation.y += delta.y;
+        // }
+    // }
 }
 
 pub fn toggle_simulation_state(

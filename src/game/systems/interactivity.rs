@@ -83,11 +83,13 @@ pub fn handle_board_resize<C>(
     }
 }
 
-pub fn handle_cell_color_change(cell_color: Res<CellColor>) {
+pub fn handle_cell_color_change(
+    cell_color: Res<CellColor>,
+    mut sprites: Query<&mut Sprite, With<ConwayCellState>>,
+) {
     if cell_color.is_changed() {
-        println!(
-            "New cell color: {}{}{}",
-            cell_color.color[0], cell_color.color[1], cell_color.color[2]
-        );
+        sprites
+            .par_iter_mut()
+            .for_each_mut(|mut sprite| sprite.color = cell_color.color);
     }
 }

@@ -1,5 +1,5 @@
 use bevy::{
-    prelude::{Entity, Resource},
+    prelude::{Color, Entity, Resource},
     utils::{HashMap, HashSet},
 };
 
@@ -12,7 +12,7 @@ pub struct BoardSize {
 
 #[derive(Default, Resource)]
 pub struct CellColor {
-    pub color: [f32; 3],
+    pub color: Color,
 }
 
 #[derive(Clone, Resource)]

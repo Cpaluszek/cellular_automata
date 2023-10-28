@@ -29,7 +29,7 @@ impl Plugin for GameOfLifePlugin {
             .insert_resource(BoardSize { size: BOARD_SIZE })
             .insert_resource(CellMap::<Moore2dCell>::default())
             .insert_resource(CellColor {
-                color: [CELL_COLOR.r(), CELL_COLOR.r(), CELL_COLOR.r()],
+                color: [CELL_COLOR.r(), CELL_COLOR.r(), CELL_COLOR.r()].into(),
             })
             .add_systems(Update, handle_new_cells::<Moore2dCell>)
             .add_systems(

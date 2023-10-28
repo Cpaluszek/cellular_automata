@@ -11,9 +11,9 @@ pub use resources::*;
 use crate::{
     game::systems::{
         cells::{handle_cells, handle_new_cells, handle_removed_cells},
-        interactivity::handle_board_resize,
+        interactivity::{handle_board_resize, handle_cell_color_change},
     },
-    BOARD_SIZE, CYCLE_INTERVAL,
+    BOARD_SIZE, CYCLE_INTERVAL, CELL_COLOR,
 };
 
 // Game of life patterns: [LifeWiki](https://conwaylife.com/wiki)
@@ -28,8 +28,9 @@ impl Plugin for GameOfLifePlugin {
         app.add_state::<SimulationState>()
             .insert_resource(BoardSize { size: BOARD_SIZE })
             .insert_resource(CellMap::<Moore2dCell>::default())
+            .insert_resource(CellColor {cell_color: [CELL_COLOR.r(), CELL_COLOR.r(), CELL_COLOR.r()],})
             .add_systems(Update, handle_new_cells::<Moore2dCell>)
-            .add_systems(PostUpdate, handle_removed_cells::<Moore2dCell>);
+            .add_systems(PostUpdate, (handle_removed_cells::<Moore2dCell>, handle_cell_color_change));
         if let Some(time_step) = self.tick_time_step {
             let duration = Duration::from_secs_f64(time_step);
             app.add_systems(

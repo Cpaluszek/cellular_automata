@@ -1,6 +1,6 @@
 use crate::{
     game::{
-        BoardBackground, BoardSize, Cell, CellContainer, CellMap, ConwayCellState, Moore2dCell,
+        BoardBackground, BoardSize, Cell, CellContainer, CellMap, ConwayCellState, Moore2dCell, CellColor,
     },
     SPRITE_SIZE,
 };
@@ -77,5 +77,11 @@ pub fn handle_board_resize<C>(
                 None => println!("Tried to despawn without entity"),
             });
         }
+    }
+}
+
+pub fn handle_cell_color_change(cell_color: Res<CellColor>) {
+    if cell_color.is_changed() {
+        println!("New cell color: {}{}{}", cell_color.cell_color[0], cell_color.cell_color[1], cell_color.cell_color[2]);
     }
 }

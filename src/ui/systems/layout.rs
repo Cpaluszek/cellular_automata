@@ -5,8 +5,8 @@ use bevy_egui::{
 };
 
 use crate::{
-    game::{BoardSize, SimulationState},
-    ui::resources::{UIBoardState, UiSimulationState},
+    game::{BoardSize, SimulationState, CellColor},
+    ui::resources::{UIBoardState, UiSimulationState, UICellColor},
     BOARD_MAX_SIZE, BOARD_MIN_SIZE,
 };
 
@@ -17,6 +17,8 @@ pub fn ui_panel(
     mut ui_simulation_state: ResMut<UiSimulationState>,
     mut ui_board_state: ResMut<UIBoardState>,
     mut board_size: ResMut<BoardSize>,
+    mut cell_color: ResMut<CellColor>,
+    mut ui_cell_color: ResMut<UICellColor>,
     simulation_state: Res<State<SimulationState>>,
 ) {
     egui::Window::new("Settings").show(contexts.ctx_mut(), |ui| {
@@ -49,6 +51,16 @@ pub fn ui_panel(
                 }
             }
         });
+
+        // Cell color
+        ui.separator();
+        ui.label("Colors:");
+        ui.horizontal(|ui| {
+            if ui.color_edit_button_rgb(&mut ui_cell_color.cell_color).changed() {
+               cell_color.cell_color = ui_cell_color.cell_color; 
+            }
+            ui.label("Cell color");
+        });
     });
 }
 // ui.allocate_space(egui::Vec2::new(1.0, 10.0));
@@ -61,27 +73,6 @@ pub fn ui_panel(
 //     )));
 // }
 // ui.allocate_space(egui::Vec2::new(1.0, 10.0));
-// // Cell color
-// ui.separator();
-// ui.label("Colors:");
-// ui.horizontal(|ui| {
-//     if ui.color_edit_button_rgb(&mut ui_state.cell_color).changed() {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::CellColor(
-//             ui_state.cell_color,
-//         )));
-//     }
-//     ui.label("Cell color");
-//     ui.allocate_space(egui::Vec2::new(10.0, 0.0));
-//     if ui
-//         .color_edit_button_rgb(&mut ui_state.background_color)
-//         .changed()
-//     {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::BackgroundColor(
-//             ui_state.background_color,
-//         )));
-//     }
-//     ui.label("Background color");
-// });
 // ui.allocate_space(egui::Vec2::new(1.0, 10.0));
 
 // // Pattern files loading

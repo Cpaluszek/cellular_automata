@@ -10,6 +10,11 @@ pub struct BoardSize {
     pub size: u32,
 }
 
+#[derive(Default, Resource, Debug)]
+pub struct CellColor {
+    pub cell_color: [f32; 3],
+}
+
 #[derive(Clone, Resource)]
 pub struct CellMap<C: Cell> {
     cells: HashMap<C::Coordinates, Entity>,

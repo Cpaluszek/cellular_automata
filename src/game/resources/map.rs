@@ -31,12 +31,12 @@ impl<C: Cell> Default for CellMap<C> {
 impl<C: Cell> CellMap<C> {
     /// Retrieves every cell entity matching `coords`.
     /// If some coordinates are not stored in the cell map they will be ignored.
-    pub fn get_cell_entities<'a>(
-        &'a self,
-        coords: &'a [C::Coordinates],
-    ) -> impl Iterator<Item = &Entity> + 'a {
-        coords.iter().filter_map(|c| self.cells.get(c))
-    }
+    // pub fn get_cell_entities<'a>(
+    //     &'a self,
+    //     coords: &'a [C::Coordinates],
+    // ) -> impl Iterator<Item = &Entity> + 'a {
+    //     coords.iter().filter_map(|c| self.cells.get(c))
+    // }
 
     /// Adds a `Cell` entity to the map at `coordinates`.
     ///
@@ -76,14 +76,14 @@ impl<C: Cell> CellMap<C> {
     }
 
     // Retrieves a cell entity using its `coordinates`
-    pub fn get_cell(&self, coordinates: &C::Coordinates) -> Option<Entity> {
-        self.cells.get(coordinates).copied()
-    }
+    // pub fn get_cell(&self, coordinates: &C::Coordinates) -> Option<Entity> {
+    //     self.cells.get(coordinates).copied()
+    // }
 
     // Clears the entire map
-    pub fn clear(&mut self) {
-        self.cells.clear();
-    }
+    // pub fn clear(&mut self) {
+    //     self.cells.clear();
+    // }
 
     pub fn cell_count(&self) -> usize {
         self.cells.len()

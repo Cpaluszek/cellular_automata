@@ -72,8 +72,6 @@ pub fn handle_board_resize<C>(
                     c.get_x() >= board_size.size as i32 || c.get_y() >= board_size.size as i32
                 })
                 .collect();
-            println!("To remove len: {}", coords.len());
-            coords.iter().for_each(|c| println!("{:?}", c.coords()));
             coords.iter().for_each(|c| match map.remove_cell(c.coords()) {
                 Some(e) => commands.entity(e).despawn(),
                 None => println!("Tried to despawn without entity"),

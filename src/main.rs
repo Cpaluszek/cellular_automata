@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use startup::{setup_map, spawn_camera};
-use systems::{quit_application, scroll_events, toggle_simulation_state, mouse_drag_event};
+use systems::{quit_application, toggle_simulation_state};
 
 mod game;
 mod startup;
@@ -50,7 +50,7 @@ fn main() {
         .add_systems(Startup, (spawn_camera, setup_map))
         .add_systems(
             PostUpdate,
-            (quit_application, scroll_events, mouse_drag_event, toggle_simulation_state),
+            (quit_application, toggle_simulation_state),
         )
         .run();
 }

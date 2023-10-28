@@ -11,7 +11,9 @@ pub use resources::*;
 use crate::{
     game::systems::{
         cells::{handle_cells, handle_new_cells, handle_removed_cells},
+        coloring::color_sprites,
         interactivity::{handle_board_resize, handle_cell_color_change},
+        mouse::{mouse_drag_event, scroll_events},
     },
     BOARD_SIZE, CELL_COLOR, CYCLE_INTERVAL,
 };
@@ -20,42 +22,45 @@ use crate::{
 // [Conway's Game of Life - Wikipedia](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
 
 pub struct GameOfLifePlugin {
-    pub tick_time_step: Option<f64>,
+    pub tick_time_step: f64,
 }
 
 impl Plugin for GameOfLifePlugin {
     fn build(&self, app: &mut App) {
+        // Todo: use resource for duration -> UI
+        let duration = Duration::from_secs_f64(self.tick_time_step);
+
         app.add_state::<SimulationState>()
+            // Resources
             .insert_resource(BoardSize { size: BOARD_SIZE })
             .insert_resource(CellMap::<Moore2dCell>::default())
             .insert_resource(CellColor {
                 color: [CELL_COLOR.r(), CELL_COLOR.r(), CELL_COLOR.r()].into(),
             })
-            .add_systems(Update, handle_new_cells::<Moore2dCell>)
+            // Systems
+            .add_systems(
+                Update,
+                (
+                    handle_new_cells::<Moore2dCell>,
+                    color_sprites::<ConwayCellState>,
+                ),
+            )
+            .add_systems(
+                Update,
+                handle_cells::<Moore2dCell, ConwayCellState>
+                    .run_if(on_timer(duration))
+                    .run_if(in_state(SimulationState::Running)),
+            )
             .add_systems(
                 PostUpdate,
                 (
                     handle_removed_cells::<Moore2dCell>,
                     handle_cell_color_change,
+                    handle_board_resize::<Moore2dCell>,
+                    mouse_drag_event,
+                    scroll_events,
                 ),
             );
-        if let Some(time_step) = self.tick_time_step {
-            let duration = Duration::from_secs_f64(time_step);
-            app.add_systems(
-                Update,
-                handle_cells::<Moore2dCell, ConwayCellState>
-                    .run_if(on_timer(duration))
-                    .run_if(in_state(SimulationState::Running)),
-            );
-        } else {
-            app.add_systems(
-                Update,
-                handle_cells::<Moore2dCell, ConwayCellState>
-                    .run_if(in_state(SimulationState::Running)),
-            );
-        }
-        app.add_systems(Update, systems::coloring::color_sprites::<ConwayCellState>)
-            .add_systems(PostUpdate, handle_board_resize::<Moore2dCell>);
         info!("Loaded cellular automata plugin");
     }
 }
@@ -65,7 +70,7 @@ impl GameOfLifePlugin {
     #[inline]
     pub const fn new() -> Self {
         Self {
-            tick_time_step: Some(CYCLE_INTERVAL),
+            tick_time_step: CYCLE_INTERVAL,
         }
     }
 }

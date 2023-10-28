@@ -14,26 +14,29 @@ C: Cell,
         let entities_count = map.cell_count();
         let prev_board_size = (entities_count as f64).sqrt() as u32;
 
-        let (parent_entity, mut parent_transform) = cell_container.get_single_mut().unwrap();
-
         // Set board background sprite
-        // let mut sprite = board_background.get_single_mut().unwrap();
-        // sprite.custom_size = Some(Vec2::new(
-        //         board_size.size as f32 * SPRITE_SIZE,
-        //         board_size.size as f32 * SPRITE_SIZE,
-        //     ));
+        let mut sprite = board_background.get_single_mut().unwrap();
+        sprite.custom_size = Some(Vec2::new(
+                board_size.size as f32 * SPRITE_SIZE,
+                board_size.size as f32 * SPRITE_SIZE,
+                ));
 
-        // let delta_size = board_size.size as i32 - prev_board_size as i32;
-        // parent_transform.translation.x -= delta_size as f32;
-        // parent_transform.translation.y += delta_size as f32;
+        let (parent_entity, mut parent_transform) = cell_container.get_single_mut().unwrap();
+        let delta_size = board_size.size as i32 - prev_board_size as i32;
+        println!("Delta size: {}", delta_size);
+        parent_transform.translation.x -= delta_size as f32 * SPRITE_SIZE * 0.5;
+        parent_transform.translation.y -= delta_size as f32 * SPRITE_SIZE * 0.5;
 
         println!("Board size changed to: {}", board_size.size);
         println!("Previous entities count: {}", entities_count);
         println!("Previous board size: {}", prev_board_size);
         if prev_board_size < board_size.size {
             let mut new_entities = vec![];
-            for y in prev_board_size..board_size.size {
-                for x in prev_board_size..board_size.size {
+            for y in 0..board_size.size {
+                for x in 0..board_size.size {
+                    if x < prev_board_size && y < prev_board_size {
+                        continue ;
+                    }
                     let entity = commands.spawn((
                             SpriteBundle {
                                 sprite: Sprite {
@@ -48,20 +51,21 @@ C: Cell,
                                                ..default()
                             },
                             Moore2dCell::new(IVec2::new(x as i32, y as i32)),
-                            ConwayCellState(true),
+                            ConwayCellState(false),
                             ));
                     new_entities.push(entity.id());
                 }
             }
-                commands.entity(parent_entity).push_children(&new_entities);
+            commands.entity(parent_entity).push_children(&new_entities);
             println!("Added {} entities", new_entities.len());
-        } else {
-            for y in (prev_board_size..board_size.size).rev() {
-                for x in (prev_board_size..board_size.size).rev() {
-                    // Todo: remove cells
-                }
-            }
-        }
+        } 
+        // else {
+        //     for y in (prev_board_size..board_size.size).rev() {
+        //         for x in (prev_board_size..board_size.size).rev() {
+        //             // Todo: remove cells
+        //         }
+        //     }
+        // }
         // Todo:  resize background
     }
 }

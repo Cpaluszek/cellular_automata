@@ -17,8 +17,7 @@ pub fn handle_board_resize<C>(
     C: Cell,
 {
     if board_size.is_changed() {
-        let entities_count = map.cell_count();
-        let prev_board_size = (entities_count as f64).sqrt() as u32;
+        let prev_board_size = (map.cell_count() as f64).sqrt() as u32;
         let delta_size = board_size.size as i32 - prev_board_size as i32;
 
         if delta_size == 0 {
@@ -32,14 +31,12 @@ pub fn handle_board_resize<C>(
             board_size.size as f32 * SPRITE_SIZE,
         ));
 
+        // Offset cell_container position
         let (parent_entity, mut parent_transform) = cell_container.get_single_mut().unwrap();
-        println!("Delta size: {}", delta_size);
-        parent_transform.translation.x -= delta_size as f32 * SPRITE_SIZE * 0.5;
-        parent_transform.translation.y -= delta_size as f32 * SPRITE_SIZE * 0.5;
+        let translation_offset = delta_size as f32 * SPRITE_SIZE * 0.5;
+        parent_transform.translation.x -= translation_offset;
+        parent_transform.translation.y -= translation_offset;
 
-        println!("Board size changed to: {}", board_size.size);
-        println!("Previous entities count: {}", entities_count);
-        println!("Previous board size: {}", prev_board_size);
         if prev_board_size < board_size.size {
             // Increase board size
             let mut new_entities = vec![];
@@ -68,7 +65,6 @@ pub fn handle_board_resize<C>(
                 }
             }
             commands.entity(parent_entity).push_children(&new_entities);
-            println!("Added {} entities", new_entities.len());
         } else {
             let coords: Vec<_> = cell_entities
                 .iter()

@@ -26,7 +26,7 @@ impl Plugin for UIPlugin {
                 board_size: BOARD_SIZE,
             })
             .insert_resource(UICellColor {
-                cell_color: [CELL_COLOR.r(), CELL_COLOR.g(), CELL_COLOR.b()]
+                color: [CELL_COLOR.r(), CELL_COLOR.g(), CELL_COLOR.b()]
             })
             .add_systems(Update, ui_panel)
             .add_systems(PostUpdate, handle_pause_interaction);

@@ -10,9 +10,9 @@ pub struct BoardSize {
     pub size: u32,
 }
 
-#[derive(Default, Resource, Debug)]
+#[derive(Default, Resource)]
 pub struct CellColor {
-    pub cell_color: [f32; 3],
+    pub color: [f32; 3],
 }
 
 #[derive(Clone, Resource)]

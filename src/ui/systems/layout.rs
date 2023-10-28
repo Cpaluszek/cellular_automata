@@ -56,8 +56,8 @@ pub fn ui_panel(
         ui.separator();
         ui.label("Colors:");
         ui.horizontal(|ui| {
-            if ui.color_edit_button_rgb(&mut ui_cell_color.cell_color).changed() {
-               cell_color.cell_color = ui_cell_color.cell_color; 
+            if ui.color_edit_button_rgb(&mut ui_cell_color.color).changed() {
+               cell_color.color = ui_cell_color.color; 
             }
             ui.label("Cell color");
         });

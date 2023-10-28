@@ -28,7 +28,7 @@ impl Plugin for GameOfLifePlugin {
         app.add_state::<SimulationState>()
             .insert_resource(BoardSize { size: BOARD_SIZE })
             .insert_resource(CellMap::<Moore2dCell>::default())
-            .insert_resource(CellColor {cell_color: [CELL_COLOR.r(), CELL_COLOR.r(), CELL_COLOR.r()],})
+            .insert_resource(CellColor {color: [CELL_COLOR.r(), CELL_COLOR.r(), CELL_COLOR.r()],})
             .add_systems(Update, handle_new_cells::<Moore2dCell>)
             .add_systems(PostUpdate, (handle_removed_cells::<Moore2dCell>, handle_cell_color_change));
         if let Some(time_step) = self.tick_time_step {

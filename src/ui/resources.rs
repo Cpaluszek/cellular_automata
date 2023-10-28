@@ -12,7 +12,7 @@ pub struct UIBoardState {
 
 #[derive(Default, Resource)]
 pub struct UICellColor {
-    pub cell_color: [f32; 3],
+    pub color: [f32; 3],
 }
 
 // pub cycle_interval: u32,

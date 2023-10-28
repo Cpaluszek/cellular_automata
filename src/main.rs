@@ -13,11 +13,11 @@ use ui::UIPlugin;
 pub const WINDOW_WIDTH: f32 = 1600.0;
 pub const WINDOW_HEIGHT: f32 = 900.0;
 
-pub const BOARD_SIZE: u32 = 40;
-pub const BOARD_MAX_SIZE: u32 = 1000;
+pub const BOARD_SIZE: u32 = 100;
+pub const BOARD_MAX_SIZE: u32 = 600;
 pub const BOARD_MIN_SIZE: u32 = 20;
 
-pub const SPRITE_SIZE: f32 = 20.0;
+pub const SPRITE_SIZE: f32 = 8.0;
 
 pub const CELL_PROBABILITY: f64 = 0.3;
 

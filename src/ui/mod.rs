@@ -4,7 +4,7 @@ use bevy_egui::EguiPlugin;
 use crate::{BOARD_SIZE, CELL_COLOR};
 
 use self::{
-    resources::{UIBoardState, UiSimulationState, UICellColor},
+    resources::{UIBoardState, UICellColor, UiSimulationState},
     systems::{interaction::handle_pause_interaction, layout::ui_panel},
 };
 
@@ -26,7 +26,7 @@ impl Plugin for UIPlugin {
                 board_size: BOARD_SIZE,
             })
             .insert_resource(UICellColor {
-                color: [CELL_COLOR.r(), CELL_COLOR.g(), CELL_COLOR.b()]
+                color: [CELL_COLOR.r(), CELL_COLOR.g(), CELL_COLOR.b()],
             })
             .add_systems(Update, ui_panel)
             .add_systems(PostUpdate, handle_pause_interaction);

@@ -1,6 +1,7 @@
 use crate::{
     game::{
-        BoardBackground, BoardSize, Cell, CellContainer, CellMap, ConwayCellState, Moore2dCell, CellColor,
+        BoardBackground, BoardSize, Cell, CellColor, CellContainer, CellMap, ConwayCellState,
+        Moore2dCell,
     },
     SPRITE_SIZE,
 };
@@ -21,7 +22,7 @@ pub fn handle_board_resize<C>(
         let delta_size = board_size.size as i32 - prev_board_size as i32;
 
         if delta_size == 0 {
-            return ;
+            return;
         }
 
         // Set board background sprite
@@ -72,16 +73,21 @@ pub fn handle_board_resize<C>(
                     c.get_x() >= board_size.size as i32 || c.get_y() >= board_size.size as i32
                 })
                 .collect();
-            coords.iter().for_each(|c| match map.remove_cell(c.coords()) {
-                Some(e) => commands.entity(e).despawn(),
-                None => println!("Tried to despawn without entity"),
-            });
+            coords
+                .iter()
+                .for_each(|c| match map.remove_cell(c.coords()) {
+                    Some(e) => commands.entity(e).despawn(),
+                    None => println!("Tried to despawn without entity"),
+                });
         }
     }
 }
 
 pub fn handle_cell_color_change(cell_color: Res<CellColor>) {
     if cell_color.is_changed() {
-        println!("New cell color: {}{}{}", cell_color.color[0], cell_color.color[1], cell_color.color[2]);
+        println!(
+            "New cell color: {}{}{}",
+            cell_color.color[0], cell_color.color[1], cell_color.color[2]
+        );
     }
 }

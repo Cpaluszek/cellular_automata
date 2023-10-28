@@ -5,8 +5,8 @@ use bevy_egui::{
 };
 
 use crate::{
-    game::{BoardSize, SimulationState, CellColor},
-    ui::resources::{UIBoardState, UiSimulationState, UICellColor},
+    game::{BoardSize, CellColor, SimulationState},
+    ui::resources::{UIBoardState, UICellColor, UiSimulationState},
     BOARD_MAX_SIZE, BOARD_MIN_SIZE,
 };
 
@@ -57,7 +57,7 @@ pub fn ui_panel(
         ui.label("Colors:");
         ui.horizontal(|ui| {
             if ui.color_edit_button_rgb(&mut ui_cell_color.color).changed() {
-               cell_color.color = ui_cell_color.color; 
+                cell_color.color = ui_cell_color.color;
             }
             ui.label("Cell color");
         });

@@ -40,6 +40,14 @@ impl Cell for Moore2dCell {
     fn coords(&self) -> &Self::Coordinates {
         &self.coords
     }
+    #[inline]
+    fn get_x(&self) -> i32 {
+        self.coords.x
+    }
+    #[inline]
+    fn get_y(&self) -> i32 {
+        self.coords.y
+    }
 
     #[inline]
     fn neighbours_coordinates(&self) -> Vec<Self::Coordinates> {

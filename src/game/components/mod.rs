@@ -12,6 +12,9 @@ pub trait Cell: Clone + Component {
     #[must_use]
     fn coords(&self) -> &Self::Coordinates;
 
+    fn get_x(&self) -> i32;
+    fn get_y(&self) -> i32;
+
     #[must_use]
     fn neighbours_coordinates(&self) -> Vec<Self::Coordinates>;
 }

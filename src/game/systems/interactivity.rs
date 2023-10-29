@@ -97,9 +97,7 @@ pub fn handle_cell_color_change(
     }
 }
 
-pub fn load_pattern_file(pattern_file: Res<UIPatternFile>,
-    board_size: Res<BoardSize>,
-                         ) {
+pub fn load_pattern_file(pattern_file: Res<UIPatternFile>, board_size: Res<BoardSize>) {
     if !pattern_file.is_changed() || pattern_file.path.is_empty() {
         return;
     }
@@ -145,12 +143,12 @@ pub fn load_pattern_file(pattern_file: Res<UIPatternFile>,
 
             if pattern_width <= 0 || pattern_height <= 0 {
                 println!("Invalid pattern size");
-                return ;
+                return;
             }
 
-            if pattern_width as u32 > board_size.size || pattern_height as u32 > board_size.size  {
+            if pattern_width as u32 > board_size.size || pattern_height as u32 > board_size.size {
                 println!("Pattern size exceed board size");
-                return ;
+                return;
             }
 
             // Todo: use 2D container - vec of vec?
@@ -196,16 +194,17 @@ pub fn load_pattern_file(pattern_file: Res<UIPatternFile>,
     let pattern_y = (board_size.size - pattern_height as u32) / 2;
     for x in 0..board_size.size {
         for y in 0..board_size.size {
-            if x > pattern_x && x < pattern_x + pattern_width as u32 &&
-                y > pattern_y && y < pattern_y + pattern_height as u32 {
-                    // look for pattern
-                }
-            else {
+            if x > pattern_x
+                && x < pattern_x + pattern_width as u32
+                && y > pattern_y
+                && y < pattern_y + pattern_height as u32
+            {
+                // look for pattern
+            } else {
                 // Set cell to dead
             }
         }
     }
-
 
     // query: Query<(Entity, &C, &S)>,
 
@@ -261,4 +260,3 @@ fn read_file_content(file: &str) -> Result<String, std::io::Error> {
     file.read_to_string(&mut content)?;
     Ok(content)
 }
-

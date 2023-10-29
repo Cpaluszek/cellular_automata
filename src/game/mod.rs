@@ -12,8 +12,8 @@ use crate::{
     game::systems::{
         cells::{handle_cells, handle_new_cells, handle_removed_cells},
         coloring::color_sprites,
+        input::{handle_keyboard_input, mouse_drag_event, scroll_events},
         interactivity::{handle_board_resize, handle_cell_color_change},
-        input::{mouse_drag_event, scroll_events, handle_keyboard_input},
     },
     BOARD_SIZE, CELL_COLOR, CYCLE_INTERVAL,
 };

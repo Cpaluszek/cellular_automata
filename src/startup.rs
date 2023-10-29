@@ -3,7 +3,8 @@ use rand::Rng;
 
 use crate::{
     game::{BoardBackground, CellContainer, ConwayCellState, Moore2dCell},
-    BACKGROND_COLOR, BOARD_SIZE, CELL_PROBABILITY, SPRITE_SIZE, ui::SIDE_PANEL_WIDTH,
+    ui::SIDE_PANEL_WIDTH,
+    BACKGROND_COLOR, BOARD_SIZE, CELL_PROBABILITY, SPRITE_SIZE,
 };
 
 pub fn spawn_camera(mut commands: Commands) {
@@ -25,7 +26,11 @@ pub fn setup_map(mut commands: Commands) {
                 color: BACKGROND_COLOR,
                 ..default()
             },
-            transform: Transform::from_xyz(SIDE_PANEL_WIDTH * 0.5 -SPRITE_SIZE * 0.5, -SPRITE_SIZE * 0.5, 0.),
+            transform: Transform::from_xyz(
+                SIDE_PANEL_WIDTH * 0.5 - SPRITE_SIZE * 0.5,
+                -SPRITE_SIZE * 0.5,
+                0.,
+            ),
             ..default()
         },
         BoardBackground {},
@@ -35,7 +40,7 @@ pub fn setup_map(mut commands: Commands) {
     commands
         .spawn((
             SpatialBundle::from_transform(Transform::from_xyz(
-                SIDE_PANEL_WIDTH * 0.5 -(size as f32 * SPRITE_SIZE) * 0.5,
+                SIDE_PANEL_WIDTH * 0.5 - (size as f32 * SPRITE_SIZE) * 0.5,
                 -(size as f32 * SPRITE_SIZE) / 2.,
                 0.,
             )),

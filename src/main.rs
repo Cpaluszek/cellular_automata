@@ -48,9 +48,6 @@ fn main() {
         .add_plugins(UIPlugin)
         .add_plugins(GameOfLifePlugin::default())
         .add_systems(Startup, (spawn_camera, setup_map))
-        .add_systems(
-            PostUpdate,
-            (quit_application, toggle_simulation_state),
-        )
+        .add_systems(PostUpdate, (quit_application, toggle_simulation_state))
         .run();
 }

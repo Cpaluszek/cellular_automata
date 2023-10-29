@@ -6,7 +6,10 @@ use bevy_egui::{
 
 use crate::{
     game::{BoardSize, CellColor, SimulationState},
-    ui::{resources::{UIBoardState, UICellColor, UiSimulationState}, SIDE_PANEL_WIDTH},
+    ui::{
+        resources::{UIBoardState, UICellColor, UiSimulationState},
+        SIDE_PANEL_WIDTH,
+    },
     BOARD_MAX_SIZE, BOARD_MIN_SIZE,
 };
 
@@ -21,51 +24,54 @@ pub fn ui_panel(
     mut ui_cell_color: ResMut<UICellColor>,
     simulation_state: Res<State<SimulationState>>,
 ) {
-    egui::SidePanel::left("Settings").exact_width(SIDE_PANEL_WIDTH).resizable(false).show(contexts.ctx_mut(), |ui| {
-        ui.allocate_space(egui::Vec2::new(0.0, 4.0));
-        ui.heading("Settings");
-        ui.separator();
+    egui::SidePanel::left("Settings")
+        .exact_width(SIDE_PANEL_WIDTH)
+        .resizable(false)
+        .show(contexts.ctx_mut(), |ui| {
+            ui.allocate_space(egui::Vec2::new(0.0, 4.0));
+            ui.heading("Settings");
+            ui.separator();
 
-        // Pause - Resume button
-        let button_text = match *simulation_state.get() {
-            SimulationState::Running => "Pause",
-            SimulationState::Paused => "Resume",
-        };
-        ui.allocate_space(egui::Vec2::new(10.0, 0.0));
-        if ui.button(button_text).clicked() {
-            ui_simulation_state.simulation_state = !ui_simulation_state.simulation_state;
-        }
-        ui.allocate_space(egui::Vec2::new(0.0, 10.0));
-        ui.separator();
-
-        // Board size
-        ui.label("Board size");
-        ui.horizontal(|ui| {
-            ui.vertical(|ui| {
-                ui.add(egui::Slider::new(
-                    &mut ui_board_state.board_size,
-                    BOARD_MIN_SIZE..=BOARD_MAX_SIZE,
-                ));
-            });
+            // Pause - Resume button
+            let button_text = match *simulation_state.get() {
+                SimulationState::Running => "Pause",
+                SimulationState::Paused => "Resume",
+            };
             ui.allocate_space(egui::Vec2::new(10.0, 0.0));
+            if ui.button(button_text).clicked() {
+                ui_simulation_state.simulation_state = !ui_simulation_state.simulation_state;
+            }
+            ui.allocate_space(egui::Vec2::new(0.0, 10.0));
+            ui.separator();
 
-            if ui.button("Apply").clicked() {
-                if board_size.size != ui_board_state.board_size {
-                    board_size.size = ui_board_state.board_size;
+            // Board size
+            ui.label("Board size");
+            ui.horizontal(|ui| {
+                ui.vertical(|ui| {
+                    ui.add(egui::Slider::new(
+                        &mut ui_board_state.board_size,
+                        BOARD_MIN_SIZE..=BOARD_MAX_SIZE,
+                    ));
+                });
+                ui.allocate_space(egui::Vec2::new(10.0, 0.0));
+
+                if ui.button("Apply").clicked() {
+                    if board_size.size != ui_board_state.board_size {
+                        board_size.size = ui_board_state.board_size;
+                    }
                 }
-            }
-        });
+            });
 
-        // Cell color
-        ui.separator();
-        ui.label("Colors");
-        ui.horizontal(|ui| {
-            if ui.color_edit_button_rgb(&mut ui_cell_color.color).changed() {
-                cell_color.color = ui_cell_color.color.into();
-            }
-            ui.label("Cell color");
+            // Cell color
+            ui.separator();
+            ui.label("Colors");
+            ui.horizontal(|ui| {
+                if ui.color_edit_button_rgb(&mut ui_cell_color.color).changed() {
+                    cell_color.color = ui_cell_color.color.into();
+                }
+                ui.label("Cell color");
+            });
         });
-    });
 }
 // // Pattern files loading
 // ui.separator();

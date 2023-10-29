@@ -1,4 +1,4 @@
 pub mod cells;
 pub mod coloring;
-pub mod interactivity;
 pub mod input;
+pub mod interactivity;

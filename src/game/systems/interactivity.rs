@@ -3,6 +3,7 @@ use crate::{
         BoardBackground, BoardSize, Cell, CellColor, CellContainer, CellMap, ConwayCellState,
         Moore2dCell,
     },
+    ui::resources::UIPatternFile,
     SPRITE_SIZE,
 };
 use bevy::prelude::*;
@@ -91,5 +92,11 @@ pub fn handle_cell_color_change(
         sprites
             .par_iter_mut()
             .for_each_mut(|mut sprite| sprite.color = cell_color.color);
+    }
+}
+
+pub fn load_pattern_file(ui_pattern_file: Res<UIPatternFile>) {
+    if ui_pattern_file.is_changed() {
+        println!("Pattern: {}", ui_pattern_file.path);
     }
 }

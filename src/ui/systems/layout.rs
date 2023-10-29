@@ -7,7 +7,7 @@ use bevy_egui::{
 use crate::{
     game::{BoardSize, CellColor, SimulationState},
     ui::{
-        resources::{UIBoardState, UICellColor, UiSimulationState},
+        resources::{UIBoardState, UICellColor, UIPatternFile, UiSimulationState},
         SIDE_PANEL_WIDTH,
     },
     BOARD_MAX_SIZE, BOARD_MIN_SIZE,
@@ -22,6 +22,7 @@ pub fn ui_panel(
     mut board_size: ResMut<BoardSize>,
     mut cell_color: ResMut<CellColor>,
     mut ui_cell_color: ResMut<UICellColor>,
+    mut ui_pattern_file: ResMut<UIPatternFile>,
     simulation_state: Res<State<SimulationState>>,
 ) {
     egui::SidePanel::left("Settings")
@@ -63,6 +64,7 @@ pub fn ui_panel(
             });
 
             // Cell color
+            ui.allocate_space(egui::Vec2::new(0.0, 10.0));
             ui.separator();
             ui.label("Colors");
             ui.horizontal(|ui| {
@@ -71,34 +73,36 @@ pub fn ui_panel(
                 }
                 ui.label("Cell color");
             });
+            // Pattern files
+            ui.allocate_space(egui::Vec2::new(0.0, 10.0));
+            ui.separator();
+            ui.label("RLE Files");
+            ui.horizontal(|ui| {
+                ui.label("Lines");
+                if ui.button("Blinker").clicked() {
+                    ui_pattern_file.path = "assets/rle/blinker.rle".to_string();
+                }
+                if ui.button("four").clicked() {
+                    // ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    //             "assets/rle/four.rle".to_string(),
+                    //             )));
+                }
+                if ui.button("Five").clicked() {
+                    // ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    //             "assets/rle/five.rle".to_string(),
+                    //             )));
+                }
+                if ui.button("ten").clicked() {
+                    // ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
+                    //             "assets/rle/ten.rle".to_string(),
+                    //             )));
+                }
+            });
         });
 }
 // // Pattern files loading
 // ui.separator();
 // ui.label("RLE files:");
-// ui.horizontal(|ui| {
-//     ui.label("Lines");
-//     if ui.button("Blinker").clicked() {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-//             "assets/rle/blinker.rle".to_string(),
-//         )));
-//     }
-//     if ui.button("four").clicked() {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-//             "assets/rle/four.rle".to_string(),
-//         )));
-//     }
-//     if ui.button("Five").clicked() {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-//             "assets/rle/five.rle".to_string(),
-//         )));
-//     }
-//     if ui.button("ten").clicked() {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-//             "assets/rle/ten.rle".to_string(),
-//         )));
-//     }
-// });
 // ui.horizontal(|ui| {
 //     ui.label("Stables");
 //     if ui.button("cthulhu").clicked() {

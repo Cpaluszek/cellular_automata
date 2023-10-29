@@ -4,11 +4,11 @@ use bevy_egui::EguiPlugin;
 use crate::{BOARD_SIZE, CELL_COLOR};
 
 use self::{
-    resources::{UIBoardState, UICellColor, UiSimulationState},
+    resources::{UIBoardState, UICellColor, UIPatternFile, UiSimulationState},
     systems::{interaction::handle_pause_interaction, layout::ui_panel},
 };
 
-mod resources;
+pub mod resources;
 mod systems;
 
 pub const SIDE_PANEL_WIDTH: f32 = 240.0;
@@ -21,14 +21,15 @@ impl Plugin for UIPlugin {
             .insert_resource(UiSimulationState {
                 simulation_state: true,
                 // cycle_interval: CYCLE_INTERVAL.as_millis() as u32,
-                // cell_color: [CELL_COLOR.r(), CELL_COLOR.g(), CELL_COLOR.b()],
-                // background_color: [CLEAR_COLOR.r(), CLEAR_COLOR.g(), CLEAR_COLOR.b()],
             })
             .insert_resource(UIBoardState {
                 board_size: BOARD_SIZE,
             })
             .insert_resource(UICellColor {
                 color: [CELL_COLOR.r(), CELL_COLOR.g(), CELL_COLOR.b()],
+            })
+            .insert_resource(UIPatternFile {
+                path: String::new(),
             })
             .add_systems(Update, ui_panel)
             .add_systems(PostUpdate, handle_pause_interaction);

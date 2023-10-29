@@ -4,6 +4,7 @@ use bevy::{
 };
 
 const ZOOM_SPEED: f32 = 1.;
+const MOVE_SPEED: f32 = 10.0;
 
 pub fn scroll_events(
     mut scroll_event: EventReader<MouseWheel>,
@@ -24,9 +25,9 @@ pub fn scroll_events(
 }
 
 pub fn mouse_drag_event(
-    input_mouse: Res<Input<MouseButton>>,
+    // input_mouse: Res<Input<MouseButton>>,
     mut ev_motion: EventReader<MouseMotion>,
-    mut camera_query: Query<&mut Transform, With<Camera>>,
+    // mut camera_query: Query<&mut Transform, With<Camera>>,
 ) {
     // Todo: try without WSL
 
@@ -44,4 +45,31 @@ pub fn mouse_drag_event(
     //     camera.translation.y += delta.y;
     // }
     // }
+}
+
+pub fn handle_keyboard_input(
+    keyboard_input: Res<Input<KeyCode>>,
+    mut camera_query: Query<&mut Transform, With<Camera>>
+) {
+    let mut camera_transform = camera_query.get_single_mut().unwrap();
+    let mut translation = Vec2::ZERO;
+
+    if keyboard_input.any_pressed([KeyCode::Left, KeyCode::A]) {
+        translation.x += MOVE_SPEED;    
+    }
+    if keyboard_input.any_pressed([KeyCode::Right, KeyCode::D]) {
+        translation.x -= MOVE_SPEED;    
+    }
+    if keyboard_input.any_pressed([KeyCode::Up, KeyCode::W]) {
+        translation.y -= MOVE_SPEED;    
+    }
+    if keyboard_input.any_pressed([KeyCode::Down, KeyCode::S]) {
+        translation.y += MOVE_SPEED;    
+    }
+
+    if translation.length_squared() > 0.0 {
+       camera_transform.translation.x += translation.x; 
+       camera_transform.translation.y += translation.y; 
+    }
+
 }

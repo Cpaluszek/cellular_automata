@@ -10,7 +10,7 @@ mod ui;
 use game::GameOfLifePlugin;
 use ui::UIPlugin;
 
-pub const WINDOW_WIDTH: f32 = 1600.0;
+pub const WINDOW_WIDTH: f32 = 1300.0;
 pub const WINDOW_HEIGHT: f32 = 900.0;
 
 pub const BOARD_SIZE: u32 = 100;

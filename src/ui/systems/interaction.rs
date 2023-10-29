@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 use crate::{game::SimulationState, ui::resources::UiSimulationState};
 
+// Todo: move to interactivity.rs
 pub fn handle_pause_interaction(
     ui_state: Res<UiSimulationState>,
     simulation_state: Res<State<SimulationState>>,

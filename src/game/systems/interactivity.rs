@@ -1,3 +1,5 @@
+use std::{fs::File, io::Read};
+
 use crate::{
     game::{
         BoardBackground, BoardSize, Cell, CellColor, CellContainer, CellMap, ConwayCellState,
@@ -95,8 +97,168 @@ pub fn handle_cell_color_change(
     }
 }
 
-pub fn load_pattern_file(ui_pattern_file: Res<UIPatternFile>) {
-    if ui_pattern_file.is_changed() {
-        println!("Pattern: {}", ui_pattern_file.path);
+pub fn load_pattern_file(pattern_file: Res<UIPatternFile>,
+    board_size: Res<BoardSize>,
+                         ) {
+    if !pattern_file.is_changed() || pattern_file.path.is_empty() {
+        return;
     }
+    println!("Pattern: {}", pattern_file.path);
+
+    // Read file content - see http://www.conwaylife.com/wiki/RLE
+    let content = read_file_content(&pattern_file.path).unwrap();
+    let mut state: Vec<bool> = vec![];
+
+    let mut pattern_height = 0;
+    let mut pattern_width = 0;
+    let mut col = 0;
+    let mut row = 0;
+    let mut count = 0;
+
+    // Todo: clean parsing
+
+    // Parse a rle file
+    for line in content.lines() {
+        if line.starts_with('#') {
+            continue;
+        } else if line.starts_with('x') {
+            let mut split = line.split(',');
+            pattern_width = split
+                .next()
+                .unwrap()
+                .split('=')
+                .last()
+                .unwrap()
+                .trim()
+                .parse::<usize>()
+                .unwrap();
+
+            pattern_height = split
+                .next()
+                .unwrap()
+                .split('=')
+                .last()
+                .unwrap()
+                .trim()
+                .parse::<usize>()
+                .unwrap();
+
+            if pattern_width <= 0 || pattern_height <= 0 {
+                println!("Invalid pattern size");
+                return ;
+            }
+
+            if pattern_width as u32 > board_size.size || pattern_height as u32 > board_size.size  {
+                println!("Pattern size exceed board size");
+                return ;
+            }
+
+            // Todo: use 2D container - vec of vec?
+            state = vec![false; pattern_width * pattern_height];
+        } else {
+            for c in line.chars() {
+                match c {
+                    '0'..='9' => {
+                        count = count * 10 + c.to_digit(10).unwrap();
+                    }
+                    'o' => {
+                        if count == 0 {
+                            state[row * pattern_width + col] = true;
+                            col += 1;
+                        } else {
+                            for _ in 0..count {
+                                state[row * pattern_width + col] = true;
+                                col += 1;
+                            }
+                            count = 0;
+                        }
+                    }
+                    'b' => {
+                        if count == 0 {
+                            col += 1;
+                        } else {
+                            col += count as usize;
+                            count = 0;
+                        }
+                    }
+                    _ => {
+                        row += 1;
+                        col = 0;
+                    }
+                }
+            }
+        }
+    }
+
+    // Todo: Clear previous board
+
+    let pattern_x = (board_size.size - pattern_width as u32) / 2;
+    let pattern_y = (board_size.size - pattern_height as u32) / 2;
+    for x in 0..board_size.size {
+        for y in 0..board_size.size {
+            if x > pattern_x && x < pattern_x + pattern_width as u32 &&
+                y > pattern_y && y < pattern_y + pattern_height as u32 {
+                    // look for pattern
+                }
+            else {
+                // Set cell to dead
+            }
+        }
+    }
+
+
+    // query: Query<(Entity, &C, &S)>,
+
+    // board.clear();
+    // for cell_entt in cell_entities.0.values() {
+    //     commands.entity(*cell_entt).despawn();
+    // }
+    // cell_entities.0.clear();
+
+    // Set the new state to the board
+    // let pos = CellPosition {
+    //     col: (board.width - pattern_width) / 2,
+    //     row: (board.height - pattern_height) / 2,
+    // };
+    //
+    // board.patch(pos, &state, pattern_width, pattern_height);
+
+    // Spawn entities
+    // let half_window_height = window.single().height() / 2.0;
+    // let half_window_width = window.single().width() / 2.0;
+    // for row in 0..board.height {
+    //     for col in 0..board.width {
+    //         let pos = CellPosition { col, row };
+    //         if board.alive(pos) {
+    //             let x = -half_window_width + (col as f32 * cell_size.width) + cell_size.width / 2.0;
+    //             let y =
+    //                 half_window_height - (row as f32 * cell_size.height) - cell_size.height / 2.0;
+    //
+    //             // Cell Entity
+    //             let new_cell = commands
+    //                 .spawn((
+    //                     SpriteBundle {
+    //                         sprite: Sprite {
+    //                             color: cell_color.0,
+    //                             custom_size: Some(Vec2::new(cell_size.width, cell_size.height)),
+    //                             ..default()
+    //                         },
+    //                         transform: Transform::from_xyz(x, y, 0.0),
+    //                         ..default()
+    //                     },
+    //                     CellPosition { col, row },
+    //                 ))
+    //                 .id();
+    //             cell_entities.0.insert(pos, new_cell);
+    //         }
+    //     }
+    // }
 }
+
+fn read_file_content(file: &str) -> Result<String, std::io::Error> {
+    let mut file = File::open(file)?;
+    let mut content = String::new();
+    file.read_to_string(&mut content)?;
+    Ok(content)
+}
+

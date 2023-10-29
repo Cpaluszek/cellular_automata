@@ -27,6 +27,7 @@ pub fn handle_cells<C, S>(
     C: Cell,
     S: CellState,
 {
+    // Todo: remove batch and pause
     if pause.is_some() {
         println!("Pause");
         return;

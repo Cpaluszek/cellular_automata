@@ -6,7 +6,7 @@ use bevy_egui::{
 
 use crate::{
     game::{BoardSize, CellColor, SimulationState},
-    ui::resources::{UIBoardState, UICellColor, UiSimulationState},
+    ui::{resources::{UIBoardState, UICellColor, UiSimulationState}, SIDE_PANEL_WIDTH},
     BOARD_MAX_SIZE, BOARD_MIN_SIZE,
 };
 
@@ -21,7 +21,11 @@ pub fn ui_panel(
     mut ui_cell_color: ResMut<UICellColor>,
     simulation_state: Res<State<SimulationState>>,
 ) {
-    egui::Window::new("Settings").show(contexts.ctx_mut(), |ui| {
+    egui::SidePanel::left("Settings").exact_width(SIDE_PANEL_WIDTH).resizable(false).show(contexts.ctx_mut(), |ui| {
+        ui.allocate_space(egui::Vec2::new(0.0, 4.0));
+        ui.heading("Settings");
+        ui.separator();
+
         // Pause - Resume button
         let button_text = match *simulation_state.get() {
             SimulationState::Running => "Pause",
@@ -35,7 +39,7 @@ pub fn ui_panel(
         ui.separator();
 
         // Board size
-        ui.label("Board size:");
+        ui.label("Board size");
         ui.horizontal(|ui| {
             ui.vertical(|ui| {
                 ui.add(egui::Slider::new(
@@ -54,7 +58,7 @@ pub fn ui_panel(
 
         // Cell color
         ui.separator();
-        ui.label("Colors:");
+        ui.label("Colors");
         ui.horizontal(|ui| {
             if ui.color_edit_button_rgb(&mut ui_cell_color.color).changed() {
                 cell_color.color = ui_cell_color.color.into();

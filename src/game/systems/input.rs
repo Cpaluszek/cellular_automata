@@ -71,5 +71,4 @@ pub fn handle_keyboard_input(
        camera_transform.translation.x += translation.x; 
        camera_transform.translation.y += translation.y; 
     }
-
 }

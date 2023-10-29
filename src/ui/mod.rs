@@ -11,6 +11,8 @@ use self::{
 mod resources;
 mod systems;
 
+pub const SIDE_PANEL_WIDTH: f32 = 240.0;
+
 pub struct UIPlugin;
 
 impl Plugin for UIPlugin {

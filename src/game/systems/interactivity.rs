@@ -99,8 +99,7 @@ pub fn handle_cell_color_change(
 pub fn load_pattern_file(
     pattern_file: Res<UIPatternFile>,
     board_size: Res<BoardSize>,
-    mut map: ResMut<CellMap>,
-    // mut cell_query: Query<(&C, &S)>,
+    mut cell_query: Query<(&Moore2dCell, &ConwayCellState)>,
 ) {
     if !pattern_file.is_changed() || pattern_file.path.is_empty() {
         return;
@@ -195,13 +194,12 @@ pub fn load_pattern_file(
     }
 
     // Todo: Clear previous board
-    // let map: HashMap<_, _> = cell_query
-    //     .iter_mut().map(|(cell, state)| (cell, state)).collect();
 
     let pattern_x = (board_size.size - pattern_width as u32) / 2;
     let pattern_y = (board_size.size - pattern_height as u32) / 2;
     for x in 0..board_size.size {
         for y in 0..board_size.size {
+            let pos = IVec2::new(x as i32, y as i32);
             if x > pattern_x
                 && x < pattern_x + pattern_width as u32
                 && y > pattern_y
@@ -209,13 +207,20 @@ pub fn load_pattern_file(
             {
                 let local_x = x - pattern_x;
                 let local_y = y - pattern_y;
-                let state = state[local_x as usize + local_y as usize * pattern_width];
-                // let test: C::Coordinates = IVec2::new(local_x as i32, local_y as i32).into();
-                // if map.get_cell(&test).is_some() {
-                //
-                // }
+                let pattern_state = state[local_x as usize + local_y as usize * pattern_width];
+                for (cell, mut state) in cell_query.iter_mut() {
+                    if *cell.coords() == pos {
+                        state = &ConwayCellState(pattern_state);
+                        println!("Set state {} at pos {},{}", pattern_state, x, y);
+                    }
+                }
             } else {
                 // Set cell to dead
+                for (cell, mut state) in cell_query.iter_mut() {
+                    if *cell.coords() == pos {
+                        state = &ConwayCellState(false);
+                    }
+                }
             }
         }
     }

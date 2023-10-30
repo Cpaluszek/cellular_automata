@@ -1,11 +1,8 @@
 use bevy::{prelude::*, utils::HashMap};
 
-use crate::game::{resources::SimulationBatch, Cell, CellMap, CellState, SimulationPause};
+use crate::game::{resources::SimulationBatch, CellMap, SimulationPause, ConwayCellState, Moore2dCell};
 
-fn handle_cell<C, S>((cell, state): (&C, &S), map: &HashMap<C::Coordinates, S>) -> Option<S>
-where
-    C: Cell,
-    S: CellState,
+fn handle_cell((cell, state): (&Moore2dCell, &ConwayCellState), map: &HashMap<IVec2, ConwayCellState>) -> Option<ConwayCellState>
 {
     let neighbours_coords = cell.neighbours_coordinates();
     let neigbours_states = neighbours_coords.iter().filter_map(|c| map.get(c));
@@ -20,13 +17,10 @@ where
 pub fn handle_cells<C, S>(
     mut commands: Commands,
     par_commands: ParallelCommands,
-    query: Query<(Entity, &C, &S)>,
+    query: Query<(Entity, &Moore2dCell, &ConwayCellState)>,
     pause: Option<Res<SimulationPause>>,
     batch: Option<Res<SimulationBatch>>,
-) where
-    C: Cell,
-    S: CellState,
-{
+) {
     // Todo: remove batch and pause
     if pause.is_some() {
         println!("Pause");
@@ -54,9 +48,7 @@ pub fn handle_cells<C, S>(
     }
 }
 
-pub fn handle_new_cells<C>(query: Query<(Entity, &C), Added<C>>, mut map: ResMut<CellMap<C>>)
-where
-    C: Cell,
+pub fn handle_new_cells(query: Query<(Entity, &Moore2dCell), Added<Moore2dCell>>, mut map: ResMut<CellMap>)
 {
     for (entity, new_cell) in query.iter() {
         let old_entity = map.insert_cell(new_cell.coords().clone(), entity);
@@ -73,9 +65,7 @@ where
     }
 }
 
-pub fn handle_removed_cells<C>(mut removed_cells: RemovedComponents<C>, mut map: ResMut<CellMap<C>>)
-where
-    C: Cell,
+pub fn handle_removed_cells(mut removed_cells: RemovedComponents<Moore2dCell>, mut map: ResMut<CellMap>)
 {
     if removed_cells.is_empty() {
         return;

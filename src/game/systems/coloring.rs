@@ -13,7 +13,7 @@ fn apply_color(state: &ConwayCellState, visible: &mut Visibility) {
     }
 }
 
-pub fn color_sprites<S>(
+pub fn color_sprites(
     mut query: Query<(&ConwayCellState, &mut Visibility), Changed<ConwayCellState>>,
     batch: Option<Res<SimulationBatch>>,
 ) {

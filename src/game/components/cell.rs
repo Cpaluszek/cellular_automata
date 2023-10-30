@@ -1,8 +1,6 @@
 use bevy::prelude::{Component, IVec2, Reflect};
 use std::ops::Deref;
 
-use super::Cell;
-
 const NEIGHBOURS_COORDINATES: [IVec2; 8] = [
     IVec2::new(-1, 0),
     IVec2::new(-1, -1),
@@ -33,28 +31,6 @@ impl Deref for Moore2dCell {
     }
 }
 
-impl Cell for Moore2dCell {
-    type Coordinates = IVec2;
-
-    #[inline]
-    fn coords(&self) -> &Self::Coordinates {
-        &self.coords
-    }
-    #[inline]
-    fn get_x(&self) -> i32 {
-        self.coords.x
-    }
-    #[inline]
-    fn get_y(&self) -> i32 {
-        self.coords.y
-    }
-
-    #[inline]
-    fn neighbours_coordinates(&self) -> Vec<Self::Coordinates> {
-        NEIGHBOURS_COORDINATES.map(|c| c + *self.coords()).to_vec()
-    }
-}
-
 impl Moore2dCell {
     // must_use is a compiler hint that the return value of this function should
     // be used. If the return value is not used, the compiler will emit a warning.
@@ -63,4 +39,15 @@ impl Moore2dCell {
     pub const fn new(coords: IVec2) -> Self {
         Self { coords }
     }
+
+    #[inline]
+    pub fn coords(&self) -> &IVec2 {
+        &self.coords
+    }
+
+    #[inline]
+    pub fn neighbours_coordinates(&self) -> Vec<IVec2> {
+        NEIGHBOURS_COORDINATES.map(|c| c + *self.coords()).to_vec()
+    }
 }
+

@@ -1,9 +1,7 @@
 use bevy::{
-    prelude::{Color, Entity, Resource},
+    prelude::{Color, Entity, Resource, IVec2},
     utils::{HashMap, HashSet},
 };
-
-use crate::game::Cell;
 
 #[derive(Resource)]
 pub struct BoardSize {
@@ -16,11 +14,11 @@ pub struct CellColor {
 }
 
 #[derive(Clone, Resource)]
-pub struct CellMap<C: Cell> {
-    cells: HashMap<C::Coordinates, Entity>,
+pub struct CellMap {
+    cells: HashMap<IVec2, Entity>,
 }
 
-impl<C: Cell> Default for CellMap<C> {
+impl Default for CellMap {
     fn default() -> Self {
         Self {
             cells: Default::default(),
@@ -28,7 +26,7 @@ impl<C: Cell> Default for CellMap<C> {
     }
 }
 
-impl<C: Cell> CellMap<C> {
+impl CellMap {
     /// Retrieves every cell entity matching `coords`.
     /// If some coordinates are not stored in the cell map they will be ignored.
     // pub fn get_cell_entities<'a>(
@@ -50,7 +48,7 @@ impl<C: Cell> CellMap<C> {
     /// If the map did not have this key present, `None` is returned.
     /// If the map did have this key present, the value is updated, and the old
     /// value is returned
-    pub fn insert_cell(&mut self, coordinates: C::Coordinates, entity: Entity) -> Option<Entity> {
+    pub fn insert_cell(&mut self, coordinates: IVec2, entity: Entity) -> Option<Entity> {
         self.cells.insert(coordinates, entity)
     }
 
@@ -62,7 +60,7 @@ impl<C: Cell> CellMap<C> {
     /// Use this method to remove cell entities from the map if you remove a
     /// `Cell` component from an `Entity` or *despawn* an `Entity` with a
     /// `Cell` component.
-    pub fn remove_cell(&mut self, coordinates: &C::Coordinates) -> Option<Entity> {
+    pub fn remove_cell(&mut self, coordinates: &IVec2) -> Option<Entity> {
         self.cells.remove(coordinates)
     }
 
@@ -76,7 +74,7 @@ impl<C: Cell> CellMap<C> {
     }
 
     // Retrieves a cell entity using its `coordinates`
-    pub fn get_cell(&self, coordinates: &C::Coordinates) -> Option<Entity> {
+    pub fn get_cell(&self, coordinates: &IVec2) -> Option<Entity> {
         self.cells.get(coordinates).copied()
     }
 

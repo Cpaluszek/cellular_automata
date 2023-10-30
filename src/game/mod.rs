@@ -33,7 +33,7 @@ impl Plugin for GameOfLifePlugin {
         app.add_state::<SimulationState>()
             // Resources
             .insert_resource(BoardSize { size: BOARD_SIZE })
-            .insert_resource(CellMap::<Moore2dCell>::default())
+            .insert_resource(CellMap::default())
             .insert_resource(CellColor {
                 color: [CELL_COLOR.r(), CELL_COLOR.r(), CELL_COLOR.r()].into(),
             })
@@ -41,8 +41,7 @@ impl Plugin for GameOfLifePlugin {
             .add_systems(
                 Update,
                 (
-                    handle_new_cells::<Moore2dCell>,
-                    color_sprites::<ConwayCellState>,
+                    handle_new_cells, color_sprites,
                 ),
             )
             .add_systems(
@@ -54,13 +53,13 @@ impl Plugin for GameOfLifePlugin {
             .add_systems(
                 PostUpdate,
                 (
-                    handle_removed_cells::<Moore2dCell>,
+                    handle_removed_cells,
                     handle_cell_color_change,
-                    handle_board_resize::<Moore2dCell>,
+                    handle_board_resize,
                     mouse_drag_event,
                     scroll_events,
                     handle_keyboard_input,
-                    load_pattern_file::<Moore2dCell, ConwayCellState>,
+                    load_pattern_file,
                 ),
             );
         info!("Loaded cellular automata plugin");

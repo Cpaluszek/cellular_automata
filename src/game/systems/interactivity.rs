@@ -2,24 +2,22 @@ use std::{fs::File, io::Read};
 
 use crate::{
     game::{
-        BoardBackground, BoardSize, Cell, CellColor, CellContainer, CellMap, ConwayCellState,
-        Moore2dCell, CellState, 
+        BoardBackground, BoardSize, CellColor, CellContainer, CellMap, ConwayCellState,
+        Moore2dCell, 
     },
     ui::resources::UIPatternFile,
     SPRITE_SIZE,
 };
 use bevy::prelude::*;
 
-pub fn handle_board_resize<C>(
+pub fn handle_board_resize(
     board_size: Res<BoardSize>,
-    mut map: ResMut<CellMap<C>>,
-    cell_entities: Query<&C>,
+    mut map: ResMut<CellMap>,
+    cell_entities: Query<&Moore2dCell>,
     mut cell_container: Query<(Entity, &mut Transform), With<CellContainer>>,
     mut board_background: Query<&mut Sprite, With<BoardBackground>>,
     mut commands: Commands,
-) where
-    C: Cell,
-{
+) {
     if board_size.is_changed() {
         let prev_board_size = (map.cell_count() as f64).sqrt() as u32;
         let delta_size = board_size.size as i32 - prev_board_size as i32;
@@ -73,7 +71,8 @@ pub fn handle_board_resize<C>(
             let coords: Vec<_> = cell_entities
                 .iter()
                 .filter(|c| {
-                    c.get_x() >= board_size.size as i32 || c.get_y() >= board_size.size as i32
+                    let coords = c.coords();
+                    coords.x >= board_size.size as i32 || coords.y >= board_size.size as i32
                 })
                 .collect();
             coords
@@ -97,16 +96,12 @@ pub fn handle_cell_color_change(
     }
 }
 
-pub fn load_pattern_file<C, S>(
+pub fn load_pattern_file(
     pattern_file: Res<UIPatternFile>,
     board_size: Res<BoardSize>,
-    mut map: ResMut<CellMap<C>>,
+    mut map: ResMut<CellMap>,
     // mut cell_query: Query<(&C, &S)>,
-) 
-where
-    C: Cell,
-    S: CellState,
-{
+) {
     if !pattern_file.is_changed() || pattern_file.path.is_empty() {
         return;
     }

@@ -3,7 +3,7 @@ use std::{fs::File, io::Read};
 use crate::{
     game::{
         BoardBackground, BoardSize, Cell, CellColor, CellContainer, CellMap, ConwayCellState,
-        Moore2dCell,
+        Moore2dCell, CellState, 
     },
     ui::resources::UIPatternFile,
     SPRITE_SIZE,
@@ -97,7 +97,16 @@ pub fn handle_cell_color_change(
     }
 }
 
-pub fn load_pattern_file(pattern_file: Res<UIPatternFile>, board_size: Res<BoardSize>) {
+pub fn load_pattern_file<C, S>(
+    pattern_file: Res<UIPatternFile>,
+    board_size: Res<BoardSize>,
+    mut map: ResMut<CellMap<C>>,
+    // mut cell_query: Query<(&C, &S)>,
+) 
+where
+    C: Cell,
+    S: CellState,
+{
     if !pattern_file.is_changed() || pattern_file.path.is_empty() {
         return;
     }
@@ -105,6 +114,7 @@ pub fn load_pattern_file(pattern_file: Res<UIPatternFile>, board_size: Res<Board
 
     // Read file content - see http://www.conwaylife.com/wiki/RLE
     let content = read_file_content(&pattern_file.path).unwrap();
+
     let mut state: Vec<bool> = vec![];
 
     let mut pattern_height = 0;
@@ -147,6 +157,7 @@ pub fn load_pattern_file(pattern_file: Res<UIPatternFile>, board_size: Res<Board
             }
 
             if pattern_width as u32 > board_size.size || pattern_height as u32 > board_size.size {
+                // Todo: resize board if possible
                 println!("Pattern size exceed board size");
                 return;
             }
@@ -189,6 +200,8 @@ pub fn load_pattern_file(pattern_file: Res<UIPatternFile>, board_size: Res<Board
     }
 
     // Todo: Clear previous board
+    // let map: HashMap<_, _> = cell_query
+    //     .iter_mut().map(|(cell, state)| (cell, state)).collect();
 
     let pattern_x = (board_size.size - pattern_width as u32) / 2;
     let pattern_y = (board_size.size - pattern_height as u32) / 2;
@@ -199,7 +212,13 @@ pub fn load_pattern_file(pattern_file: Res<UIPatternFile>, board_size: Res<Board
                 && y > pattern_y
                 && y < pattern_y + pattern_height as u32
             {
-                // look for pattern
+                let local_x = x - pattern_x;
+                let local_y = y - pattern_y;
+                let state = state[local_x as usize + local_y as usize * pattern_width];
+                // let test: C::Coordinates = IVec2::new(local_x as i32, local_y as i32).into();
+                // if map.get_cell(&test).is_some() {
+                //
+                // }
             } else {
                 // Set cell to dead
             }

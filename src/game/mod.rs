@@ -60,7 +60,7 @@ impl Plugin for GameOfLifePlugin {
                     mouse_drag_event,
                     scroll_events,
                     handle_keyboard_input,
-                    load_pattern_file,
+                    load_pattern_file::<Moore2dCell, ConwayCellState>,
                 ),
             );
         info!("Loaded cellular automata plugin");

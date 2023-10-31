@@ -206,19 +206,10 @@ pub fn load_pattern_file(
     //     })
     // });
 
-    for y in 0..pattern_height {
-        for x in 0..pattern_width {
-            print!("{} ", state[x + y * pattern_width]);
-        }
-        println!("");
-    }
-
     let pattern_start_x = (board_size.size - pattern_width as u32) / 2;
     let pattern_start_y = (board_size.size - pattern_height as u32) / 2;
     let pattern_end_x = pattern_start_x + pattern_width as u32;
     let pattern_end_y = pattern_start_y + pattern_height as u32;
-    println!("pattern start {} {}", pattern_start_x, pattern_start_y);
-    println!("pattern end {} {}", pattern_end_x, pattern_end_y);
     // Todo: optimise
     for y in pattern_start_y..pattern_end_y {
         for x in pattern_start_x..pattern_end_x {

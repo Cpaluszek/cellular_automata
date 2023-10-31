@@ -44,7 +44,8 @@ impl Plugin for GameOfLifePlugin {
             .add_systems(Update, (handle_new_cells, color_sprites))
             .add_systems(
                 Update,
-                handle_cells.run_if(on_timer(duration))
+                handle_cells
+                    .run_if(on_timer(duration))
                     .run_if(in_state(SimulationState::Running)),
             )
             .add_systems(

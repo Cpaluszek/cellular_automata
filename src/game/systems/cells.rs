@@ -1,8 +1,6 @@
 use bevy::{prelude::*, utils::HashMap};
 
-use crate::game::{
-    resources::CellMap, ConwayCellState, Moore2dCell,
-};
+use crate::game::{resources::CellMap, ConwayCellState, Moore2dCell};
 
 fn handle_cell(
     (cell, state): (&Moore2dCell, &ConwayCellState),

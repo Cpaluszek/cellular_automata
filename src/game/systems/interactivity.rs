@@ -55,7 +55,7 @@ pub fn handle_board_resize(
 
         if prev_board_size < board_size.size {
             // Increase board size
-            
+
             // Todo: optimize
             let mut new_entities = vec![];
             for y in 0..board_size.size {
@@ -153,7 +153,7 @@ pub fn load_pattern_file(
                 state = vec![false; pattern_width * pattern_height];
             } else {
                 println!("Invalid pattern size");
-                return ;
+                return;
             }
         } else {
             for c in line.chars() {
@@ -222,6 +222,7 @@ pub fn load_pattern_file(
             };
             for (entity, cell) in cell_query.iter_mut() {
                 if *cell.coords() == pos {
+                    // Overwrite ConwayCellState component
                     commands
                         .entity(entity)
                         .insert(ConwayCellState(pattern_state));

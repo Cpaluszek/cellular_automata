@@ -83,19 +83,13 @@ pub fn ui_panel(
                     ui_pattern_file.path = "assets/rle/blinker.rle".to_string();
                 }
                 if ui.button("four").clicked() {
-                    // ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-                    //             "assets/rle/four.rle".to_string(),
-                    //             )));
+                    ui_pattern_file.path = "assets/rle/four.rle".to_string();
                 }
                 if ui.button("Five").clicked() {
-                    // ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-                    //             "assets/rle/five.rle".to_string(),
-                    //             )));
+                    ui_pattern_file.path = "assets/rle/five.rle".to_string();
                 }
                 if ui.button("ten").clicked() {
-                    // ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-                    //             "assets/rle/ten.rle".to_string(),
-                    //             )));
+                    ui_pattern_file.path = "assets/rle/ten.rle".to_string();
                 }
             });
         });

@@ -5,7 +5,7 @@ use bevy::{
 
 const ZOOM_SPEED: f32 = 1.;
 const MOVE_SPEED: f32 = 10.0;
-const DRAG_SPEED_MULT: f32 = 0.01;
+const DRAG_SPEED_MULT: f32 = 35.0;
 
 pub fn scroll_events(
     mut scroll_event: EventReader<MouseWheel>,
@@ -37,11 +37,10 @@ pub fn mouse_drag_event(
         let delta = ev_motion.iter().fold(Vec2::ZERO, |acc, e| acc + e.delta);
 
         if delta.length_squared() > 0.0 {
-            println!("Drag : {}", delta);
             // Translate the camera
             let mut camera = camera_query.get_single_mut().unwrap();
-            camera.translation.x += delta.x * DRAG_SPEED_MULT * time.delta_seconds();
-            camera.translation.y -= delta.y * DRAG_SPEED_MULT * time.delta_seconds();
+            camera.translation.x -= delta.x * DRAG_SPEED_MULT * time.delta_seconds();
+            camera.translation.y += delta.y * DRAG_SPEED_MULT * time.delta_seconds();
         }
     }
 }

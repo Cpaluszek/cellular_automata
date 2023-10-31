@@ -2,12 +2,27 @@ use std::{fs::File, io::Read};
 
 use crate::{
     game::{
-        BoardBackground, BoardSize, CellColor, CellContainer, CellMap, ConwayCellState, Moore2dCell,
+        BoardBackground, BoardSize, CellColor, CellContainer, CellMap, ConwayCellState,
+        Moore2dCell, SimulationState,
     },
-    ui::resources::UIPatternFile,
+    ui::resources::{UIPatternFile, UiSimulationState},
     SPRITE_SIZE,
 };
 use bevy::prelude::*;
+
+pub fn handle_pause_interaction(
+    ui_state: Res<UiSimulationState>,
+    simulation_state: Res<State<SimulationState>>,
+    mut commands: Commands,
+) {
+    if ui_state.is_changed() {
+        if *simulation_state.get() == SimulationState::Running {
+            commands.insert_resource(NextState(Some(SimulationState::Paused)));
+        } else if *simulation_state.get() == SimulationState::Paused {
+            commands.insert_resource(NextState(Some(SimulationState::Running)));
+        }
+    }
+}
 
 pub fn handle_board_resize(
     board_size: Res<BoardSize>,
@@ -157,7 +172,6 @@ pub fn load_pattern_file(
                 return;
             }
 
-            // Todo: use 2D container - vec of vec?
             state = vec![false; pattern_width * pattern_height];
         } else {
             for c in line.chars() {

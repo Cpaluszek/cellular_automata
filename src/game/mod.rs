@@ -13,7 +13,10 @@ use crate::{
         cells::{handle_cells, handle_new_cells, handle_removed_cells},
         coloring::color_sprites,
         input::{handle_keyboard_input, mouse_drag_event, scroll_events},
-        interactivity::{handle_board_resize, handle_cell_color_change, load_pattern_file},
+        interactivity::{
+            handle_board_resize, handle_cell_color_change, handle_pause_interaction,
+            load_pattern_file,
+        },
     },
     BOARD_SIZE, CELL_COLOR, CYCLE_INTERVAL,
 };
@@ -55,6 +58,7 @@ impl Plugin for GameOfLifePlugin {
                     scroll_events,
                     handle_keyboard_input,
                     load_pattern_file,
+                    handle_pause_interaction,
                 ),
             );
         info!("Loaded cellular automata plugin");

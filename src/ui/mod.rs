@@ -5,7 +5,7 @@ use crate::{BOARD_SIZE, CELL_COLOR};
 
 use self::{
     resources::{UIBoardState, UICellColor, UIPatternFile, UiSimulationState},
-    systems::{interaction::handle_pause_interaction, layout::ui_panel},
+    systems::layout::ui_panel,
 };
 
 pub mod resources;
@@ -31,7 +31,6 @@ impl Plugin for UIPlugin {
             .insert_resource(UIPatternFile {
                 path: String::new(),
             })
-            .add_systems(Update, ui_panel)
-            .add_systems(PostUpdate, handle_pause_interaction);
+            .add_systems(Update, ui_panel);
     }
 }

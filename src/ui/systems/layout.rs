@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use bevy_egui::{
-    egui::{self},
+    egui::{self, Color32, RichText},
     EguiContexts,
 };
 
@@ -77,8 +77,8 @@ pub fn ui_panel(
             ui.allocate_space(egui::Vec2::new(0.0, 10.0));
             ui.separator();
             ui.label("RLE Files");
+            ui.label("Lines");
             ui.horizontal(|ui| {
-                ui.label("Lines");
                 if ui.button("Blinker").clicked() {
                     ui_pattern_file.path = "assets/rle/blinker.rle".to_string();
                 }
@@ -92,116 +92,89 @@ pub fn ui_panel(
                     ui_pattern_file.path = "assets/rle/ten.rle".to_string();
                 }
             });
+            ui.allocate_space(egui::Vec2::new(0.0, 10.0));
+            ui.label("Stables");
+            ui.horizontal(|ui| {
+                if ui.button("cthulhu").clicked() {
+                    ui_pattern_file.path = "assets/rle/cthulhu.rle".to_string();
+                }
+                if ui.button("beehiveplus").clicked() {
+                    ui_pattern_file.path = "assets/rle/beehiveplus.rle".to_string();
+                }
+                if ui.button("stairs6").clicked() {
+                    ui_pattern_file.path = "assets/rle/stairs6.rle".to_string();
+                }
+            });
+            ui.allocate_space(egui::Vec2::new(0.0, 10.0));
+            ui.label("Infinites");
+            ui.horizontal(|ui| {
+                if ui.button("Max").clicked() {
+                    ui_pattern_file.path = "assets/rle/max.rle".to_string();
+                }
+                if ui.button("10-cell inf.").clicked() {
+                    ui_pattern_file.path = "assets/rle/10cellinfinitegrowth.rle".to_string();
+                }
+            });
+            ui.allocate_space(egui::Vec2::new(0.0, 10.0));
+            ui.label("Gliders");
+            ui.horizontal(|ui| {
+                if ui.button("glider gun").clicked() {
+                    ui_pattern_file.path = "assets/rle/gosperglidergun.rle".to_string();
+                }
+                if ui.button("60p5h2v0").clicked() {
+                    ui_pattern_file.path = "assets/rle/60p5h2v0.rle".to_string();
+                }
+                if ui.button("puffer1").clicked() {
+                    ui_pattern_file.path = "assets/rle/puffer1.rle".to_string();
+                }
+            });
+            ui.horizontal(|ui| {
+                if ui.button("canada goose").clicked() {
+                    ui_pattern_file.path = "assets/rle/canadagoose.rle".to_string();
+                }
+                if ui.button("linepuffer").clicked() {
+                    ui_pattern_file.path = "assets/rle/linepuffer.rle".to_string();
+                }
+            });
+            ui.allocate_space(egui::Vec2::new(0.0, 10.0));
+            ui.label("Oscillators");
+            ui.horizontal(|ui| {
+                if ui.button("oscillos").clicked() {
+                    ui_pattern_file.path = "assets/rle/oscillos.rle".to_string();
+                }
+                if ui.button("exploder").clicked() {
+                    ui_pattern_file.path = "assets/rle/exploder.rle".to_string();
+                }
+            });
+            ui.allocate_space(egui::Vec2::new(0.0, 10.0));
+            ui.label("Big");
+            ui.horizontal(|ui| {
+                if ui
+                    .button(RichText::new("otcametapixel").color(Color32::RED))
+                    .clicked()
+                {
+                    ui_pattern_file.path = "assets/rle/otcametapixel.rle".to_string();
+                }
+                if ui
+                    .button(RichText::new("otcametapixeloff").color(Color32::RED))
+                    .clicked()
+                {
+                    ui_pattern_file.path = "assets/rle/otcametapixeloff.rle".to_string();
+                }
+            });
+            ui.horizontal(|ui| {
+                if ui
+                    .button(RichText::new("breeder1").color(Color32::RED))
+                    .clicked()
+                {
+                    ui_pattern_file.path = "assets/rle/breeder1.rle".to_string();
+                }
+                if ui
+                    .button(RichText::new("p41660p5h2v0gun").color(Color32::RED))
+                    .clicked()
+                {
+                    ui_pattern_file.path = "assets/rle/p41660p5h2v0gun.rle".to_string();
+                }
+            });
         });
 }
-// // Pattern files loading
-// ui.separator();
-// ui.label("RLE files:");
-// ui.horizontal(|ui| {
-//     ui.label("Stables");
-//     if ui.button("cthulhu").clicked() {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-//             "assets/rle/cthulhu.rle".to_string(),
-//         )));
-//     }
-//     if ui.button("beehiveplus").clicked() {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-//             "assets/rle/beehiveplus.rle".to_string(),
-//         )));
-//     }
-//     if ui.button("stairs6").clicked() {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-//             "assets/rle/stairs6.rle".to_string(),
-//         )));
-//     }
-// });
-// ui.horizontal(|ui| {
-//     ui.label("Infinites");
-//     if ui.button("Max").clicked() {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-//             "assets/rle/max.rle".to_string(),
-//         )));
-//     }
-//     if ui.button("10-cell inf.").clicked() {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-//             "assets/rle/10cellinfinitegrowth.rle".to_string(),
-//         )));
-//     }
-// });
-// ui.horizontal(|ui| {
-//     ui.label("Gliders");
-//     if ui.button("glider gun").clicked() {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-//             "assets/rle/gosperglidergun.rle".to_string(),
-//         )));
-//     }
-//     if ui.button("60p5h2v0").clicked() {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-//             "assets/rle/60p5h2v0.rle".to_string(),
-//         )));
-//     }
-//     if ui.button("puffer1").clicked() {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-//             "assets/rle/puffer1.rle".to_string(),
-//         )));
-//     }
-//     if ui.button("canada goose").clicked() {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-//             "assets/rle/canadagoose.rle".to_string(),
-//         )));
-//     }
-//     if ui.button("linepuffer").clicked() {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-//             "assets/rle/linepuffer.rle".to_string(),
-//         )));
-//     }
-// });
-// ui.horizontal(|ui| {
-//     ui.label("Oscillators");
-//     if ui.button("oscillos").clicked() {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-//             "assets/rle/oscillos.rle".to_string(),
-//         )));
-//     }
-//     if ui.button("exploder").clicked() {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-//             "assets/rle/exploder.rle".to_string(),
-//         )));
-//     }
-// });
-// ui.horizontal(|ui| {
-//     ui.label("Big");
-//     if ui
-//         .button(RichText::new("breeder1").color(Color32::RED))
-//         .clicked()
-//     {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-//             "assets/rle/breeder1.rle".to_string(),
-//         )));
-//     }
-//     if ui
-//         .button(RichText::new("otcametapixel").color(Color32::RED))
-//         .clicked()
-//     {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-//             "assets/rle/otcametapixel.rle".to_string(),
-//         )));
-//     }
-//     if ui
-//         .button(RichText::new("otcametapixeloff").color(Color32::RED))
-//         .clicked()
-//     {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-//             "assets/rle/otcametapixeloff.rle".to_string(),
-//         )));
-//     }
-//     if ui
-//         .button(RichText::new("p41660p5h2v0gun").color(Color32::RED))
-//         .clicked()
-//     {
-//         ui_event_writer.send(UiStateChangedEvent(UiParameter::LoadPatternFile(
-//             "assets/rle/p41660p5h2v0gun.rle".to_string(),
-//         )));
-//     }
-// });
-// ui.separator();

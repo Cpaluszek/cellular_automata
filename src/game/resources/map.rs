@@ -1,5 +1,5 @@
 use bevy::{
-    prelude::{Color, Entity, Resource, IVec2},
+    prelude::{Color, Entity, IVec2, Resource},
     utils::{HashMap, HashSet},
 };
 

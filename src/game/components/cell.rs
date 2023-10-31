@@ -50,4 +50,3 @@ impl Moore2dCell {
         NEIGHBOURS_COORDINATES.map(|c| c + *self.coords()).to_vec()
     }
 }
-

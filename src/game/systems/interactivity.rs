@@ -2,8 +2,7 @@ use std::{fs::File, io::Read};
 
 use crate::{
     game::{
-        BoardBackground, BoardSize, CellColor, CellContainer, CellMap, ConwayCellState,
-        Moore2dCell, 
+        BoardBackground, BoardSize, CellColor, CellContainer, CellMap, ConwayCellState, Moore2dCell,
     },
     ui::resources::UIPatternFile,
     SPRITE_SIZE,
@@ -220,14 +219,16 @@ pub fn load_pattern_file(
             match map.get_cell(&pos) {
                 Some(ent) => {
                     commands.entity(ent).insert(ConwayCellState(pattern_state));
-                },
+                }
                 None => {
                     println!("No cell at position {:?}", pos);
                 }
             };
             for (entity, cell) in cell_query.iter_mut() {
                 if *cell.coords() == pos {
-                    commands.entity(entity).insert(ConwayCellState(pattern_state));
+                    commands
+                        .entity(entity)
+                        .insert(ConwayCellState(pattern_state));
                 }
             }
         }

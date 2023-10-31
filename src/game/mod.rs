@@ -38,12 +38,7 @@ impl Plugin for GameOfLifePlugin {
                 color: [CELL_COLOR.r(), CELL_COLOR.r(), CELL_COLOR.r()].into(),
             })
             // Systems
-            .add_systems(
-                Update,
-                (
-                    handle_new_cells, color_sprites,
-                ),
-            )
+            .add_systems(Update, (handle_new_cells, color_sprites))
             .add_systems(
                 Update,
                 handle_cells::<Moore2dCell, ConwayCellState>

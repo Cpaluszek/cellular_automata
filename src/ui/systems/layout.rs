@@ -73,6 +73,7 @@ pub fn ui_panel(
                 }
                 ui.label("Cell color");
             });
+
             // Pattern files
             ui.allocate_space(egui::Vec2::new(0.0, 10.0));
             ui.separator();

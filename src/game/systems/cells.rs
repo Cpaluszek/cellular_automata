@@ -1,7 +1,7 @@
 use bevy::{prelude::*, utils::HashMap};
 
 use crate::game::{
-    resources::SimulationBatch, CellMap, ConwayCellState, Moore2dCell,
+    resources::CellMap, ConwayCellState, Moore2dCell,
 };
 
 fn handle_cell(
@@ -19,32 +19,21 @@ fn handle_cell(
 }
 
 pub fn handle_cells(
-    mut commands: Commands,
     par_commands: ParallelCommands,
     query: Query<(Entity, &Moore2dCell, &ConwayCellState)>,
-    batch: Option<Res<SimulationBatch>>,
 ) {
-    // Todo: remove batch
     let map: HashMap<_, _> = query
         .iter()
         .map(|(_entity, cell, state)| (cell.coords().clone(), state.clone()))
         .collect();
 
-    if batch.is_some() {
-        query.par_iter().for_each(|(entity, cell, state)| {
-            if let Some(new_state) = handle_cell((cell, state), &map) {
-                par_commands.command_scope(|mut cmd| {
-                    cmd.entity(entity).insert(new_state);
-                })
-            }
-        });
-    } else {
-        for (entity, cell, state) in query.iter() {
-            if let Some(new_state) = handle_cell((cell, state), &map) {
-                commands.entity(entity).insert(new_state);
-            }
+    query.par_iter().for_each(|(entity, cell, state)| {
+        if let Some(new_state) = handle_cell((cell, state), &map) {
+            par_commands.command_scope(|mut cmd| {
+                cmd.entity(entity).insert(new_state);
+            })
         }
-    }
+    });
 }
 
 pub fn handle_new_cells(

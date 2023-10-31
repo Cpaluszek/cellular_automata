@@ -34,7 +34,7 @@ impl Plugin for GameOfLifePlugin {
         let duration = Duration::from_secs_f64(self.tick_time_step);
 
         app.add_state::<SimulationState>()
-            // Resources
+            // resources
             .insert_resource(BoardSize { size: BOARD_SIZE })
             .insert_resource(CellMap::default())
             .insert_resource(CellColor {

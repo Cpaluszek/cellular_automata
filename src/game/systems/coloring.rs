@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::game::{resources::SimulationBatch, ConwayCellState};
+use crate::game::ConwayCellState;
 
 #[inline]
 fn apply_color(state: &ConwayCellState, visible: &mut Visibility) {
@@ -15,15 +15,8 @@ fn apply_color(state: &ConwayCellState, visible: &mut Visibility) {
 
 pub fn color_sprites(
     mut query: Query<(&ConwayCellState, &mut Visibility), Changed<ConwayCellState>>,
-    batch: Option<Res<SimulationBatch>>,
 ) {
-    if batch.is_some() {
-        query.par_iter_mut().for_each_mut(|(state, mut visible)| {
-            apply_color(state, &mut visible);
-        });
-    } else {
-        for (state, mut visible) in &mut query {
-            apply_color(state, &mut visible);
-        }
-    }
+    query.par_iter_mut().for_each_mut(|(state, mut visible)| {
+        apply_color(state, &mut visible);
+    });
 }

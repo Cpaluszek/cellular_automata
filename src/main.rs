@@ -45,8 +45,8 @@ fn main() {
                 })
                 .build(),
         )
-        .add_plugins(FrameTimeDiagnosticsPlugin::default())
-        .add_plugins(LogDiagnosticsPlugin::default())
+        // .add_plugins(FrameTimeDiagnosticsPlugin::default())
+        // .add_plugins(LogDiagnosticsPlugin::default())
         .insert_resource(ClearColor(CLEAR_COLOR))
         .add_plugins(UIPlugin)
         .add_plugins(GameOfLifePlugin::default())

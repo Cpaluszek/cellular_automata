@@ -55,6 +55,8 @@ pub fn handle_board_resize(
 
         if prev_board_size < board_size.size {
             // Increase board size
+            
+            // Todo: optimize
             let mut new_entities = vec![];
             for y in 0..board_size.size {
                 for x in 0..board_size.size {

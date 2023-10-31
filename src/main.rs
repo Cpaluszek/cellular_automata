@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy::diagnostic::FrameTimeDiagnosticsPlugin;
 use startup::{setup_map, spawn_camera};
 use systems::{quit_application, toggle_simulation_state};
 
@@ -44,6 +45,7 @@ fn main() {
                 })
                 .build(),
         )
+        .add_plugins(FrameTimeDiagnosticsPlugin::default())
         .insert_resource(ClearColor(CLEAR_COLOR))
         .add_plugins(UIPlugin)
         .add_plugins(GameOfLifePlugin::default())

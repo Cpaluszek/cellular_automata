@@ -99,12 +99,14 @@ pub fn handle_cell_color_change(
 pub fn load_pattern_file(
     pattern_file: Res<UIPatternFile>,
     board_size: Res<BoardSize>,
-    mut cell_query: Query<(&Moore2dCell, &ConwayCellState)>,
+    mut cell_query: Query<(Entity, &Moore2dCell)>,
+    mut commands: Commands,
+    map: Res<CellMap>,
+    // par_commands: ParallelCommands,
 ) {
     if !pattern_file.is_changed() || pattern_file.path.is_empty() {
         return;
     }
-    println!("Pattern: {}", pattern_file.path);
 
     // Read file content - see http://www.conwaylife.com/wiki/RLE
     let content = read_file_content(&pattern_file.path).unwrap();
@@ -193,84 +195,52 @@ pub fn load_pattern_file(
         }
     }
 
-    // Todo: Clear previous board
+    // Todo: use threads
+    // Clear previous board
+    cell_query.iter().for_each(|(entity, _)| {
+        commands.entity(entity).insert(ConwayCellState(false));
+    });
+    // cell_query.par_iter().for_each(|(entity, _)| {
+    //     par_commands.command_scope(|mut cmd| {
+    //         cmd.entity(entity).insert(ConwayCellState(false));
+    //     })
+    // });
 
-    let pattern_x = (board_size.size - pattern_width as u32) / 2;
-    let pattern_y = (board_size.size - pattern_height as u32) / 2;
-    for x in 0..board_size.size {
-        for y in 0..board_size.size {
+    for y in 0..pattern_height {
+        for x in 0..pattern_width {
+            print!("{} ", state[x + y * pattern_width]);
+        }
+        println!("");
+    }
+
+    let pattern_start_x = (board_size.size - pattern_width as u32) / 2;
+    let pattern_start_y = (board_size.size - pattern_height as u32) / 2;
+    let pattern_end_x = pattern_start_x + pattern_width as u32;
+    let pattern_end_y = pattern_start_y + pattern_height as u32;
+    println!("pattern start {} {}", pattern_start_x, pattern_start_y);
+    println!("pattern end {} {}", pattern_end_x, pattern_end_y);
+    // Todo: optimise
+    for y in pattern_start_y..pattern_end_y {
+        for x in pattern_start_x..pattern_end_x {
             let pos = IVec2::new(x as i32, y as i32);
-            if x > pattern_x
-                && x < pattern_x + pattern_width as u32
-                && y > pattern_y
-                && y < pattern_y + pattern_height as u32
-            {
-                let local_x = x - pattern_x;
-                let local_y = y - pattern_y;
-                let pattern_state = state[local_x as usize + local_y as usize * pattern_width];
-                for (cell, mut state) in cell_query.iter_mut() {
-                    if *cell.coords() == pos {
-                        state = &ConwayCellState(pattern_state);
-                        println!("Set state {} at pos {},{}", pattern_state, x, y);
-                    }
+            let local_x = x - pattern_start_x;
+            let local_y = y - pattern_start_y;
+            let pattern_state = state[local_x as usize + local_y as usize * pattern_width];
+            match map.get_cell(&pos) {
+                Some(ent) => {
+                    commands.entity(ent).insert(ConwayCellState(pattern_state));
+                },
+                None => {
+                    println!("No cell at position {:?}", pos);
                 }
-            } else {
-                // Set cell to dead
-                for (cell, mut state) in cell_query.iter_mut() {
-                    if *cell.coords() == pos {
-                        state = &ConwayCellState(false);
-                    }
+            };
+            for (entity, cell) in cell_query.iter_mut() {
+                if *cell.coords() == pos {
+                    commands.entity(entity).insert(ConwayCellState(pattern_state));
                 }
             }
         }
     }
-
-    // query: Query<(Entity, &C, &S)>,
-
-    // board.clear();
-    // for cell_entt in cell_entities.0.values() {
-    //     commands.entity(*cell_entt).despawn();
-    // }
-    // cell_entities.0.clear();
-
-    // Set the new state to the board
-    // let pos = CellPosition {
-    //     col: (board.width - pattern_width) / 2,
-    //     row: (board.height - pattern_height) / 2,
-    // };
-    //
-    // board.patch(pos, &state, pattern_width, pattern_height);
-
-    // Spawn entities
-    // let half_window_height = window.single().height() / 2.0;
-    // let half_window_width = window.single().width() / 2.0;
-    // for row in 0..board.height {
-    //     for col in 0..board.width {
-    //         let pos = CellPosition { col, row };
-    //         if board.alive(pos) {
-    //             let x = -half_window_width + (col as f32 * cell_size.width) + cell_size.width / 2.0;
-    //             let y =
-    //                 half_window_height - (row as f32 * cell_size.height) - cell_size.height / 2.0;
-    //
-    //             // Cell Entity
-    //             let new_cell = commands
-    //                 .spawn((
-    //                     SpriteBundle {
-    //                         sprite: Sprite {
-    //                             color: cell_color.0,
-    //                             custom_size: Some(Vec2::new(cell_size.width, cell_size.height)),
-    //                             ..default()
-    //                         },
-    //                         transform: Transform::from_xyz(x, y, 0.0),
-    //                         ..default()
-    //                     },
-    //                     CellPosition { col, row },
-    //                 ))
-    //                 .id();
-    //             cell_entities.0.insert(pos, new_cell);
-    //         }
-    //     }
-    // }
 }
 
 fn read_file_content(file: &str) -> Result<String, std::io::Error> {

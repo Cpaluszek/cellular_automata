@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
+// use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 use startup::{setup_map, spawn_camera};
 use systems::{quit_application, toggle_simulation_state};
 
@@ -27,7 +27,6 @@ pub const CYCLE_INTERVAL: f64 = 0.1;
 // [catppuccin/catppuccin: 😸 Soothing pastel theme for the high-spirited!](https://github.com/catppuccin/catppuccin)
 pub const CLEAR_COLOR: Color = Color::hsl(240.0, 0.23, 0.09);
 pub const BACKGROND_COLOR: Color = Color::hsl(237.0, 0.16, 0.23);
-// pub const BACKGROND_COLOR: Color = Color::hsl(240.0, 0.21, 0.15);
 pub const CELL_COLOR: Color = Color::hsl(10.0, 0.56, 0.91);
 
 fn main() {

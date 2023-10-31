@@ -142,39 +142,19 @@ pub fn load_pattern_file(
         if line.starts_with('#') {
             continue;
         } else if line.starts_with('x') {
-            let mut split = line.split(',');
-            pattern_width = split
-                .next()
-                .unwrap()
-                .split('=')
-                .last()
-                .unwrap()
-                .trim()
-                .parse::<usize>()
-                .unwrap();
-
-            pattern_height = split
-                .next()
-                .unwrap()
-                .split('=')
-                .last()
-                .unwrap()
-                .trim()
-                .parse::<usize>()
-                .unwrap();
-
-            if pattern_width <= 0 || pattern_height <= 0 {
+            if let Some((width, height)) = parse_pattern_size(line) {
+                if width > board_size.size as usize || height > board_size.size as usize {
+                    // Todo: resize board if possible
+                    println!("Pattern size exceed board size");
+                    return;
+                }
+                pattern_width = width;
+                pattern_height = height;
+                state = vec![false; pattern_width * pattern_height];
+            } else {
                 println!("Invalid pattern size");
-                return;
+                return ;
             }
-
-            if pattern_width as u32 > board_size.size || pattern_height as u32 > board_size.size {
-                // Todo: resize board if possible
-                println!("Pattern size exceed board size");
-                return;
-            }
-
-            state = vec![false; pattern_width * pattern_height];
         } else {
             for c in line.chars() {
                 match c {
@@ -249,6 +229,15 @@ pub fn load_pattern_file(
             }
         }
     }
+}
+
+fn parse_pattern_size(line: &str) -> Option<(usize, usize)> {
+    let mut split = line.split(',');
+    let width_str = split.nth(0)?.split('=').last()?.trim();
+    let height_str = split.nth(0)?.split('=').last()?.trim();
+    let width = width_str.parse().ok()?;
+    let height = height_str.parse().ok()?;
+    Some((width, height))
 }
 
 fn read_file_content(file: &str) -> Result<String, std::io::Error> {

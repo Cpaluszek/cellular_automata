@@ -1,7 +1,7 @@
 use bevy::{prelude::*, utils::HashMap};
 
 use crate::game::{
-    resources::SimulationBatch, CellMap, ConwayCellState, Moore2dCell, SimulationPause,
+    resources::SimulationBatch, CellMap, ConwayCellState, Moore2dCell,
 };
 
 fn handle_cell(
@@ -18,18 +18,13 @@ fn handle_cell(
     }
 }
 
-pub fn handle_cells<C, S>(
+pub fn handle_cells(
     mut commands: Commands,
     par_commands: ParallelCommands,
     query: Query<(Entity, &Moore2dCell, &ConwayCellState)>,
-    pause: Option<Res<SimulationPause>>,
     batch: Option<Res<SimulationBatch>>,
 ) {
-    // Todo: remove batch and pause
-    if pause.is_some() {
-        println!("Pause");
-        return;
-    }
+    // Todo: remove batch
     let map: HashMap<_, _> = query
         .iter()
         .map(|(_entity, cell, state)| (cell.coords().clone(), state.clone()))

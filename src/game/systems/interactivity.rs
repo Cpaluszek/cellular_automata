@@ -124,71 +124,16 @@ pub fn load_pattern_file(
         return;
     }
 
-    // Read file content - see http://www.conwaylife.com/wiki/RLE
-    let content = read_file_content(&pattern_file.path).unwrap();
-
-    let mut state: Vec<bool> = vec![];
-
-    let mut pattern_height = 0;
-    let mut pattern_width = 0;
-    let mut col = 0;
-    let mut row = 0;
-    let mut count = 0;
-
-    // Todo: clean parsing
-
-    // Parse a rle file
-    for line in content.lines() {
-        if line.starts_with('#') {
-            continue;
-        } else if line.starts_with('x') {
-            if let Some((width, height)) = parse_pattern_size(line) {
-                if width > board_size.size as usize || height > board_size.size as usize {
-                    // Todo: resize board if possible
-                    println!("Pattern size exceed board size");
-                    return;
-                }
-                pattern_width = width;
-                pattern_height = height;
-                state = vec![false; pattern_width * pattern_height];
-            } else {
-                println!("Invalid pattern size");
-                return;
-            }
-        } else {
-            for c in line.chars() {
-                match c {
-                    '0'..='9' => {
-                        count = count * 10 + c.to_digit(10).unwrap();
-                    }
-                    'o' => {
-                        if count == 0 {
-                            state[row * pattern_width + col] = true;
-                            col += 1;
-                        } else {
-                            for _ in 0..count {
-                                state[row * pattern_width + col] = true;
-                                col += 1;
-                            }
-                            count = 0;
-                        }
-                    }
-                    'b' => {
-                        if count == 0 {
-                            col += 1;
-                        } else {
-                            col += count as usize;
-                            count = 0;
-                        }
-                    }
-                    _ => {
-                        row += 1;
-                        col = 0;
-                    }
-                }
-            }
+    let content = match read_file_content(&pattern_file.path) {
+        Ok(content) => content,
+        Err(e) => {
+            println!("Error reading file: {}", e);
+            return;
         }
-    }
+    };
+
+    let (pattern_width, pattern_height, state) =
+        parse_rle_content(&content, board_size.size as usize);
 
     // Todo: use threads
     // Clear previous board
@@ -230,6 +175,72 @@ pub fn load_pattern_file(
             }
         }
     }
+}
+
+fn parse_rle_content(content: &str, board_size: usize) -> (usize, usize, Vec<bool>) {
+    // Read file content - see http://www.conwaylife.com/wiki/RLE
+
+    let mut state: Vec<bool> = vec![];
+    let mut pattern_height = 0;
+    let mut pattern_width = 0;
+    let mut col = 0;
+    let mut row = 0;
+    let mut count = 0;
+
+    // Parse a rle file
+    for line in content.lines() {
+        if line.starts_with('#') {
+            continue;
+        } else if line.starts_with('x') {
+            if let Some((width, height)) = parse_pattern_size(line) {
+                if width > board_size || height > board_size {
+                    // Todo: resize board if possible
+                    println!("Pattern size exceed board size");
+                    return (0, 0, vec![]);
+                }
+                pattern_width = width;
+                pattern_height = height;
+                state = vec![false; pattern_width * pattern_height];
+            } else {
+                println!("Invalid pattern size");
+                return (0, 0, vec![]);
+            }
+        } else {
+            for c in line.chars() {
+                match c {
+                    '0'..='9' => {
+                        count = count * 10 + c.to_digit(10).unwrap() as usize;
+                    }
+                    'o' => {
+                        if count == 0 {
+                            state[row * pattern_width + col] = true;
+                            col += 1;
+                        } else {
+                            for _ in 0..count {
+                                state[row * pattern_width + col] = true;
+                                col += 1;
+                            }
+                            count = 0;
+                        }
+                    }
+                    'b' => {
+                        if count == 0 {
+                            col += 1;
+                        } else {
+                            col += count as usize;
+                            count = 0;
+                        }
+                    }
+                    _ => {
+                        row += 1;
+                        col = 0;
+                    }
+                }
+            }
+        }
+    }
+
+    (pattern_width, pattern_height, state)
 }
 
 fn parse_pattern_size(line: &str) -> Option<(usize, usize)> {

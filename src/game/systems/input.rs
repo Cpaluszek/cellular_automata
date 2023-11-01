@@ -31,7 +31,7 @@ pub fn mouse_drag_event(
     mut camera_query: Query<&mut Transform, With<Camera>>,
     time: Res<Time>,
 ) {
-    // Todo: try without WSL
+    // Note: does not work on WSL
 
     if input_mouse.pressed(MouseButton::Left) {
         let delta = ev_motion.iter().fold(Vec2::ZERO, |acc, e| acc + e.delta);

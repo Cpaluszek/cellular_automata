@@ -30,7 +30,6 @@ pub struct GameOfLifePlugin {
 
 impl Plugin for GameOfLifePlugin {
     fn build(&self, app: &mut App) {
-        // Todo: use resource for duration -> UI
         let duration = Duration::from_secs_f64(self.tick_time_step);
 
         app.add_state::<SimulationState>()

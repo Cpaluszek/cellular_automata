@@ -115,10 +115,9 @@ pub fn handle_cell_color_change(
 pub fn load_pattern_file(
     pattern_file: Res<UIPatternFile>,
     board_size: Res<BoardSize>,
-    mut cell_query: Query<(Entity, &Moore2dCell)>,
+    cell_query: Query<Entity, With<Moore2dCell>>,
     mut commands: Commands,
     map: Res<CellMap>,
-    // par_commands: ParallelCommands,
 ) {
     if !pattern_file.is_changed() || pattern_file.path.is_empty() {
         return;
@@ -135,27 +134,21 @@ pub fn load_pattern_file(
     let (pattern_width, pattern_height, state) =
         parse_rle_content(&content, board_size.size as usize);
 
-    // Todo: use threads
     // Clear previous board
-    cell_query.iter().for_each(|(entity, _)| {
+    cell_query.iter().for_each(|entity| {
         commands.entity(entity).insert(ConwayCellState(false));
     });
-    // cell_query.par_iter().for_each(|(entity, _)| {
-    //     par_commands.command_scope(|mut cmd| {
-    //         cmd.entity(entity).insert(ConwayCellState(false));
-    //     })
-    // });
 
     let pattern_start_x = (board_size.size - pattern_width as u32) / 2;
     let pattern_start_y = (board_size.size - pattern_height as u32) / 2;
     let pattern_end_x = pattern_start_x + pattern_width as u32;
     let pattern_end_y = pattern_start_y + pattern_height as u32;
-    // Todo: optimise
+
     for y in pattern_start_y..pattern_end_y {
+        let local_y = y - pattern_start_y;
         for x in pattern_start_x..pattern_end_x {
             let pos = IVec2::new(x as i32, y as i32);
             let local_x = x - pattern_start_x;
-            let local_y = y - pattern_start_y;
             let pattern_state = state[local_x as usize + local_y as usize * pattern_width];
             match map.get_cell(&pos) {
                 Some(ent) => {
@@ -165,14 +158,6 @@ pub fn load_pattern_file(
                     println!("No cell at position {:?}", pos);
                 }
             };
-            for (entity, cell) in cell_query.iter_mut() {
-                if *cell.coords() == pos {
-                    // Overwrite ConwayCellState component
-                    commands
-                        .entity(entity)
-                        .insert(ConwayCellState(pattern_state));
-                }
-            }
         }
     }
 }
@@ -213,11 +198,11 @@ fn parse_rle_content(content: &str, board_size: usize) -> (usize, usize, Vec<boo
                     }
                     'o' => {
                         if count == 0 {
-                            state[row * pattern_width + col] = true;
+                            state[(pattern_height - row - 1) * pattern_width + col] = true;
                             col += 1;
                         } else {
                             for _ in 0..count {
-                                state[row * pattern_width + col] = true;
+                                state[(pattern_height - row - 1) * pattern_width + col] = true;
                                 col += 1;
                             }
                             count = 0;

@@ -32,72 +32,72 @@ pub fn handle_board_resize(
     mut board_background: Query<&mut Sprite, With<BoardBackground>>,
     mut commands: Commands,
 ) {
-    if board_size.is_changed() {
-        let prev_board_size = (map.cell_count() as f64).sqrt() as u32;
-        let delta_size = board_size.size as i32 - prev_board_size as i32;
+    if !board_size.is_changed() {
+        return;
+    }
 
-        if delta_size == 0 {
-            return;
-        }
+    let prev_board_size = (map.cell_count() as f64).sqrt() as u32;
+    let delta_size = board_size.size as i32 - prev_board_size as i32;
 
-        // Set board background sprite
-        let mut sprite = board_background.get_single_mut().unwrap();
+    if delta_size == 0 {
+        return;
+    }
+
+    // Set board background sprite
+    if let Some(mut sprite) = board_background.get_single_mut().ok() {
         sprite.custom_size = Some(Vec2::new(
             board_size.size as f32 * SPRITE_SIZE,
             board_size.size as f32 * SPRITE_SIZE,
         ));
+    }
 
-        // Offset cell_container position
-        let (parent_entity, mut parent_transform) = cell_container.get_single_mut().unwrap();
-        let translation_offset = delta_size as f32 * SPRITE_SIZE * 0.5;
-        parent_transform.translation.x -= translation_offset;
-        parent_transform.translation.y -= translation_offset;
+    // Offset cell_container position
+    let (parent_entity, mut parent_transform) = cell_container.get_single_mut().unwrap();
+    let translation_offset = delta_size as f32 * SPRITE_SIZE * 0.5;
+    parent_transform.translation.x -= translation_offset;
+    parent_transform.translation.y -= translation_offset;
 
-        if prev_board_size < board_size.size {
-            // Increase board size
+    if prev_board_size < board_size.size {
+        let cell_sprite_size = Some(Vec2::splat(SPRITE_SIZE));
 
-            // Todo: optimize
-            let mut new_entities = vec![];
-            for y in 0..board_size.size {
-                for x in 0..board_size.size {
-                    if x < prev_board_size && y < prev_board_size {
-                        continue;
-                    }
-                    let entity = commands.spawn((
-                        SpriteBundle {
-                            sprite: Sprite {
-                                custom_size: Some(Vec2::splat(SPRITE_SIZE)),
-                                ..default()
-                            },
-                            transform: Transform::from_xyz(
-                                x as f32 * SPRITE_SIZE,
-                                y as f32 * SPRITE_SIZE,
-                                0.,
-                            ),
+        let mut new_entities = vec![];
+        for y in 0..board_size.size {
+            for x in 0..board_size.size {
+                if x < prev_board_size && y < prev_board_size {
+                    continue;
+                }
+                let cell_pos = IVec2::new(x as i32, y as i32);
+                let entity = commands.spawn((
+                    SpriteBundle {
+                        sprite: Sprite {
+                            custom_size: cell_sprite_size,
                             ..default()
                         },
-                        Moore2dCell::new(IVec2::new(x as i32, y as i32)),
-                        ConwayCellState(false),
-                    ));
-                    new_entities.push(entity.id());
-                }
+                        transform: Transform::from_xyz(
+                            x as f32 * SPRITE_SIZE,
+                            y as f32 * SPRITE_SIZE,
+                            0.,
+                        ),
+                        ..default()
+                    },
+                    Moore2dCell::new(cell_pos),
+                    ConwayCellState(false),
+                ));
+                new_entities.push(entity.id());
             }
-            commands.entity(parent_entity).push_children(&new_entities);
-        } else {
-            let coords: Vec<_> = cell_entities
-                .iter()
-                .filter(|c| {
-                    let coords = c.coords();
-                    coords.x >= board_size.size as i32 || coords.y >= board_size.size as i32
-                })
-                .collect();
-            coords
-                .iter()
-                .for_each(|c| match map.remove_cell(c.coords()) {
-                    Some(e) => commands.entity(e).despawn(),
-                    None => println!("Tried to despawn without entity"),
-                });
         }
+        commands.entity(parent_entity).push_children(&new_entities);
+    } else {
+        cell_entities
+            .iter()
+            .filter(|c| {
+                let coords = c.coords();
+                coords.x >= board_size.size as i32 || coords.y >= board_size.size as i32
+            })
+            .for_each(|c| match map.remove_cell(c.coords()) {
+                Some(e) => commands.entity(e).despawn(),
+                None => println!("Tried to despawn without entity"),
+            });
     }
 }
 

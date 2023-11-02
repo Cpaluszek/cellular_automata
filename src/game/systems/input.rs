@@ -4,6 +4,7 @@ use bevy::{
 };
 
 const ZOOM_SPEED: f32 = 1.;
+const KEYBOARD_ZOOM_SPEED: f32 = 1.;
 const MOVE_SPEED: f32 = 10.0;
 const DRAG_SPEED_MULT: f32 = 35.0;
 
@@ -46,26 +47,36 @@ pub fn mouse_drag_event(
 
 pub fn handle_keyboard_input(
     keyboard_input: Res<Input<KeyCode>>,
-    mut camera_query: Query<&mut Transform, With<Camera>>,
+    mut camera_query: Query<(&mut Transform, &mut OrthographicProjection), With<Camera>>,
+    time: Res<Time>,
 ) {
-    let mut camera_transform = camera_query.get_single_mut().unwrap();
+    let (mut transform, mut projection) = camera_query.get_single_mut().unwrap();
     let mut translation = Vec2::ZERO;
+    let mut log_scale = projection.scale.ln();
 
     if keyboard_input.any_pressed([KeyCode::Left, KeyCode::A]) {
-        translation.x += MOVE_SPEED;
-    }
-    if keyboard_input.any_pressed([KeyCode::Right, KeyCode::D]) {
         translation.x -= MOVE_SPEED;
     }
+    if keyboard_input.any_pressed([KeyCode::Right, KeyCode::D]) {
+        translation.x += MOVE_SPEED;
+    }
     if keyboard_input.any_pressed([KeyCode::Up, KeyCode::W]) {
-        translation.y -= MOVE_SPEED;
+        translation.y += MOVE_SPEED;
     }
     if keyboard_input.any_pressed([KeyCode::Down, KeyCode::S]) {
-        translation.y += MOVE_SPEED;
+        translation.y -= MOVE_SPEED;
     }
 
     if translation.length_squared() > 0.0 {
-        camera_transform.translation.x += translation.x;
-        camera_transform.translation.y += translation.y;
+        transform.translation.x += translation.x;
+        transform.translation.y += translation.y;
     }
+
+    if keyboard_input.pressed(KeyCode::E) {
+        log_scale -= KEYBOARD_ZOOM_SPEED * time.delta_seconds();
+    }
+    if keyboard_input.pressed(KeyCode::Q) {
+        log_scale += KEYBOARD_ZOOM_SPEED * time.delta_seconds();
+    }
+    projection.scale = log_scale.exp();
 }

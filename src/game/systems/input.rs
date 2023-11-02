@@ -12,7 +12,6 @@ pub fn scroll_events(
     mut camera_query: Query<&mut OrthographicProjection, With<Camera>>,
     time: Res<Time>,
 ) {
-    // Todo: zoom to mouse pos -> https://github.com/bevyengine/bevy/issues/2580
     for event in scroll_event.iter() {
         for mut camera in camera_query.iter_mut() {
             let mut log_scale = camera.scale.ln();

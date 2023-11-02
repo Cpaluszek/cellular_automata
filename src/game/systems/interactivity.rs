@@ -179,7 +179,6 @@ fn parse_rle_content(content: &str, board_size: usize) -> (usize, usize, Vec<boo
         } else if line.starts_with('x') {
             if let Some((width, height)) = parse_pattern_size(line) {
                 if width > board_size || height > board_size {
-                    // Todo: resize board if possible
                     println!("Pattern size exceed board size");
                     return (0, 0, vec![]);
                 }
